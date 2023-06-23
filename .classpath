@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="0623Start/src"/>
+	<classpathentry kind="lib" path="0623Start/lib/c3p0-0.9.5.2.jar"/>
+	<classpathentry kind="lib" path="0623Start/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="0623Start/lib/quartz-2.3.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="0623Start/lib/quartz-jobs-2.3.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="0623Start/lib/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="0623Start/lib/slf4j-log4j12-1.7.7.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
