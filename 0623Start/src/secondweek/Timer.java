@@ -148,14 +148,15 @@ public class Timer implements ITimer {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT *\r\n"
-					+ "FROM auction AS C\r\n"
-					+ "RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image\r\n"
-					+ "	, B.setno\r\n"
-					+ "		FROM product AS A\r\n"
-					+ "		LEFT JOIN enrollmentinfo AS B ON A.productno = B.productno) AS D\r\n"
-					+ "ON C.setno = D.setno\r\n"
-					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline);");
+			stmt = conn.prepareStatement("SELECT *\r\n" + 
+					"FROM auction AS C\r\n" + 
+					"RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image\r\n" + 
+					"	, B.setno\r\n" + 
+					"		FROM product AS A\r\n" + 
+					"		LEFT JOIN enrollmentinfo AS B ON A.productno = B.productno) AS D\r\n" + 
+					"ON C.setno = D.setno\r\n" + 
+					"WHERE C.deadline > current_timestamp()\r\n" + 
+					"ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
