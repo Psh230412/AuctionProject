@@ -21,6 +21,7 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -237,7 +238,12 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo.setInt(2, auctionId);
 							inputAuctionSetNo.executeUpdate();
 						}
-
+					} catch (NumberFormatException e2) {
+						JOptionPane.showMessageDialog(null, "올바르게 입력해주십시오", "입력오류", JOptionPane.WARNING_MESSAGE);
+						e2.printStackTrace();
+					} catch (IIOException e2) {	
+						JOptionPane.showMessageDialog(null, "파일의 경로가 잘못되었습니다.", "입력오류", JOptionPane.WARNING_MESSAGE);
+						e2.printStackTrace();
 					} catch (IOException e2) {
 						e2.printStackTrace();
 					} catch (SQLException e2) {
@@ -257,11 +263,10 @@ public class RegistFrame extends JFrame {
 				}
 			}
 		});
-
 		JButton returnMain = new JButton("메인화면가기");
 		returnMain.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AuctionFrame(null);
+				new AuctionFrame(data);
 				setVisible(false);
 			}
 		});
