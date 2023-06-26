@@ -1,3 +1,4 @@
+
 package secondweek;
 
 import java.io.File;
@@ -16,9 +17,8 @@ import java.util.List;
 
 import dbutil.DBUtil;
 
-public class Timer implements ITimer {
+public class TimerTest implements ITimer {
 
-	@Override
 	public LocalDateTime selectTime(int butten) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -45,7 +45,6 @@ public class Timer implements ITimer {
 		return null;
 	}
 
-	@Override
 	public int updateTime(int butten) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -64,7 +63,6 @@ public class Timer implements ITimer {
 		return 0;
 	}
 
-	@Override
 	public List<Product> selectProductId(int userId) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -138,7 +136,6 @@ public class Timer implements ITimer {
 		return list;
 	}
 
-	@Override
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -169,24 +166,28 @@ public class Timer implements ITimer {
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 				
-				File file = new File("images/" + productName + ".jpg");
+//				File file = new File("images/" + productName + ".jpg");
 				list.add(new Product(productNo, productName, productPriceNow, productContent, startTime, endTime));
 
-				if (file.exists()) {
-					continue;
-				}
-
-				Files.copy(image.getBinaryStream(), Paths.get("images/" + productName + ".jpg"));
+//				if (file.exists()) {
+//					continue;
+//				}
+//
+//				Files.copy(image.getBinaryStream(), Paths.get("images/" + productName + ".jpg"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		} 
+//		catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		
+		finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
 		return list;
 	}
+
 }

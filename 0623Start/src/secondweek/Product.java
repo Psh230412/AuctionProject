@@ -2,6 +2,8 @@ package secondweek;
 import java.time.LocalDateTime;
 
 import javax.swing.ImageIcon;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Product {
 	private int userId;
@@ -11,7 +13,6 @@ public class Product {
 	private String productContent;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	private ImageIcon image;
 
 	public Product(int userId, int productNo, String productName, int productPriceNow, String productContent,
 			LocalDateTime startTime, LocalDateTime endTime) {
@@ -34,19 +35,6 @@ public class Product {
 		this.productContent = productContent;
 		this.startTime = startTime;
 		this.endTime = endTime;
-	}
-
-	public Product(int userId, int productNo, String productName, int productPriceNow, String productContent,
-			LocalDateTime startTime, LocalDateTime endTime, ImageIcon image) {
-		super();
-		this.userId = userId;
-		this.productNo = productNo;
-		this.productName = productName;
-		this.productPriceNow = productPriceNow;
-		this.productContent = productContent;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.image = image;
 	}
 
 	public int getUserId() {
@@ -105,14 +93,6 @@ public class Product {
 		this.endTime = endTime;
 	}
 	
-	public ImageIcon getImage() {
-		return image;
-	}
-
-	public void setImage(ImageIcon image) {
-		this.image = image;
-	}
-
 	@Override
 	public String toString() {
 		return "Product [userId=" + userId + ", productNo=" + productNo + ", productName=" + productName
@@ -122,3 +102,4 @@ public class Product {
 	
 	
 }
+
