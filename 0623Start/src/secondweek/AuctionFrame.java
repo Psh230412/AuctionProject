@@ -1,4 +1,4 @@
-package auction;
+package secondweek;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,9 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import database.DataBase;
-import login_signup.LoginFrame;
 
 public class AuctionFrame extends JFrame {
 

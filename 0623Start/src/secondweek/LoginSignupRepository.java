@@ -1,4 +1,4 @@
-package login_signup;
+package secondweek;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 import dbutil.DBUtil;
-import objects.User;
 
 public class LoginSignupRepository {
 

@@ -1,4 +1,4 @@
-package login_signup;
+package secondweek;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -11,8 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
-import database.DataBase;
 
 public class SignupFrame extends JFrame {
 	LoginSignupRepository repo;

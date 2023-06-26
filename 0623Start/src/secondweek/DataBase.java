@@ -1,6 +1,4 @@
-package database;
-
-import objects.User;
+package secondweek;
 
 public class DataBase {
 	private User currentUser;
