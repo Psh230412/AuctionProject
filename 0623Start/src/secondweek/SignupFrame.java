@@ -154,6 +154,7 @@ public class SignupFrame extends JFrame {
 		}
 	}
 
+	
 	private void passwordCheck(String password, String password2) {
 		if ((password.length() != 0) && (password2.length() != 0) && repo.isMatchesString(password)
 				&& repo.isMatchesString(password2) && password.equals(password2)) {
