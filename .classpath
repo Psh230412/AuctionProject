@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="0623Start/lib/quartz-jobs-2.3.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="0623Start/lib/slf4j-api-1.7.7.jar"/>
 	<classpathentry kind="lib" path="0623Start/lib/slf4j-log4j12-1.7.7.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DBUtil_230626"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DBUtil_Project"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
