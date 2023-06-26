@@ -86,6 +86,7 @@ public class LoginFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false);
 	}
+	
 
 	public boolean loginCondition(String id, String password) {
 		// 1. 아이디와 비밀번호가 비어있으면 "아이디와 비밀번호를 입력하세요"
