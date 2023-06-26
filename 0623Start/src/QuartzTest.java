@@ -25,15 +25,17 @@ public class QuartzTest {
                 .withIdentity("myTrigger", "group1")
                 .startNow()
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                    .withIntervalInSeconds(10)
+                    .withIntervalInSeconds(1)
                     .repeatForever())            
                 .build();
 
             // Tell quartz to schedule the job using our trigger
             sched.scheduleJob(job, trigger);
+//            new Aution();
             
             // Start the scheduler
             sched.start();
+            
         } catch (SchedulerException se) {
             se.printStackTrace();
         }
