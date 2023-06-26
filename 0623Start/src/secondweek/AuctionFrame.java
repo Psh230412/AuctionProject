@@ -1,20 +1,79 @@
 package secondweek;
 
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import org.quartz.Job;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleScheduleBuilder;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
+
+import dbutil.DBUtil;
 
 public class AuctionFrame extends JFrame {
 
-	public AuctionFrame(DataBase data) {
+	private Scheduler scheduler;
+	private static TimerTest timerTest;
+	private static JLabel lblImage1;
+	private static JLabel lblImage2;
+	private static JLabel lblImage3;
+	private static JLabel lblImage4;
+	private static JLabel lblImage5;
+	private static JLabel lblImage6;
+	private static JLabel lblImage7;
+	private static JLabel lblImage8;
+	private static JLabel lblImage9;
+	private static JLabel lblImage10;
 
+	private static JLabel lblTime1;
+	private static JLabel lblTime2;
+	private static JLabel lblTime3;
+	private static JLabel lblTime4;
+	private static JLabel lblTime5;
+	private static JLabel lblTime6;
+	private static JLabel lblTime7;
+	private static JLabel lblTime8;
+	private static JLabel lblTime9;
+	private static JLabel lblTime10;
+
+	private static JLabel lblPrice1;
+	private static JLabel lblPrice2;
+	private static JLabel lblPrice3;
+	private static JLabel lblPrice4;
+	private static JLabel lblPrice5;
+	private static JLabel lblPrice6;
+	private static JLabel lblPrice7;
+	private static JLabel lblPrice8;
+	private static JLabel lblPrice9;
+	private static JLabel lblPrice10;
+
+//	Connection conn = DBUtil.getConnection();
+
+	public AuctionFrame(DataBase data) {
+		timerTest = new TimerTest();
 		JPanel pnl = new JPanel();
 		pnl.setLayout(null);
 		pnl.setBackground(Color.RED);
@@ -33,7 +92,6 @@ public class AuctionFrame extends JFrame {
 			}
 		});
 
-		
 		JButton logoutBtn = new JButton("로그아웃");
 		logoutBtn.setBounds(529, 50, 100, 20);
 		logoutBtn.addActionListener(new ActionListener() {
@@ -79,25 +137,44 @@ public class AuctionFrame extends JFrame {
 		JPanel pnl10 = new JPanel();
 		JPanel[] pnls = { pnl1, pnl2, pnl3, pnl4, pnl5, pnl6, pnl7, pnl8, pnl9, pnl10 };
 
+		lblImage1 = new JLabel("");
+		pnl1.add(lblImage1);
+
+		lblImage2 = new JLabel("");
+		pnl2.add(lblImage2);
+
+		lblImage3 = new JLabel("");
+		pnl3.add(lblImage3);
+
+		lblImage4 = new JLabel("");
+		pnl4.add(lblImage4);
+
+		lblImage5 = new JLabel("");
+		pnl5.add(lblImage5);
+
+		lblImage6 = new JLabel("");
+		pnl6.add(lblImage6);
+
+		lblImage7 = new JLabel("");
+		pnl7.add(lblImage7);
+
+		lblImage8 = new JLabel("");
+		pnl8.add(lblImage8);
+
+		lblImage9 = new JLabel("");
+		pnl9.add(lblImage9);
+
+		lblImage10 = new JLabel("");
+		pnl10.add(lblImage10);
+
 		int x = 25;
 		int y = 150;
 		for (int i = 0; i < pnls.length; i++) {
 
 			pnls[i].setBounds(x, y, 130, 225);
-			JPanel imagepnl = new JPanel();
-			imagepnl.setPreferredSize(new Dimension(120, 120));
-			imagepnl.setBackground(Color.BLUE);
-			JLabel imageLbl = new JLabel("이미지");
-			imagepnl.add(imageLbl);
 			JButton viewProductBtn = new JButton("경매보기");
-			JLabel timeLbl = new JLabel("00:00:00");
 
-			JLabel priceLbl = new JLabel("현재가 8000원");
-
-			pnls[i].add(imagepnl);
 			pnls[i].add(viewProductBtn);
-			pnls[i].add(timeLbl);
-			pnls[i].add(priceLbl);
 
 			pnl.add(pnls[i]);
 
@@ -109,10 +186,92 @@ public class AuctionFrame extends JFrame {
 			} else {
 				x += 155;
 			}
-
 		}
 
+		lblTime1 = new JLabel("00 : 00 : 01");
+		pnl1.add(lblTime1);
+
+		lblTime2 = new JLabel("00 : 00 : 02");
+		pnl2.add(lblTime2);
+
+		lblTime3 = new JLabel("00 : 00 : 03");
+		pnl3.add(lblTime3);
+
+		lblTime4 = new JLabel("00 : 00 : 04");
+		pnl4.add(lblTime4);
+
+		lblTime5 = new JLabel("00 : 00 : 05");
+		pnl5.add(lblTime5);
+
+		lblTime6 = new JLabel("00 : 00 : 06");
+		pnl6.add(lblTime6);
+
+		lblTime7 = new JLabel("00 : 00 : 07");
+		pnl7.add(lblTime7);
+
+		lblTime8 = new JLabel("00 : 00 : 08");
+		pnl8.add(lblTime8);
+
+		lblTime9 = new JLabel("00 : 00 : 09");
+		pnl9.add(lblTime9);
+
+		lblTime10 = new JLabel("00 : 00 : 10");
+		pnl10.add(lblTime10);
+
+		lblPrice1 = new JLabel("현재가 8001원");
+		pnl1.add(lblPrice1);
+
+		lblPrice2 = new JLabel("현재가 8002원");
+		pnl2.add(lblPrice2);
+
+		lblPrice3 = new JLabel("현재가 8003원");
+		pnl3.add(lblPrice3);
+
+		lblPrice4 = new JLabel("현재가 8004원");
+		pnl4.add(lblPrice4);
+
+		lblPrice5 = new JLabel("현재가 8005원");
+		pnl5.add(lblPrice5);
+
+		lblPrice6 = new JLabel("현재가 8006원");
+		pnl6.add(lblPrice6);
+
+		lblPrice7 = new JLabel("현재가 8007원");
+		pnl7.add(lblPrice7);
+
+		lblPrice8 = new JLabel("현재가 8008원");
+		pnl8.add(lblPrice8);
+
+		lblPrice9 = new JLabel("현재가 8009원");
+		pnl9.add(lblPrice9);
+
+		lblPrice10 = new JLabel("현재가 8010원");
+		pnl10.add(lblPrice10);
+
 		getContentPane().add(pnl);
+
+		LocalDateTime now = LocalDateTime.now();
+		updatLabel(now);
+
+		try {
+			scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+			JobDataMap jobDataMap = new JobDataMap();
+			jobDataMap.put("label", lblImage1);
+
+			JobDetail job = JobBuilder.newJob(AutionUpdateJob.class).withIdentity("labelUpdateJob", "group1")
+					.usingJobData(jobDataMap).build();
+
+			Trigger trigger = TriggerBuilder.newTrigger().withIdentity("labelUpdateTrigger", "group1").startNow()
+					.withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(1).repeatForever())
+					.build();
+
+			scheduler.scheduleJob(job, trigger);
+
+			scheduler.start();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
 
 		setSize(800, 700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -121,4 +280,139 @@ public class AuctionFrame extends JFrame {
 		setResizable(false);
 	}
 
+	public static String TimeFormatString(LocalDateTime startTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd일 HH:mm:ss");
+		return startTime.format(formatter);
+	}
+
+	public static ImageIcon iconSize(ImageIcon icon) {
+		Image img = icon.getImage();
+		Image changeSize = img.getScaledInstance(140, 140, Image.SCALE_SMOOTH);
+		return new ImageIcon(changeSize);
+	}
+
+	public static void updatLabel(LocalDateTime now) {
+		Connection conn = null;
+
+		try {
+			conn = DBUtil.getConnection();
+
+			for (int i = 0; i < timerTest.selectProduct().size(); i++) {
+				switch (i) {
+				case 0: {
+					lblPrice1.setText(Integer.toString(timerTest.selectProduct().get(0).getProductPriceNow()));
+
+
+					lblImage1.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 1)));
+					String result1 = duration(timerTest.selectProduct().get(0).getEndTime(), now);
+					lblTime1.setText(result1);
+					break;
+				}
+				case 1: {
+					lblPrice2.setText(Integer.toString(timerTest.selectProduct().get(1).getProductPriceNow()));
+
+					
+					lblImage2.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 2)));
+					String result2 = duration(timerTest.selectProduct().get(1).getEndTime(), now);
+					lblTime2.setText(result2);
+					break;
+				}
+				case 2: {
+					lblPrice3.setText(Integer.toString(timerTest.selectProduct().get(2).getProductPriceNow()));
+					
+					lblImage3.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 3)));
+
+					String result3 = duration(timerTest.selectProduct().get(2).getEndTime(), now);
+					lblTime3.setText(result3);
+					break;
+				}
+				case 3: {
+					lblPrice4.setText(Integer.toString(timerTest.selectProduct().get(3).getProductPriceNow()));
+					lblImage4.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 4)));
+
+					String result4 = duration(timerTest.selectProduct().get(3).getEndTime(), now);
+					lblTime4.setText(result4);
+					break;
+				}
+				case 4: {
+					lblPrice5.setText(Integer.toString(timerTest.selectProduct().get(4).getProductPriceNow()));
+					
+					lblImage5.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 5)));
+
+					String result5 = duration(timerTest.selectProduct().get(4).getEndTime(), now);
+					lblTime5.setText(result5);
+					break;
+				}
+				case 5: {
+					lblPrice6.setText(Integer.toString(timerTest.selectProduct().get(5).getProductPriceNow()));
+					
+					lblImage6.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 6)));
+
+					String result6 = duration(timerTest.selectProduct().get(5).getEndTime(), now);
+					lblTime6.setText(result6);
+					break;
+				}
+				case 6: {
+					lblPrice7.setText(Integer.toString(timerTest.selectProduct().get(6).getProductPriceNow()));
+//					lblImage7.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 7)));
+
+					String result7 = duration(timerTest.selectProduct().get(6).getEndTime(), now);
+					lblTime7.setText(result7);
+					break;
+				}
+				case 7: {
+					lblPrice8.setText(Integer.toString(timerTest.selectProduct().get(7).getProductPriceNow()));
+//					lblImage8.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 8)));
+
+					String result8 = duration(timerTest.selectProduct().get(7).getEndTime(), now);
+					lblTime8.setText(result8);
+					break;
+				}
+				case 8: {
+					lblPrice9.setText(Integer.toString(timerTest.selectProduct().get(8).getProductPriceNow()));
+//					lblImage9.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 9)));
+					String result9 = duration(timerTest.selectProduct().get(8).getEndTime(), now);
+					lblTime9.setText(result9);
+					break;
+				}
+				case 9: {
+					lblPrice10.setText(Integer.toString(timerTest.selectProduct().get(9).getProductPriceNow()));
+//					lblImage10.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 10)));
+					String result10 = duration(timerTest.selectProduct().get(9).getEndTime(), now);
+					lblTime10.setText(result10);
+					break;
+				}
+				}
+			}
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(conn);
+		}
+
+	}
+
+	public static String duration(LocalDateTime targetDateTime, LocalDateTime now) {
+		Duration duration = Duration.between(now, targetDateTime);
+		long days = duration.toDays();
+		long hours = duration.toHours() % 24;
+		long minutes = duration.toMinutes() % 60;
+		long seconds = duration.getSeconds() % 60;
+
+		return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
+	}
+
+	public static class AutionUpdateJob implements Job {
+		public void execute(JobExecutionContext context) throws JobExecutionException {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+
+					LocalDateTime now = LocalDateTime.now();
+					updatLabel(now);
+				}
+			});
+		}
+	}
 }
