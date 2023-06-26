@@ -28,11 +28,12 @@ public class AuctionFrame extends JFrame {
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new Mypage(data);
+				new MypageFrame(data);
 				setVisible(false);
 			}
 		});
 
+		
 		JButton logoutBtn = new JButton("로그아웃");
 		logoutBtn.setBounds(529, 50, 100, 20);
 		logoutBtn.addActionListener(new ActionListener() {

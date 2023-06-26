@@ -30,7 +30,7 @@ import javax.swing.border.EmptyBorder;
 
 import dbutil.DBUtil;
 
-public class Registration extends JFrame {
+public class RegistFrame extends JFrame {
    private JPanel contentPane;
    private JTextField detailBox;
    private JTextField productNameInput;
@@ -43,7 +43,7 @@ public class Registration extends JFrame {
       EventQueue.invokeLater(new Runnable() {
          public void run() {
             try {
-               Registration frame = new Registration();
+        	RegistFrame frame = new RegistFrame();
                frame.setVisible(true);
             } catch (Exception e) {
                e.printStackTrace();
@@ -55,7 +55,7 @@ public class Registration extends JFrame {
    /**
     * Create the frame.
     */
-   public Registration() {
+   public RegistFrame() {
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setBounds(100, 100, 737, 572);
       contentPane = new JPanel();
@@ -80,9 +80,9 @@ public class Registration extends JFrame {
       contentPane.add(lbl);
       lbl.setBounds(100, 200, 100, 100);
 
-      JButton registrationBtn = new JButton("등록하기");
-      registrationBtn.setBounds(301, 483, 97, 23);
-      contentPane.add(registrationBtn);
+      JButton registBtn = new JButton("등록하기");
+      registBtn.setBounds(301, 483, 97, 23);
+      contentPane.add(registBtn);
       
       String[] auctionTimeOptions = {"1시간", "4시간", "24시간", "사용자 정의"};
       JComboBox<String> auctionTimeBox = new JComboBox<>(auctionTimeOptions);
@@ -107,7 +107,7 @@ public class Registration extends JFrame {
       
       
       
-      registrationBtn.addActionListener(new ActionListener() {
+      registBtn.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
             Connection conn = null;
@@ -201,10 +201,11 @@ public class Registration extends JFrame {
          }
       });
 
+      
       JButton returnMain = new JButton("메인화면가기");
       returnMain.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            new Aution();
+             new AuctionFrame(null);
             setVisible(false);
          }
       });

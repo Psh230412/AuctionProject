@@ -44,6 +44,7 @@ public class LoginSignupRepository {
 		return null;
 	}
 
+	
 	// 회원가입할 때 중복되는 아이디가 DB에 있는지 검색하고 있으면 그 아이디 반환
 	public String searchId(String id) {
 		Connection conn = null;
