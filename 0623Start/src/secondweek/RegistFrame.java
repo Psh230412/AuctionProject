@@ -261,7 +261,7 @@ public class RegistFrame extends JFrame {
 		JButton returnMain = new JButton("메인화면가기");
 		returnMain.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AuctionFrame(null);
+				new AuctionFrame(data);
 				setVisible(false);
 			}
 		});

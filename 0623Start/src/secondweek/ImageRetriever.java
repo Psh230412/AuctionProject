@@ -24,6 +24,7 @@ public class ImageRetriever {
 		
 		
 		String sql = "SELECT image FROM product WHERE productno = ?";
+//		String sql = "SELECT image FROM product order by ";
 		int id = index; // 이미지를 가져올 레코드의 ID
 
 		try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -41,7 +42,7 @@ public class ImageRetriever {
 				return imageIcon;
 
 			} else {
-				System.out.println("지정된 ID의 레코드가 없습니다.");
+				
 				return null;
 			}
 		}
