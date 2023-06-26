@@ -1,4 +1,4 @@
-package objects;
+package secondweek;
 
 import java.util.Objects;
 

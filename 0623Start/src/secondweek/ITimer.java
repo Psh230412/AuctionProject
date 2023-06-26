@@ -1,3 +1,4 @@
+package secondweek;
 import java.time.LocalDateTime;
 
 public interface ITimer {
