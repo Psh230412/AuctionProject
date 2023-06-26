@@ -12,7 +12,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
@@ -39,23 +41,23 @@ public class RegistFrame extends JFrame {
    /**
     * Launch the application.
     */
-   public static void main(String[] args) {
-      EventQueue.invokeLater(new Runnable() {
-         public void run() {
-            try {
-        	RegistFrame frame = new RegistFrame();
-               frame.setVisible(true);
-            } catch (Exception e) {
-               e.printStackTrace();
-            }
-         }
-      });
-   }
+//   public static void main(String[] args) {
+//      EventQueue.invokeLater(new Runnable() {
+//         public void run() {
+//            try {
+//               Registration frame = new Registration();
+//               frame.setVisible(true);
+//            } catch (Exception e) {
+//               e.printStackTrace();
+//            }
+//         }
+//      });
+//   }
 
    /**
     * Create the frame.
     */
-   public RegistFrame() {
+   public RegistFrame(DataBase data) {
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setBounds(100, 100, 737, 572);
       contentPane = new JPanel();
@@ -80,9 +82,9 @@ public class RegistFrame extends JFrame {
       contentPane.add(lbl);
       lbl.setBounds(100, 200, 100, 100);
 
-      JButton registBtn = new JButton("등록하기");
-      registBtn.setBounds(301, 483, 97, 23);
-      contentPane.add(registBtn);
+      JButton registrationBtn = new JButton("등록하기");
+      registrationBtn.setBounds(301, 483, 97, 23);
+      contentPane.add(registrationBtn);
       
       String[] auctionTimeOptions = {"1시간", "4시간", "24시간", "사용자 정의"};
       JComboBox<String> auctionTimeBox = new JComboBox<>(auctionTimeOptions);
@@ -107,58 +109,62 @@ public class RegistFrame extends JFrame {
       
       
       
-      registBtn.addActionListener(new ActionListener() {
+      registrationBtn.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
             Connection conn = null;
-            PreparedStatement stmt = null;
-            PreparedStatement stmt2 = null;
-            PreparedStatement stmt3 = null;
+            PreparedStatement inputProduct = null;
+            PreparedStatement inputProductDate = null;
+            PreparedStatement recentProductId = null;
+            PreparedStatement inputTogether = null;
+            PreparedStatement recentEnrollId = null;
+            PreparedStatement inputAuctionSetNo = null;
+            ResultSet getRecentProductId = null; // 물건의 정보값(id) 가져오기
+            ResultSet getRecentSetNo = null; // 물건의 정보값(id) 가져오기
+            
             try {
-
                conn = DBUtil.getConnection();
                
-               
+               // 물건정보 입력 (이름,상세정보,시작가격,이미지파일(경로)
                String path = imageRoot.getText();
                String productname = productNameInput.getText();
                String detailinfo = detailBox.getText();
                Integer initialPrice = Integer.valueOf(productPriceInput.getText());
                File imageFile = new File(path); // 사용자가 입력한 파일 경로
-               if(imageFile.length() > 2 * 1024 * 1024) { // if file size is more than 2MB
+               // 파일 용량 제한 (2mb)
+               if(imageFile.length() > 2 * 1024 * 1024) { // 파일의 크기가 2MB보다 클때
                    JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
                    return;
                }
+               // 파일 크기 100,100으로 조절
                BufferedImage originalImage = ImageIO.read(imageFile);
                BufferedImage resizedImage = new BufferedImage(100, 100, originalImage.getType());
                Graphics2D g = resizedImage.createGraphics();
                g.drawImage(originalImage, 0, 0, 100, 100, null);
-               
                g.dispose();
                // Convert the resized image to a byte array
                ByteArrayOutputStream baos = new ByteArrayOutputStream();
                ImageIO.write(resizedImage, "jpg", baos);
                
                byte[] imageInByte = baos.toByteArray();
-
-               stmt = conn.prepareStatement(
+               // 정보 sql에 등록
+               inputProduct = conn.prepareStatement(
                      "insert into product(productname, initialprice, detailinfo, image) values (?,?,?,?)");
-               stmt.setString(1, productname);
-               stmt.setObject(2, initialPrice , Types.INTEGER);
-               stmt.setString(3, detailinfo);
-               stmt.setBytes(4, imageInByte);
+               inputProduct.setString(1, productname);
+               inputProduct.setObject(2, initialPrice , Types.INTEGER);
+               inputProduct.setString(3, detailinfo);
+               inputProduct.setBytes(4, imageInByte);
                
-               stmt.executeUpdate();
-               // start 
-               // dead 
-               stmt2 = conn.prepareStatement("insert into auction(starttime, deadline) values (?, ?)");
-
+               inputProduct.executeUpdate();
+               // 옥션의 시작시간 , 마감시간 추가  
+               inputProductDate = conn.prepareStatement("insert into auction(starttime, deadline) values (?, ?)",Statement.RETURN_GENERATED_KEYS);
                LocalDateTime now = LocalDateTime.now(); // 현재 시간
                Timestamp timestampNow = Timestamp.valueOf(now);  // LocalDateTime을 Timestamp로 변환
-               stmt2.setTimestamp(1, timestampNow);
-
+               inputProductDate.setTimestamp(1, timestampNow);
+               // 마감시간 콤보박스 and 시간 직접 입력
                String selectedOption = (String) auctionTimeBox.getSelectedItem();
                LocalDateTime deadline;
-
+               
                if ("사용자 정의".equals(selectedOption)) {
                    int hoursToAdd = Integer.parseInt(hourInput.getText()); // 사용자가 입력한 시간을 가져옵니다.
                    int minutesToAdd = Integer.parseInt(minuteInput.getText()); // 사용자가 입력한 분을 가져옵니다.
@@ -176,36 +182,67 @@ public class RegistFrame extends JFrame {
                            hoursToAdd = 24;
                            break;
                        default:
-                           throw new IllegalArgumentException("Unexpected option: " + selectedOption);
+                           throw new IllegalArgumentException("존재하지않는 옵션입니다: " + selectedOption);
                    }
                    deadline = now.plusHours(hoursToAdd);
                }
 
                Timestamp timestampDeadline = Timestamp.valueOf(deadline);  // LocalDateTime을 Timestamp로 변환
-               stmt2.setTimestamp(2, timestampDeadline);
-
-               stmt2.executeUpdate();
+               inputProductDate.setTimestamp(2, timestampDeadline);
+               inputProductDate.executeUpdate();
                
-               // 로그인 / 물건의 정보
+               // date가 저장된 옥션의 키값
+               ResultSet rs = inputProductDate.getGeneratedKeys();
+               int auctionId = 0;
+               if (rs.next()) {
+                   auctionId = rs.getInt(1);
+               }
                
-               
+               // 로그인한 유저의 id값과 / 물건의 id값을 구하기 enrollmentinfo에 등록 (두개의 값의 id가 setno)
+               int currentLoginUserId = data.getCurrentUser().getNo();
+               recentProductId = conn.prepareStatement("SELECT MAX(productno) from product");
+               getRecentProductId = recentProductId.executeQuery();
+               while(getRecentProductId.next()) {
+            	   int productNum = getRecentProductId.getInt("MAX(productno)");
+            	   
+            	   inputTogether = conn.prepareStatement("insert into enrollmentinfo(userno,productno) values(?,?)");
+            	   inputTogether.setInt(1, currentLoginUserId);
+            	   inputTogether.setInt(2, productNum);
+            	   inputTogether.executeUpdate();
+               }
+               // 그 최신으로 등록된 enrollmentinfo의 setno를 auction의 최근 정보에 등록(최근 등록된 경매에)
+               recentEnrollId = conn.prepareStatement("SELECT MAX(setno) from enrollmentinfo");
+               getRecentSetNo = recentEnrollId.executeQuery();
+               while(getRecentSetNo.next()) {
+            	   int setNo = getRecentSetNo.getInt("MAX(setno)");
+            	   inputAuctionSetNo = conn.prepareStatement("UPDATE auction SET setno = ? WHERE auctionno = ?");
+            	   inputAuctionSetNo.setInt(1, setNo);
+            	   inputAuctionSetNo.setInt(2, auctionId);
+            	   inputAuctionSetNo.executeUpdate();
+               }
                
             } catch (IOException e2) {
                e2.printStackTrace();
             } catch (SQLException e2) {
                e2.printStackTrace();
             } finally {
-               DBUtil.close(stmt);
+               DBUtil.close(inputAuctionSetNo);
+               DBUtil.close(getRecentSetNo);
+               DBUtil.close(recentEnrollId);
+               DBUtil.close(inputTogether);
+               DBUtil.close(getRecentProductId);
+               DBUtil.close(recentProductId);
+               DBUtil.close(inputProductDate);
+               DBUtil.close(inputProduct);
                DBUtil.close(conn);
             }
          }
       });
 
-      
       JButton returnMain = new JButton("메인화면가기");
       returnMain.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-             new AuctionFrame(null);
+            new AuctionFrame(null);
             setVisible(false);
          }
       });
