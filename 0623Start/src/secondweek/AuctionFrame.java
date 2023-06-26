@@ -354,7 +354,7 @@ public class AuctionFrame extends JFrame {
             }
             case 6: {
                lblPrice7.setText(Integer.toString(timerTest.selectProduct().get(6).getProductPriceNow()));
-//               lblImage7.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 7)));
+               lblImage7.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 7)));
 
                String result7 = duration(timerTest.selectProduct().get(6).getEndTime(), now);
                lblTime7.setText(result7);
@@ -362,7 +362,7 @@ public class AuctionFrame extends JFrame {
             }
             case 7: {
                lblPrice8.setText(Integer.toString(timerTest.selectProduct().get(7).getProductPriceNow()));
-//               lblImage8.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 8)));
+               lblImage8.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 8)));
 
                String result8 = duration(timerTest.selectProduct().get(7).getEndTime(), now);
                lblTime8.setText(result8);
@@ -370,14 +370,14 @@ public class AuctionFrame extends JFrame {
             }
             case 8: {
                lblPrice9.setText(Integer.toString(timerTest.selectProduct().get(8).getProductPriceNow()));
-//               lblImage9.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 9)));
+               lblImage9.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 9)));
                String result9 = duration(timerTest.selectProduct().get(8).getEndTime(), now);
                lblTime9.setText(result9);
                break;
             }
             case 9: {
                lblPrice10.setText(Integer.toString(timerTest.selectProduct().get(9).getProductPriceNow()));
-//               lblImage10.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 10)));
+               lblImage10.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 10)));
                String result10 = duration(timerTest.selectProduct().get(9).getEndTime(), now);
                lblTime10.setText(result10);
                break;
