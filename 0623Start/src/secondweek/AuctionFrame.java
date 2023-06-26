@@ -302,8 +302,13 @@ public class AuctionFrame extends JFrame {
             case 0: {
                lblPrice1.setText(Integer.toString(timerTest.selectProduct().get(0).getProductPriceNow()));
 
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 1);
 
-               lblImage1.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 1)));
+               if (imageIcon != null) {
+
+                  lblImage1.setIcon(iconSize(imageIcon));
+               }
+
                String result1 = duration(timerTest.selectProduct().get(0).getEndTime(), now);
                lblTime1.setText(result1);
                break;
@@ -311,16 +316,25 @@ public class AuctionFrame extends JFrame {
             case 1: {
                lblPrice2.setText(Integer.toString(timerTest.selectProduct().get(1).getProductPriceNow()));
 
-               
-               lblImage2.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 2)));
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 2);
+
+               if (imageIcon != null) {
+
+                  lblImage2.setIcon(iconSize(imageIcon));
+               }
                String result2 = duration(timerTest.selectProduct().get(1).getEndTime(), now);
                lblTime2.setText(result2);
                break;
             }
             case 2: {
                lblPrice3.setText(Integer.toString(timerTest.selectProduct().get(2).getProductPriceNow()));
-               
-               lblImage3.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 3)));
+
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 3);
+
+               if (imageIcon != null) {
+
+                  lblImage3.setIcon(iconSize(imageIcon));
+               }
 
                String result3 = duration(timerTest.selectProduct().get(2).getEndTime(), now);
                lblTime3.setText(result3);
@@ -328,7 +342,12 @@ public class AuctionFrame extends JFrame {
             }
             case 3: {
                lblPrice4.setText(Integer.toString(timerTest.selectProduct().get(3).getProductPriceNow()));
-               lblImage4.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 4)));
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 4);
+
+               if (imageIcon != null) {
+
+                  lblImage4.setIcon(iconSize(imageIcon));
+               }
 
                String result4 = duration(timerTest.selectProduct().get(3).getEndTime(), now);
                lblTime4.setText(result4);
@@ -336,8 +355,13 @@ public class AuctionFrame extends JFrame {
             }
             case 4: {
                lblPrice5.setText(Integer.toString(timerTest.selectProduct().get(4).getProductPriceNow()));
-               
-               lblImage5.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 5)));
+
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 5);
+
+               if (imageIcon != null) {
+
+                  lblImage5.setIcon(iconSize(imageIcon));
+               }
 
                String result5 = duration(timerTest.selectProduct().get(4).getEndTime(), now);
                lblTime5.setText(result5);
@@ -345,8 +369,13 @@ public class AuctionFrame extends JFrame {
             }
             case 5: {
                lblPrice6.setText(Integer.toString(timerTest.selectProduct().get(5).getProductPriceNow()));
-               
-               lblImage6.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 6)));
+
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 6);
+
+               if (imageIcon != null) {
+
+                  lblImage6.setIcon(iconSize(imageIcon));
+               }
 
                String result6 = duration(timerTest.selectProduct().get(5).getEndTime(), now);
                lblTime6.setText(result6);
@@ -354,7 +383,13 @@ public class AuctionFrame extends JFrame {
             }
             case 6: {
                lblPrice7.setText(Integer.toString(timerTest.selectProduct().get(6).getProductPriceNow()));
-               lblImage7.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 7)));
+
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 7);
+
+               if (imageIcon != null) {
+
+                  lblImage7.setIcon(iconSize(imageIcon));
+               }
 
                String result7 = duration(timerTest.selectProduct().get(6).getEndTime(), now);
                lblTime7.setText(result7);
@@ -362,22 +397,39 @@ public class AuctionFrame extends JFrame {
             }
             case 7: {
                lblPrice8.setText(Integer.toString(timerTest.selectProduct().get(7).getProductPriceNow()));
-               lblImage8.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 8)));
 
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 8);
+
+               if (imageIcon != null) {
+
+                  lblImage8.setIcon(iconSize(imageIcon));
+               }
                String result8 = duration(timerTest.selectProduct().get(7).getEndTime(), now);
                lblTime8.setText(result8);
                break;
             }
             case 8: {
                lblPrice9.setText(Integer.toString(timerTest.selectProduct().get(8).getProductPriceNow()));
-               lblImage9.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 9)));
+
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 9);
+
+               if (imageIcon != null) {
+
+                  lblImage9.setIcon(iconSize(imageIcon));
+               }
                String result9 = duration(timerTest.selectProduct().get(8).getEndTime(), now);
                lblTime9.setText(result9);
                break;
             }
             case 9: {
                lblPrice10.setText(Integer.toString(timerTest.selectProduct().get(9).getProductPriceNow()));
-               lblImage10.setIcon(iconSize(ImageRetriever.retrieveImage(conn, 10)));
+
+               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 10);
+
+               if (imageIcon != null) {
+
+                  lblImage10.setIcon(iconSize(imageIcon));
+               }
                String result10 = duration(timerTest.selectProduct().get(9).getEndTime(), now);
                lblTime10.setText(result10);
                break;
