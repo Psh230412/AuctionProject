@@ -1,23 +1,19 @@
 package secondweek;
 import java.time.LocalDateTime;
 
-import javax.swing.ImageIcon;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 public class Product {
-	private int userId;
+	private int setNo;
 	private int productNo;
 	private String productName;
 	private int productPriceNow;
 	private String productContent;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-
-	public Product(int userId, int productNo, String productName, int productPriceNow, String productContent,
+	
+	public Product(int setNo, int productNo, String productName, int productPriceNow, String productContent,
 			LocalDateTime startTime, LocalDateTime endTime) {
 		super();
-		this.userId = userId;
+		this.setNo = setNo;
 		this.productNo = productNo;
 		this.productName = productName;
 		this.productPriceNow = productPriceNow;
@@ -26,23 +22,12 @@ public class Product {
 		this.endTime = endTime;
 	}
 	
-	public Product(int productNo, String productName, int productPriceNow, String productContent,
-			LocalDateTime startTime, LocalDateTime endTime) {
-		super();
-		this.productNo = productNo;
-		this.productName = productName;
-		this.productPriceNow = productPriceNow;
-		this.productContent = productContent;
-		this.startTime = startTime;
-		this.endTime = endTime;
+	public int getSetNo() {
+		return setNo;
 	}
 
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setSetNo(int setNo) {
+		this.setNo = setNo;
 	}
 
 	public int getProductNo() {
@@ -95,7 +80,7 @@ public class Product {
 	
 	@Override
 	public String toString() {
-		return "Product [userId=" + userId + ", productNo=" + productNo + ", productName=" + productName
+		return "Product [setNo=" + setNo + ", productNo=" + productNo + ", productName=" + productName
 				+ ", productPriceNow=" + productPriceNow + ", productContent=" + productContent + ", startTime="
 				+ startTime + ", endTime=" + endTime + "]";
 	}

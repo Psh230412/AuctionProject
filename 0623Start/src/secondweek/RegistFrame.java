@@ -225,6 +225,8 @@ public class RegistFrame extends JFrame {
 					PreparedStatement inputAuctionSetNo = null;
 					ResultSet getRecentProductId = null; // 물건의 정보값(id) 가져오기
 					ResultSet getRecentSetNo = null; // 물건의 정보값(id) 가져오기
+					Connection connForCopy = null;
+					PreparedStatement stmt = null;
 
 					try {
 						conn = DBUtil.getConnection();
@@ -263,7 +265,7 @@ public class RegistFrame extends JFrame {
 						inputProduct.executeUpdate();
 						// 옥션의 시작시간 , 마감시간 추가
 						inputProductDate = conn.prepareStatement(
-								"insert into auction(starttime, deadline) values (?, ?)",
+								"insert into auction(starttime, deadline, finalprice) values (?, ?, ?)",
 								Statement.RETURN_GENERATED_KEYS);
 						LocalDateTime now = LocalDateTime.now(); // 현재 시간
 						Timestamp timestampNow = Timestamp.valueOf(now); // LocalDateTime을 Timestamp로 변환
@@ -290,6 +292,7 @@ public class RegistFrame extends JFrame {
 
 						Timestamp timestampDeadline = Timestamp.valueOf(deadline); // LocalDateTime을 Timestamp로 변환
 						inputProductDate.setTimestamp(2, timestampDeadline);
+						inputProductDate.setObject(3, initialPrice, Types.INTEGER);
 						inputProductDate.executeUpdate();
 
 						// date가 저장된 옥션의 키값
@@ -319,9 +322,25 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo = conn
 									.prepareStatement("UPDATE auction SET setno = ? WHERE auctionno = ?");
 							inputAuctionSetNo.setInt(1, setNo);
-							inputAuctionSetNo.setInt(2, auctionId);
+							inputAuctionSetNo.setObject(2, auctionId);
 							inputAuctionSetNo.executeUpdate();
 						}
+						
+						connForCopy = DBUtil.getConnection();
+						
+						stmt = connForCopy.prepareStatement("INSERT INTO copy_auction\r\n" + 
+								"						SELECT *\r\n" + 
+								"						FROM auction\r\n" + 
+								"						WHERE auctionno > (SELECT MAX(auctionno) \r\n" + 
+								"						               FROM copy_auction);");
+						
+						
+						
+						stmt.executeUpdate();
+						
+						
+						
+						
 
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "올바르게 입력해주십시오", "입력오류", JOptionPane.WARNING_MESSAGE);
@@ -334,6 +353,8 @@ public class RegistFrame extends JFrame {
 					} catch (SQLException e2) {
 						e2.printStackTrace();
 					} finally {
+						DBUtil.close(stmt);
+						DBUtil.close(connForCopy);
 						DBUtil.close(inputAuctionSetNo);
 						DBUtil.close(getRecentSetNo);
 						DBUtil.close(recentEnrollId);
@@ -343,6 +364,7 @@ public class RegistFrame extends JFrame {
 						DBUtil.close(inputProductDate);
 						DBUtil.close(inputProduct);
 						DBUtil.close(conn);
+						
 					}
 				} else {
 				}

@@ -2,16 +2,11 @@ package secondweek;
 
 public class DataBase {
 	private User currentUser;
-//	private List<Auction> auctions;
-//	private List<Enrollment> enrolls;
-//	private List<Participate> participates;
-//	private List<Bid> bids;
-
-//	private List<JPanel> auctionPnls;
+	private Product particiapteProduct;
 
 	public DataBase() {
-//		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
-		currentUser = null;
+		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
+//		currentUser = null;
 	}
 
 	public User getCurrentUser() {
@@ -22,4 +17,11 @@ public class DataBase {
 		this.currentUser = currentUser;
 	}
 
+	public Product getProduct() {
+		return particiapteProduct;
+	}
+
+	public void setProduct(Product product) {
+		this.particiapteProduct = product;
+	}
 }
