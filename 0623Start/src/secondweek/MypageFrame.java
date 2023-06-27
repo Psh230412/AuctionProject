@@ -13,6 +13,7 @@ import javax.swing.JButton;
 public class MypageFrame extends JFrame {
 
 	private JPanel contentPane;
+	Timer timer = new Timer();
 
 	/**
 	 * Launch the application.
@@ -27,6 +28,9 @@ public class MypageFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MypageFrame(DataBase data) {
+		
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 800, 700);
 		contentPane = new JPanel();

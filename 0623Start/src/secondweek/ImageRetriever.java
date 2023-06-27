@@ -30,15 +30,16 @@ public class ImageRetriever {
 		list.clear();
 		
 //		String sql = "SELECT image FROM product WHERE productno = ?";
-		String sql = "SELECT auction.starttime,auction.deadline,\r\n"
-				+ "		enrollmentinfo.productno,\r\n"
-				+ "        product.productname,product.image\r\n"
-				+ "        FROM auction\r\n"
-				+ "INNER JOIN enrollmentinfo\r\n"
-				+ "ON auction.setno = enrollmentinfo.setno\r\n"
-				+ "INNER JOIN product\r\n"
-				+ "ON enrollmentinfo.productno = product.productno\r\n"
-				+ "ORDER BY deadline-starttime;";
+		String sql = "SELECT auction.starttime,auction.deadline,\r\n" + 
+				"			enrollmentinfo.productno,\r\n" + 
+				"			product.productname,product.image\r\n" + 
+				"FROM auction\r\n" + 
+				"INNER JOIN enrollmentinfo\r\n" + 
+				"ON auction.setno = enrollmentinfo.setno\r\n" + 
+				"INNER JOIN product\r\n" + 
+				"ON enrollmentinfo.productno = product.productno\r\n" + 
+				"WHERE deadline>current_time()\r\n" + 
+				"ORDER BY deadline-starttime;";
 //		int id = index; // 이미지를 가져올 레코드의 ID
 
 		try (PreparedStatement statement = conn.prepareStatement(sql)) {

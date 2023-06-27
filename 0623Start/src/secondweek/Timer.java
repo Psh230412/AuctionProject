@@ -146,4 +146,58 @@ public class Timer implements ITimer {
 		return list;
 	}
 
+	public void inputSuccessbidinfo() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		
+		try {
+			conn = DBUtil.getConnection();
+			
+			stmt = conn.prepareStatement("INSERT INTO successbidinfo (userno, auctioncopyno, productno)\r\n" + 
+					"SELECT B.userno, A.auctionno, B.productno\r\n" + 
+					"FROM copy_auction A\r\n" + 
+					"JOIN enrollmentinfo B ON A.setno = B.setno\r\n" + 
+					"WHERE A.deadline < CURRENT_TIMESTAMP()\r\n" + 
+					"AND NOT EXISTS (\r\n" + 
+					"  SELECT *\r\n" + 
+					"  FROM successbidinfo C\r\n" + 
+					"  WHERE C.userno = B.userno\r\n" + 
+					"    AND C.auctioncopyno = A.auctionno\r\n" + 
+					"    AND C.productno = B.productno\r\n" + 
+					")");
+			
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+	public void setIsBid() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			conn = DBUtil.getConnection();
+			
+			// 
+			stmt = conn.prepareStatement("UPDATE successbidinfo\r\n" + 
+					"set isbid = 0\r\n" + 
+					"where successbidinfo.auctioncopyno IN (SELECT A.auctionno from copy_auction A\r\n" + 
+					"WHERE A.deadline < current_time() AND A.auctionno NOT IN  (SELECT auctionno FROM participate));");
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+	
+
 }
