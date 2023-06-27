@@ -42,6 +42,7 @@ public class MypageFrame extends JFrame {
 	private static DataBase data;
 	
 	private Scheduler scheduler;
+	private Timer timer;
 	
 	private static JLabel lblImage11;
 	private static JLabel lblImage12;
@@ -211,6 +212,7 @@ public class MypageFrame extends JFrame {
 
 	public MypageFrame(DataBase data) {
 		this.data = data;
+		timer = new Timer();
 
 		JPanel pnl = new JPanel();
 		pnl.setLayout(null);
@@ -466,6 +468,7 @@ public class MypageFrame extends JFrame {
 
 		LocalDateTime now = LocalDateTime.now();
 		updatLabel(now);
+		checkBid();
 
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
