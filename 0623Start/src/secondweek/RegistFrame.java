@@ -3,9 +3,14 @@ package secondweek;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,7 +46,7 @@ public class RegistFrame extends JFrame {
 	private JTextArea detailBox;
 	private JTextField productNameInput;
 	private JTextField productPriceInput;
-
+	private JFrame frame;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -56,15 +61,28 @@ public class RegistFrame extends JFrame {
 	}
 
 	public RegistFrame(DataBase data) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 737, 572);
-		contentPane = new JPanel();
+		 frame = new JFrame();
+			frame.setSize(1200,800);
+		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		        contentPane = new JPanel(){
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+				Image image = toolkit.getImage("img/registPage.png");
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		JLabel registeredImage = new JLabel(); // 미리보기
-		registeredImage.setBounds(35, 54, 400, 400);
+		registeredImage.setBounds(150, 150, 400, 400);
 		contentPane.add(registeredImage);
 
 		JTextField imageRoot = new JTextField();
@@ -73,14 +91,34 @@ public class RegistFrame extends JFrame {
 
 		JLabel imageVolume = new JLabel("0 / 2mb");
 
-		imageVolume.setBounds(104, 343, 100, 50);
+		imageVolume.setBounds(280, 625, 100, 50);
 		contentPane.add(imageVolume);
 
 		Font myFont1 = new Font("Serif", Font.BOLD, 20);
 		imageVolume.setFont(myFont1);
 
 		JButton imageBtn = new JButton("파일 경로");
-		imageBtn.setBounds(104, 303, 100, 30);
+		imageBtn.setBounds(220, 553, 250, 100);
+		ImageIcon imgBtn = new ImageIcon("img/findimg_1.png");
+		imageBtn.setContentAreaFilled(false); 
+		imageBtn.setBorderPainted(false);
+		imageBtn.setIcon(imgBtn);
+		imageBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgBtn = new ImageIcon("img/findimg_1.png");
+			imageBtn.setIcon(imgBtn);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgBtn = new ImageIcon("img/findimg.png");
+			imageBtn.setIcon(imgBtn);
+			
+		    }
+		 
+		});
 		contentPane.add(imageBtn);
 		imageBtn.addActionListener(new ActionListener() {
 			@Override
@@ -124,23 +162,53 @@ public class RegistFrame extends JFrame {
 
 		});
 		detailBox = new JTextArea(5,20); // 상세정보 입력칸
-		detailBox.setBounds(287, 260, 391, 154);
+		detailBox.setBounds(660, 320, 388, 215);
 		contentPane.add(detailBox);
 		detailBox.setColumns(10);
 		detailBox.setLineWrap(true);
 
 		JButton registrationBtn = new JButton("등록하기");
-		registrationBtn.setBounds(301, 483, 97, 23);
+		registrationBtn.setBounds(690, 580, 350, 80);
+		ImageIcon imgregitBtn = new ImageIcon("img/regist_1.png");
+		registrationBtn.setContentAreaFilled(false); 
+		registrationBtn.setBorderPainted(false);
+		registrationBtn.setIcon(imgregitBtn);
+		registrationBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgregitBtn = new ImageIcon("img/regist_1.png");
+			registrationBtn.setIcon(imgregitBtn);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgregitBtn = new ImageIcon("img/regist.png");
+			registrationBtn.setIcon(imgregitBtn);
+			
+		    }
+		 
+		});
+		
+		registrationBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new AuctionFrame(data);
+				 frame.setVisible(false);
+			}
+		});
+	
 		contentPane.add(registrationBtn);
 
 		String[] auctionTimeOptions = { "1시간", "4시간", "24시간" };
 		JComboBox<String> auctionTimeBox = new JComboBox<>(auctionTimeOptions);
-		auctionTimeBox.setBounds(240, 200, 100, 30); // 위치와 크기를 설정해주세요.
+		auctionTimeBox.setBounds(825, 230, 190, 25); // 위치와 크기를 설정해주세요.
 		contentPane.add(auctionTimeBox);
 
-		JLabel hourLabel = new JLabel("마감시간 선택");
-		hourLabel.setBounds(230, 170, 100, 21);
-		contentPane.add(hourLabel);
+//		JLabel hourLabel = new JLabel("마감시간 선택");
+//		hourLabel.setBounds(230, 170, 100, 21);
+//		contentPane.add(hourLabel);
 
 		registrationBtn.addActionListener(new ActionListener() {
 			@Override
@@ -166,8 +234,6 @@ public class RegistFrame extends JFrame {
 						String productname = productNameInput.getText();
 						String detailinfo = detailBox.getText();
 						String sanitizedText = detailinfo.replace("\n", "").replace("\r", "");
-						
-						
 						Integer initialPrice = Integer.valueOf(productPriceInput.getText());
 						File imageFile = new File(path); // 사용자가 입력한 파일 경로
 						// 파일 용량 제한 (2mb)
@@ -282,42 +348,66 @@ public class RegistFrame extends JFrame {
 				}
 			}
 		});
-		JButton returnMain = new JButton("메인화면가기");
-		returnMain.addActionListener(new ActionListener() {
+		JButton mainBtn = new JButton("메인화면");
+		mainBtn.setBounds(75, 40, 150, 80);
+		ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
+		mainBtn.setContentAreaFilled(false); 
+		mainBtn.setBorderPainted(false);
+		mainBtn.setIcon(imgmain);
+		mainBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
+			mainBtn.setIcon(imgmain);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgmain = new ImageIcon("img/gomain.png");
+			mainBtn.setIcon(imgmain);
+			
+		    }
+		 
+		});
+		
+		mainBtn.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
-				setVisible(false);
+				 frame.setVisible(false);
 			}
 		});
+	
+		contentPane.add(mainBtn);
 
-		returnMain.setBounds(35, 21, 97, 23);
-		contentPane.add(returnMain);
-
-		JLabel productName = new JLabel("제품 이름");
-		productName.setBounds(247, 97, 57, 15);
-		contentPane.add(productName);
+//		JLabel productName = new JLabel("제품 이름");
+//		productName.setBounds(247, 97, 57, 15);
+//		contentPane.add(productName);
 
 		productNameInput = new JTextField();
-		productNameInput.setBounds(340, 91, 116, 21);
+		productNameInput.setBounds(825, 115, 200, 30);
 		contentPane.add(productNameInput);
 		productNameInput.setColumns(10);
 
-		JLabel productPrice = new JLabel("제품 가격");
-		productPrice.setBounds(247, 137, 57, 15);
-		contentPane.add(productPrice);
+//		JLabel productPrice = new JLabel("제품 가격");
+//		productPrice.setBounds(247, 137, 57, 15);
+//		contentPane.add(productPrice);
 
 		productPriceInput = new JTextField();
 		productPriceInput.setColumns(10);
-		productPriceInput.setBounds(340, 131, 116, 21);
+		productPriceInput.setBounds(825, 170, 200, 30);
 		contentPane.add(productPriceInput);
 
 		setLocationRelativeTo(null);
-		setVisible(true);
+		 frame.getContentPane().add(contentPane);
+
+		   frame.setVisible(true);
 	}
 
 	public static BufferedImage resizeImage(BufferedImage originalImage, int type) {
-		BufferedImage resizedImage = new BufferedImage(200, 200, type);
+		BufferedImage resizedImage = new BufferedImage(400, 400, type);
 		Graphics2D g = resizedImage.createGraphics();
 		g.drawImage(originalImage, 0, 0, 400, 400, null);
 		g.dispose();
