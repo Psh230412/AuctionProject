@@ -17,52 +17,7 @@ import java.util.List;
 
 import dbutil.DBUtil;
 
-public class TimerTest implements ITimer {
-
-	public LocalDateTime selectTime(int butten) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT `time` FROM timer WHERE no = ?");
-
-			stmt.setInt(1, butten);
-
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				LocalDateTime time = rs.getObject("time", LocalDateTime.class);
-				return time;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return null;
-	}
-
-	public int updateTime(int butten) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "UPDATE timer \r\n" + "SET `time` = `time` + INTERVAL 10 SECOND \r\n" + "WHERE no = 1";
-			stmt = conn.prepareStatement(sql);
-
-			return stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return 0;
-	}
-
+public class Timer implements ITimer {
 	public List<Product> selectProductId(int userId) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -145,14 +100,15 @@ public class TimerTest implements ITimer {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT *\r\n"
-					+ "FROM auction AS C\r\n"
-					+ "RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image\r\n"
-					+ "	, B.setno\r\n"
-					+ "		FROM product AS A\r\n"
-					+ "		LEFT JOIN enrollmentinfo AS B ON A.productno = B.productno) AS D\r\n"
-					+ "ON C.setno = D.setno\r\n"
-					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline);");
+			stmt = conn.prepareStatement("SELECT *\r\n" + 
+					"FROM auction AS C\r\n" + 
+					"RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image\r\n" + 
+					"	, B.setno\r\n" + 
+					"		FROM product AS A\r\n" + 
+					"		LEFT JOIN enrollmentinfo AS B ON A.productno = B.productno) AS D\r\n" + 
+					"ON C.setno = D.setno\r\n" + 
+					"WHERE C.deadline > current_timestamp()\r\n" + 
+					"ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {

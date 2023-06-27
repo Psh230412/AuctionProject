@@ -32,11 +32,12 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import dbutil.DBUtil;
+import secondweek.AuctionFrame.AutionUpdateJob;
 
 public class AuctionFrame extends JFrame {
 
    private Scheduler scheduler;
-   private static TimerTest timerTest;
+   private static Timer timer;
    private static JLabel lblImage1;
    private static JLabel lblImage2;
    private static JLabel lblImage3;
@@ -73,7 +74,7 @@ public class AuctionFrame extends JFrame {
 //   Connection conn = DBUtil.getConnection();
 
    public AuctionFrame(DataBase data) {
-      timerTest = new TimerTest();
+	   timer = new Timer();
       JPanel pnl = new JPanel();
       pnl.setLayout(null);
       pnl.setBackground(Color.RED);
@@ -254,24 +255,32 @@ public class AuctionFrame extends JFrame {
       updatLabel(now);
 
       try {
-         scheduler = StdSchedulerFactory.getDefaultScheduler();
+  	    scheduler = StdSchedulerFactory.getDefaultScheduler();
 
-         JobDataMap jobDataMap = new JobDataMap();
-         jobDataMap.put("label", lblImage1);
+  	    JobDataMap jobDataMap = new JobDataMap();
 
-         JobDetail job = JobBuilder.newJob(AutionUpdateJob.class).withIdentity("labelUpdateJob", "group1")
-               .usingJobData(jobDataMap).build();
+  	    JobDetail job = JobBuilder.newJob(AutionUpdateJob.class)
+  	            .withIdentity("labelUpdateJob", "group1")
+  	            .usingJobData(jobDataMap)
+  	            .build();
 
-         Trigger trigger = TriggerBuilder.newTrigger().withIdentity("labelUpdateTrigger", "group1").startNow()
-               .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(1).repeatForever())
-               .build();
+  	    Trigger trigger = TriggerBuilder.newTrigger()
+  	            .withIdentity("labelUpdateTrigger", "group1")
+  	            .startNow()
+  	            .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+  	                    .withIntervalInSeconds(1)
+  	                    .repeatForever())
+  	            .build();
+  	    
+  	    // 스케줄러가 job의 key를 가지고 있으면 다시 scheduleJob을 생성하지 않도록
+  	    if (!scheduler.checkExists(job.getKey())) {
+  	        scheduler.scheduleJob(job, trigger);
+  	    }
 
-         scheduler.scheduleJob(job, trigger);
-
-         scheduler.start();
-      } catch (SchedulerException e) {
-         e.printStackTrace();
-      }
+  	    scheduler.start();
+  	} catch (SchedulerException e) {
+  	    e.printStackTrace();
+  	}
 
       setSize(800, 700);
       setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -292,18 +301,16 @@ public class AuctionFrame extends JFrame {
    }
 
    public static void updatLabel(LocalDateTime now) {
-	   
       Connection conn = null;
-      
 
       try {
          conn = DBUtil.getConnection();
          ImageRetriever.retrieveImage(conn);
 
-         for (int i = 0; i < timerTest.selectProduct().size(); i++) {
+         for (int i = 0; i < timer.selectProduct().size(); i++) {
             switch (i) {
             case 0: {
-               lblPrice1.setText(Integer.toString(timerTest.selectProduct().get(0).getProductPriceNow()));
+               lblPrice1.setText(Integer.toString(timer.selectProduct().get(0).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 1);
 //
@@ -316,12 +323,12 @@ public class AuctionFrame extends JFrame {
             	   lblImage1.setIcon(iconSize(imageIcon));
                }
 
-               String result1 = duration(timerTest.selectProduct().get(0).getEndTime(), now);
+               String result1 = duration(timer.selectProduct().get(0).getEndTime(), now);
                lblTime1.setText(result1);
                break;
             }
             case 1: {
-               lblPrice2.setText(Integer.toString(timerTest.selectProduct().get(1).getProductPriceNow()));
+               lblPrice2.setText(Integer.toString(timer.selectProduct().get(1).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 2);
 //
@@ -334,12 +341,12 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage2.setIcon(iconSize(imageIcon));
                }
-               String result2 = duration(timerTest.selectProduct().get(1).getEndTime(), now);
+               String result2 = duration(timer.selectProduct().get(1).getEndTime(), now);
                lblTime2.setText(result2);
                break;
             }
             case 2: {
-               lblPrice3.setText(Integer.toString(timerTest.selectProduct().get(2).getProductPriceNow()));
+               lblPrice3.setText(Integer.toString(timer.selectProduct().get(2).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 3);
 //
@@ -353,12 +360,12 @@ public class AuctionFrame extends JFrame {
             	   lblImage3.setIcon(iconSize(imageIcon));
                }
 
-               String result3 = duration(timerTest.selectProduct().get(2).getEndTime(), now);
+               String result3 = duration(timer.selectProduct().get(2).getEndTime(), now);
                lblTime3.setText(result3);
                break;
             }
             case 3: {
-               lblPrice4.setText(Integer.toString(timerTest.selectProduct().get(3).getProductPriceNow()));
+               lblPrice4.setText(Integer.toString(timer.selectProduct().get(3).getProductPriceNow()));
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 4);
 //
 //               if (imageIcon != null) {
@@ -370,12 +377,13 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage4.setIcon(iconSize(imageIcon));
                }
-               String result4 = duration(timerTest.selectProduct().get(3).getEndTime(), now);
+
+               String result4 = duration(timer.selectProduct().get(3).getEndTime(), now);
                lblTime4.setText(result4);
                break;
             }
             case 4: {
-               lblPrice5.setText(Integer.toString(timerTest.selectProduct().get(4).getProductPriceNow()));
+               lblPrice5.setText(Integer.toString(timer.selectProduct().get(4).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 5);
 //
@@ -388,12 +396,13 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage5.setIcon(iconSize(imageIcon));
                }
-               String result5 = duration(timerTest.selectProduct().get(4).getEndTime(), now);
+
+               String result5 = duration(timer.selectProduct().get(4).getEndTime(), now);
                lblTime5.setText(result5);
                break;
             }
             case 5: {
-               lblPrice6.setText(Integer.toString(timerTest.selectProduct().get(5).getProductPriceNow()));
+               lblPrice6.setText(Integer.toString(timer.selectProduct().get(5).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 6);
 //
@@ -406,12 +415,13 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage6.setIcon(iconSize(imageIcon));
                }
-               String result6 = duration(timerTest.selectProduct().get(5).getEndTime(), now);
+
+               String result6 = duration(timer.selectProduct().get(5).getEndTime(), now);
                lblTime6.setText(result6);
                break;
             }
             case 6: {
-               lblPrice7.setText(Integer.toString(timerTest.selectProduct().get(6).getProductPriceNow()));
+               lblPrice7.setText(Integer.toString(timer.selectProduct().get(6).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 7);
 //
@@ -424,12 +434,12 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage7.setIcon(iconSize(imageIcon));
                }
-               String result7 = duration(timerTest.selectProduct().get(6).getEndTime(), now);
+               String result7 = duration(timer.selectProduct().get(6).getEndTime(), now);
                lblTime7.setText(result7);
                break;
             }
             case 7: {
-               lblPrice8.setText(Integer.toString(timerTest.selectProduct().get(7).getProductPriceNow()));
+               lblPrice8.setText(Integer.toString(timer.selectProduct().get(7).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 8);
 //
@@ -442,12 +452,12 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage8.setIcon(iconSize(imageIcon));
                }
-               String result8 = duration(timerTest.selectProduct().get(7).getEndTime(), now);
+               String result8 = duration(timer.selectProduct().get(7).getEndTime(), now);
                lblTime8.setText(result8);
                break;
             }
             case 8: {
-               lblPrice9.setText(Integer.toString(timerTest.selectProduct().get(8).getProductPriceNow()));
+               lblPrice9.setText(Integer.toString(timer.selectProduct().get(8).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 9);
 //
@@ -459,12 +469,12 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage9.setIcon(iconSize(imageIcon));
                }
-               String result9 = duration(timerTest.selectProduct().get(8).getEndTime(), now);
+               String result9 = duration(timer.selectProduct().get(8).getEndTime(), now);
                lblTime9.setText(result9);
                break;
             }
             case 9: {
-               lblPrice10.setText(Integer.toString(timerTest.selectProduct().get(9).getProductPriceNow()));
+               lblPrice10.setText(Integer.toString(timer.selectProduct().get(9).getProductPriceNow()));
 
 //               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 10);
 //
@@ -476,7 +486,7 @@ public class AuctionFrame extends JFrame {
                if(imageIcon != null) {
             	   lblImage10.setIcon(iconSize(imageIcon));
                }
-               String result10 = duration(timerTest.selectProduct().get(9).getEndTime(), now);
+               String result10 = duration(timer.selectProduct().get(9).getEndTime(), now);
                lblTime10.setText(result10);
                break;
             }
@@ -503,11 +513,10 @@ public class AuctionFrame extends JFrame {
    }
 
    public static class AutionUpdateJob implements Job {
-	   
       public void execute(JobExecutionContext context) throws JobExecutionException {
          SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-         
+
                LocalDateTime now = LocalDateTime.now();
                updatLabel(now);
             }
