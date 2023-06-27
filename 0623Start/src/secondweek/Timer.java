@@ -146,4 +146,34 @@ public class Timer implements ITimer {
 		return list;
 	}
 
+	@Override
+	public int insertSuccessBidInfo() {
+		
+		return 0;
+	}
+
+	@Override
+	public List<Integer> checkBid() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<Integer> list = new ArrayList<>();
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement("SELECT A.auctionno, A.starttime, A.deadline\r\n" + 
+					"from copy_auction A\r\n" + 
+					"WHERE A.deadline < current_time() AND A.auctionno IN(SELECT auctionno\r\n" + 
+					"													FROM participate)");
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int auctionNo = rs.getInt("auctionno");
+				list.add(auctionNo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return list;
+	}
+
 }
