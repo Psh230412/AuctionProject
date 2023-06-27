@@ -111,7 +111,7 @@ public class Timer implements ITimer {
 			while (rs.next()) {
 				int productNo = rs.getInt("productno");
 				String productName = rs.getString("productname");
-				int productPriceNow = rs.getInt("initialprice");
+				int productPriceNow = rs.getInt("finalprice");
 				String productContent = rs.getString("detailinfo");
 				Blob image = rs.getBlob("image");
 				Timestamp timestamp = rs.getTimestamp("starttime");
@@ -119,22 +119,11 @@ public class Timer implements ITimer {
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
-//				File file = new File("images/" + productName + ".jpg");
 				list.add(new Product(productNo, productName, productPriceNow, productContent, startTime, endTime));
-
-//				if (file.exists()) {
-//					continue;
-//				}
-//
-//				Files.copy(image.getBinaryStream(), Paths.get("images/" + productName + ".jpg"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-//		catch (IOException e) {
-//			e.printStackTrace();
-//		}
-
 		finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
