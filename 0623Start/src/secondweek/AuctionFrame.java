@@ -1,7 +1,10 @@
 package secondweek;
 
+
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -17,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
@@ -70,31 +74,53 @@ public class AuctionFrame extends JFrame {
    private static JLabel lblPrice8;
    private static JLabel lblPrice9;
    private static JLabel lblPrice10;
-
+   private JFrame frame;
+   private JPanel contentPane;
 //   Connection conn = DBUtil.getConnection();
 
    public AuctionFrame(DataBase data) {
 	   timer = new Timer();
-      JPanel pnl = new JPanel();
-      pnl.setLayout(null);
-      pnl.setBackground(Color.RED);
+		 frame = new JFrame();
+			frame.setSize(1200,800);
+		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		        contentPane = new JPanel(){
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+				Image image = toolkit.getImage("img/mainPage.png");
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
+		
+		
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+	   
+     
 
       JLabel userLbl = new JLabel("여기에 로그인 중인 아이디 표시");
       userLbl.setText(data.getCurrentUser().getName());
-      userLbl.setBounds(305, 50, 100, 20);
+      userLbl.setBounds(105, 50, 100, 20);
 
       JButton mypageBtn = new JButton("마이페이지");
-      mypageBtn.setBounds(417, 50, 100, 20);
+      mypageBtn.setBounds(600, 150, 100, 20);
       mypageBtn.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
             new MypageFrame(data);
-            setVisible(false);
+            frame.setVisible(false);
          }
       });
 
       JButton logoutBtn = new JButton("로그아웃");
-      logoutBtn.setBounds(529, 50, 100, 20);
+      logoutBtn.setBounds(750, 150, 100, 20);
       logoutBtn.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
@@ -103,40 +129,60 @@ public class AuctionFrame extends JFrame {
                JOptionPane.showMessageDialog(null, "로그아웃되었습니다.");
                DataBase newdata = new DataBase();
                new LoginFrame(newdata);
-               setVisible(false);
+               frame.setVisible(false);
             }
          }
       });
 
       JButton exitBtn = new JButton("종료");
-      exitBtn.setBounds(641, 50, 100, 20);
+      exitBtn.setBounds(900, 150, 100, 20);
       exitBtn.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
             int choice = JOptionPane.showConfirmDialog(null, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
-               setVisible(false);
+            	frame.setVisible(false);
                System.exit(0);
             }
          }
       });
 
-      pnl.add(userLbl);
-      pnl.add(mypageBtn);
-      pnl.add(logoutBtn);
-      pnl.add(exitBtn);
+      contentPane.add(userLbl);
+      contentPane.add(mypageBtn);
+      contentPane.add(logoutBtn);
+      contentPane.add(exitBtn);
 
       JPanel pnl1 = new JPanel();
+      pnl1.setBounds(50, 200, 200, 250);
+      JButton viewProductBtn1 = new JButton("경매보기");
       JPanel pnl2 = new JPanel();
+      pnl2.setBounds(280, 200, 200, 250);
+      JButton viewProductBtn2 = new JButton("경매보기");
       JPanel pnl3 = new JPanel();
+      pnl3.setBounds(500, 200, 200, 250);
+      JButton viewProductBtn3 = new JButton("경매보기");
       JPanel pnl4 = new JPanel();
+      pnl4.setBounds(720, 200, 200, 250);
+      JButton viewProductBtn4 = new JButton("경매보기");
       JPanel pnl5 = new JPanel();
+      pnl5.setBounds(940, 200, 200, 250);
+      JButton viewProductBtn5 = new JButton("경매보기");
       JPanel pnl6 = new JPanel();
+      pnl6.setBounds(50, 470, 200, 250);
+      JButton viewProductBtn6 = new JButton("경매보기");
       JPanel pnl7 = new JPanel();
+      pnl7.setBounds(280, 470, 200, 250);
+      JButton viewProductBtn7 = new JButton("경매보기");
       JPanel pnl8 = new JPanel();
+      pnl8.setBounds(500, 470, 200, 250);
+      JButton viewProductBtn8 = new JButton("경매보기");
       JPanel pnl9 = new JPanel();
+      pnl9.setBounds(720, 470, 200, 250);
+      JButton viewProductBtn9 = new JButton("경매보기");
       JPanel pnl10 = new JPanel();
-      JPanel[] pnls = { pnl1, pnl2, pnl3, pnl4, pnl5, pnl6, pnl7, pnl8, pnl9, pnl10 };
+      pnl10.setBounds(940, 470, 200, 250);
+      JButton viewProductBtn10 = new JButton("경매보기");
+  //    JPanel[] pnls = { pnl1, pnl2, pnl3, pnl4, pnl5, pnl6, pnl7, pnl8, pnl9, pnl10 };
 
       lblImage1 = new JLabel("");
       pnl1.add(lblImage1);
@@ -168,26 +214,26 @@ public class AuctionFrame extends JFrame {
       lblImage10 = new JLabel("");
       pnl10.add(lblImage10);
 
-      int x = 25;
-      int y = 150;
-      for (int i = 0; i < pnls.length; i++) {
-
-         pnls[i].setBounds(x, y, 130, 225);
-         JButton viewProductBtn = new JButton("경매보기");
-
-         pnls[i].add(viewProductBtn);
-
-         pnl.add(pnls[i]);
-
-         if ((i + 1) / 5 == 1) {
-            y = 400;
-         }
-         if ((i + 1) == 5) {
-            x = 25;
-         } else {
-            x += 155;
-         }
-      }
+//      int x = 25;
+//      int y = 150;
+//      for (int i = 0; i < pnls.length; i++) {
+//
+//         pnls[i].setBounds(x, y, 130, 225);
+//         JButton viewProductBtn = new JButton("경매보기");
+//
+//         pnls[i].add(viewProductBtn);
+//
+//         contentPane.add(pnls[i]);
+//
+//         if ((i + 1) / 5 == 1) {
+//            y = 400;
+//         }
+//         if ((i + 1) == 5) {
+//            x = 25;
+//         } else {
+//            x += 155;
+//         }
+//      }
 
       lblTime1 = new JLabel("00 : 00 : 01");
       pnl1.add(lblTime1);
@@ -220,6 +266,7 @@ public class AuctionFrame extends JFrame {
       pnl10.add(lblTime10);
 
       lblPrice1 = new JLabel("현재가 8001원");
+     
       pnl1.add(lblPrice1);
 
       lblPrice2 = new JLabel("현재가 8002원");
@@ -248,8 +295,29 @@ public class AuctionFrame extends JFrame {
 
       lblPrice10 = new JLabel("현재가 8010원");
       pnl10.add(lblPrice10);
-
-      getContentPane().add(pnl);
+      
+      contentPane.add(pnl1);
+      contentPane.add(pnl2);
+      contentPane.add(pnl3);
+      contentPane.add(pnl4);
+      contentPane.add(pnl5);
+      contentPane.add(pnl6);
+      contentPane.add(pnl7);
+      contentPane.add(pnl8);
+      contentPane.add(pnl9);
+      contentPane.add(pnl10);
+      pnl1.add(viewProductBtn1);
+      pnl2.add(viewProductBtn2);
+      pnl3.add(viewProductBtn3);
+      pnl4.add(viewProductBtn4);
+      pnl5.add(viewProductBtn5);
+      pnl6.add(viewProductBtn6);
+      pnl7.add(viewProductBtn7);
+      pnl8.add(viewProductBtn8);
+      pnl9.add(viewProductBtn9);
+      pnl10.add(viewProductBtn10);
+      frame.getContentPane().add(contentPane);
+      frame.setVisible(true);
 
       LocalDateTime now = LocalDateTime.now();
       updatLabel(now);
@@ -282,11 +350,7 @@ public class AuctionFrame extends JFrame {
   	    e.printStackTrace();
   	}
 
-      setSize(800, 700);
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
-      setVisible(true);
-      setLocationRelativeTo(null);
-      setResizable(false);
+      
    }
 
    public static String TimeFormatString(LocalDateTime startTime) {
