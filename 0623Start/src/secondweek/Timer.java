@@ -183,13 +183,13 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 			
-			// 
+			
 			stmt = conn.prepareStatement("UPDATE successbidinfo\r\n" + 
 					"set isbid = 0\r\n" + 
 					"where successbidinfo.auctioncopyno IN (SELECT A.auctionno from copy_auction A\r\n" + 
 					"WHERE A.deadline < current_time() AND A.auctionno NOT IN  (SELECT auctionno FROM participate));");
 			
-			
+			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

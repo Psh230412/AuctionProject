@@ -40,6 +40,8 @@ import secondweek.RegistFrame;
 
 public class MypageFrame extends JFrame {
 	private static DataBase data;
+	Timer timer = new Timer();
+	
 	
 	private Scheduler scheduler;
 	
@@ -209,8 +211,12 @@ public class MypageFrame extends JFrame {
 	}
 
 	public MypageFrame(DataBase data) {
+//		timer.inputSuccessbidinfo();
+//		timer.setIsBid();
+		
 		this.data = data;
 
+		
 		JPanel pnl = new JPanel();
 		pnl.setLayout(null);
 		pnl.setBackground(Color.BLUE);

@@ -124,7 +124,7 @@ public class ListRepository{
 		List<Bidinfo> list = new ArrayList<>();
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT A.bidno, B.userno, C.productno, C.productname, C.image, D.finalprice, A.isbid FROM bidinfo A \r\n" + 
+			String sql = "SELECT A.successbidno, B.userno, C.productno, C.productname, C.image, D.finalprice, A.isbid FROM bidinfo A \r\n" + 
 					"INNER JOIN user B ON A.userno = B.userno \r\n" + 
 					"INNER JOIN product C ON A.productno = C.productno \r\n" + 
 					"INNER JOIN copy_auction D ON A.auctioncopyno = D.auctionno \r\n" + 
@@ -134,7 +134,7 @@ public class ListRepository{
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				Integer bidnoParse = rs.getObject("bidno", Integer.class);
+				Integer bidnoParse = rs.getObject("successbidno", Integer.class);
 				Integer usernoParse = rs.getObject("userno", Integer.class);
 				Integer productnoParse = rs.getObject("productno", Integer.class);
 				String productname = rs.getString("productname");
