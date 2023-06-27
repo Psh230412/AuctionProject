@@ -40,9 +40,6 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import dbutil.DBUtil;
-import secondweek.AuctionFrame;
-import secondweek.DataBase;
-import secondweek.RegistFrame;
 
 public class MypageFrame extends JFrame {
 	private static DataBase data;
@@ -50,6 +47,8 @@ public class MypageFrame extends JFrame {
 	private Scheduler scheduler;
 	private JPanel contentPane;
 	private JFrame frame;
+	private Timer timer;
+	
 	private static JLabel lblImage11;
 	private static JLabel lblImage12;
 	private static JLabel lblImage13;
@@ -218,6 +217,7 @@ public class MypageFrame extends JFrame {
 
 	public MypageFrame(DataBase data) {
 		this.data = data;
+		timer = new Timer();
 
 		 
 		 frame = new JFrame();
@@ -587,9 +587,11 @@ public class MypageFrame extends JFrame {
 			Trigger trigger2 = TriggerBuilder.newTrigger().withIdentity("labelUpdateTriggerMain", "group2").startNow()
 					.withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(1).repeatForever())
 					.build();
-
-			scheduler.scheduleJob(job2, trigger2);
-
+			
+			// 스케줄러가 job의 key를 가지고 있으면 다시 scheduleJob을 생성하지 않도록
+    	    if (!scheduler.checkExists(job2.getKey())) {
+    	        scheduler.scheduleJob(job2, trigger2);
+    	    }
 			scheduler.start();
 		} catch (SchedulerException e) {
 			e.printStackTrace();
