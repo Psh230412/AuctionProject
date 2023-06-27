@@ -1,11 +1,16 @@
 package secondweek;
 
 
+
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Duration;
@@ -19,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
@@ -39,6 +45,8 @@ public class MypageFrame extends JFrame {
 	private static DataBase data;
 	
 	private Scheduler scheduler;
+	private JPanel contentPane;
+	private JFrame frame;
 	private Timer timer;
 	
 	private static JLabel lblImage11;
@@ -211,71 +219,170 @@ public class MypageFrame extends JFrame {
 		this.data = data;
 		timer = new Timer();
 
-		JPanel pnl = new JPanel();
-		pnl.setLayout(null);
-		pnl.setBackground(Color.BLUE);
+		 
+		 frame = new JFrame();
+				frame.setSize(1200,800);
+			        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			        contentPane = new JPanel(){
+
+				@Override
+				protected void paintComponent(Graphics g) {
+					super.paintComponent(g);
+
+					Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+					Image image = toolkit.getImage("img/myPage.png");
+					g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+				}
+			};
+			
+			
+			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+			setContentPane(contentPane);
+			contentPane.setLayout(null);
+		
+	
 
 		JLabel userNameLb = new JLabel("user_name");
-		userNameLb.setBounds(75, 123, 188, 67);
+		userNameLb.setBounds(190, 160, 188, 67);
 		userNameLb.setText(data.getCurrentUser().getName());
-		pnl.add(userNameLb);
+		contentPane.add(userNameLb);
 
 		JButton resetBtn = new JButton("개인정보변경");
-		resetBtn.setBounds(400, 123, 149, 67);
-		pnl.add(resetBtn);
+		resetBtn.setBounds(330, 123, 210, 120);
+		ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
+		resetBtn.setContentAreaFilled(false); 
+		resetBtn.setBorderPainted(false);
+		resetBtn.setIcon(imgreset);
+		resetBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
+			resetBtn.setIcon(imgreset);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgreset = new ImageIcon("img/changeinfo.png");
+			resetBtn.setIcon(imgreset);
+			
+		    }
+		 
+		});
+		
+		contentPane.add(resetBtn);
 
 		JButton resgistBtn = new JButton("물품등록하기");
+		resgistBtn.setBounds(600, 123, 210, 120);
+		ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
+		resgistBtn.setContentAreaFilled(false); 
+		resgistBtn.setBorderPainted(false);
+		resgistBtn.setIcon(imgresgist);
+		resgistBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
+			resgistBtn.setIcon(imgresgist);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgreset = new ImageIcon("img/myregist.png");
+			resgistBtn.setIcon(imgreset);
+			
+		    }
+		 
+		});
+		
 		resgistBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new RegistFrame(data);
-				setVisible(false);
+				 frame.setVisible(false);
 			}
 		});
-		resgistBtn.setBounds(750, 123, 149, 67);
-		pnl.add(resgistBtn);
+		
+		contentPane.add(resgistBtn);
 
 		JButton mainBtn = new JButton("메인화면");
+		mainBtn.setBounds(75, 60, 150, 80);
+		ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
+		mainBtn.setContentAreaFilled(false); 
+		mainBtn.setBorderPainted(false);
+		mainBtn.setIcon(imgmain);
+		mainBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
+			mainBtn.setIcon(imgmain);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgmain = new ImageIcon("img/gomain.png");
+			mainBtn.setIcon(imgmain);
+			
+		    }
+		 
+		});
+		
 		mainBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
-				setVisible(false);
+				 frame.setVisible(false);
 			}
 		});
-		mainBtn.setBounds(934, 60, 116, 30);
-		pnl.add(mainBtn);
+	
+		contentPane.add(mainBtn);
 
 		JPanel pnl1 = new JPanel(new GridLayout(5, 0));
 		JPanel pnl2 = new JPanel(new GridLayout(5, 0));
 		JPanel pnl3 = new JPanel(new GridLayout(5, 0));
 
-		pnl1.setBounds(50, 300, 300, 300);
-		pnl1.setBackground(Color.BLUE);
-		pnl2.setBounds(400, 300, 300, 300);
-		pnl2.setBackground(Color.BLUE);
-		pnl3.setBounds(750, 300, 300, 300);
-		pnl3.setBackground(Color.BLUE);
+		pnl1.setBounds(60, 350, 300, 300);
+		pnl1.setOpaque(false);
+		pnl2.setBounds(450, 350, 300, 300);
+		pnl2.setOpaque(false);
+		pnl3.setBounds(780, 350, 300, 300);
+		pnl3.setOpaque(false);
 
 		JPanel pnl11 = new JPanel();
+		pnl11.setOpaque(false);
 		JPanel pnl12 = new JPanel();
+		pnl12.setOpaque(false);
 		JPanel pnl13 = new JPanel();
+		pnl13.setOpaque(false);
 		JPanel pnl14 = new JPanel();
+		pnl14.setOpaque(false);
 		JPanel pnl15 = new JPanel();
-
+		pnl15.setOpaque(false);
 		JPanel pnl21 = new JPanel();
+		pnl21.setOpaque(false);
 		JPanel pnl22 = new JPanel();
+		pnl22.setOpaque(false);
 		JPanel pnl23 = new JPanel();
+		pnl23.setOpaque(false);
 		JPanel pnl24 = new JPanel();
+		pnl24.setOpaque(false);
 		JPanel pnl25 = new JPanel();
-
+		pnl25.setOpaque(false);
 		JPanel pnl31 = new JPanel();
+		pnl31.setOpaque(false);
 		JPanel pnl32 = new JPanel();
+		pnl32.setOpaque(false);
 		JPanel pnl33 = new JPanel();
+		pnl33.setOpaque(false);
 		JPanel pnl34 = new JPanel();
+		pnl34.setOpaque(false);
 		JPanel pnl35 = new JPanel();
+		pnl35.setOpaque(false);
 
 		lblImage11 = new JLabel("");
 		pnl11.add(lblImage11);
@@ -445,24 +552,26 @@ public class MypageFrame extends JFrame {
 		pnl3.add(pnl34);
 		pnl3.add(pnl35);
 
-		pnl.add(pnl1);
-		pnl.add(pnl2);
-		pnl.add(pnl3);
+		contentPane.add(pnl1);
+		contentPane.add(pnl2);
+		contentPane.add(pnl3);
 
-		getContentPane().add(pnl);
-
-		JLabel lblNewLabel = new JLabel("등록물품");
-		lblNewLabel.setBounds(138, 258, 125, 15);
-		pnl.add(lblNewLabel);
-
-		JLabel lblNewLabel_1 = new JLabel("입찰물품");
-		lblNewLabel_1.setBounds(492, 258, 57, 15);
-		pnl.add(lblNewLabel_1);
-
-		JLabel lblNewLabel_2 = new JLabel("낙찰/유찰 물품");
-		lblNewLabel_2.setBounds(842, 258, 125, 15);
-		pnl.add(lblNewLabel_2);
-
+		
+//
+//		JLabel lblNewLabel = new JLabel("등록물품");
+//		lblNewLabel.setBounds(138, 258, 125, 15);
+//		contentPane.add(lblNewLabel);
+//
+//		JLabel lblNewLabel_1 = new JLabel("입찰물품");
+//		lblNewLabel_1.setBounds(492, 258, 57, 15);
+//		contentPane.add(lblNewLabel_1);
+//
+//		JLabel lblNewLabel_2 = new JLabel("낙찰/유찰 물품");
+//		lblNewLabel_2.setBounds(842, 258, 125, 15);
+//		contentPane.add(lblNewLabel_2);
+		frame.getContentPane().add(contentPane);
+        frame.setVisible(true);
+        
 		LocalDateTime now = LocalDateTime.now();
 		updatLabel(now);
 
@@ -488,11 +597,7 @@ public class MypageFrame extends JFrame {
 			e.printStackTrace();
 		}
 
-		setSize(1100, 700);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setVisible(true);
-		setLocationRelativeTo(null);
-		setResizable(false);
+		   
 	}
 
 	public static String TimeFormatString(LocalDateTime startTime) {
@@ -709,5 +814,9 @@ public class MypageFrame extends JFrame {
 				}
 			});
 		}
+	} 
+	public static void main(String[] args) {
+		DataBase data = new DataBase();
+		new MypageFrame(data);
 	}
 }
