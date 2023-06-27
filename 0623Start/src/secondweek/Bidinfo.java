@@ -1,3 +1,4 @@
+package secondweek;
 
 import javax.swing.ImageIcon;
 

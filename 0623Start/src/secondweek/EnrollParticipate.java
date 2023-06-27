@@ -1,3 +1,4 @@
+package secondweek;
 
 
 // 유저가 직접 등록한 물품 관련 정보 or
