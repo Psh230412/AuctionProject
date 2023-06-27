@@ -197,7 +197,7 @@ public class RegistFrame extends JFrame {
 						inputProduct.executeUpdate();
 						// 옥션의 시작시간 , 마감시간 추가
 						inputProductDate = conn.prepareStatement(
-								"insert into auction(starttime, deadline) values (?, ?)",
+								"insert into auction(starttime, deadline, finalprice) values (?, ?, ?)",
 								Statement.RETURN_GENERATED_KEYS);
 						LocalDateTime now = LocalDateTime.now(); // 현재 시간
 						Timestamp timestampNow = Timestamp.valueOf(now); // LocalDateTime을 Timestamp로 변환
@@ -224,6 +224,7 @@ public class RegistFrame extends JFrame {
 
 						Timestamp timestampDeadline = Timestamp.valueOf(deadline); // LocalDateTime을 Timestamp로 변환
 						inputProductDate.setTimestamp(2, timestampDeadline);
+						inputProductDate.setObject(3, initialPrice, Types.INTEGER);
 						inputProductDate.executeUpdate();
 
 						// date가 저장된 옥션의 키값
@@ -253,7 +254,7 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo = conn
 									.prepareStatement("UPDATE auction SET setno = ? WHERE auctionno = ?");
 							inputAuctionSetNo.setInt(1, setNo);
-							inputAuctionSetNo.setInt(2, auctionId);
+							inputAuctionSetNo.setObject(2, auctionId);
 							inputAuctionSetNo.executeUpdate();
 						}
 
