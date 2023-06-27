@@ -109,6 +109,7 @@ public class Timer implements ITimer {
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
+				int setNo = rs.getInt("setno");
 				int productNo = rs.getInt("productno");
 				String productName = rs.getString("productname");
 				int productPriceNow = rs.getInt("finalprice");
@@ -119,7 +120,7 @@ public class Timer implements ITimer {
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
-				list.add(new Product(productNo, productName, productPriceNow, productContent, startTime, endTime));
+				list.add(new Product(setNo, productNo, productName, productPriceNow, productContent, startTime, endTime));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -167,6 +168,30 @@ public class Timer implements ITimer {
 					+ "where successbidinfo.auctioncopyno IN (SELECT A.auctionno from copy_auction A\r\n"
 					+ "WHERE A.deadline < current_time() AND A.auctionno NOT IN  (SELECT auctionno FROM participate));");
 
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	@Override
+	public void updatePrice(int setNo, String bid) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("update auction\r\n" + 
+					"set finalprice = ?\r\n" + 
+					"WHERE setno = ?;");
+			stmt.setInt(1, Integer.parseInt(bid));
+			stmt.setInt(2, setNo);
+			
 			stmt.executeUpdate();
 
 		} catch (SQLException e) {
