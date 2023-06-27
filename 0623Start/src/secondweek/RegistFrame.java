@@ -256,6 +256,7 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo.setInt(2, auctionId);
 							inputAuctionSetNo.executeUpdate();
 						}
+
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "올바르게 입력해주십시오", "입력오류", JOptionPane.WARNING_MESSAGE);
 						e2.printStackTrace();
