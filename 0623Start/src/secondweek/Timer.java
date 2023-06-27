@@ -1,3 +1,4 @@
+
 package secondweek;
 
 import java.io.File;
@@ -17,54 +18,6 @@ import java.util.List;
 import dbutil.DBUtil;
 
 public class Timer implements ITimer {
-
-	@Override
-	public LocalDateTime selectTime(int butten) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT `time` FROM timer WHERE no = ?");
-
-			stmt.setInt(1, butten);
-
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				LocalDateTime time = rs.getObject("time", LocalDateTime.class);
-				return time;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return null;
-	}
-
-	@Override
-	public int updateTime(int butten) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "UPDATE timer \r\n" + "SET `time` = `time` + INTERVAL 10 SECOND \r\n" + "WHERE no = 1";
-			stmt = conn.prepareStatement(sql);
-
-			return stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return 0;
-	}
-
-	@Override
 	public List<Product> selectProductId(int userId) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -138,7 +91,6 @@ public class Timer implements ITimer {
 		return list;
 	}
 
-	@Override
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -170,24 +122,28 @@ public class Timer implements ITimer {
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 				
-				File file = new File("images/" + productName + ".jpg");
+//				File file = new File("images/" + productName + ".jpg");
 				list.add(new Product(productNo, productName, productPriceNow, productContent, startTime, endTime));
 
-				if (file.exists()) {
-					continue;
-				}
-
-				Files.copy(image.getBinaryStream(), Paths.get("images/" + productName + ".jpg"));
+//				if (file.exists()) {
+//					continue;
+//				}
+//
+//				Files.copy(image.getBinaryStream(), Paths.get("images/" + productName + ".jpg"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		} 
+//		catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		
+		finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
 		return list;
 	}
+
 }

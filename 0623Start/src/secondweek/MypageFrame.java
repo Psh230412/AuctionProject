@@ -63,8 +63,8 @@ public class MypageFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				new Registration();
-//				setVisible(false);
+				new RegistFrame(data);
+				setVisible(false);
 			}
 		});
 		resgistBtn.setBounds(299, 68, 120, 23);
