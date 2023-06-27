@@ -219,6 +219,8 @@ public class MypageFrame extends JFrame {
 		this.data = data;
 		timer = new Timer();
 
+		timer.inputSuccessbidinfo();
+		timer.setIsBid();
 		 
 		 frame = new JFrame();
 				frame.setSize(1200,800);

@@ -225,6 +225,8 @@ public class RegistFrame extends JFrame {
 					PreparedStatement inputAuctionSetNo = null;
 					ResultSet getRecentProductId = null; // 물건의 정보값(id) 가져오기
 					ResultSet getRecentSetNo = null; // 물건의 정보값(id) 가져오기
+					Connection connForCopy = null;
+					PreparedStatement stmt = null;
 
 					try {
 						conn = DBUtil.getConnection();
@@ -323,6 +325,22 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo.setObject(2, auctionId);
 							inputAuctionSetNo.executeUpdate();
 						}
+						
+						connForCopy = DBUtil.getConnection();
+						
+						stmt = connForCopy.prepareStatement("INSERT INTO copy_auction\r\n" + 
+								"						SELECT *\r\n" + 
+								"						FROM auction\r\n" + 
+								"						WHERE auctionno > (SELECT MAX(auctionno) \r\n" + 
+								"						               FROM copy_auction);");
+						
+						
+						
+						stmt.executeUpdate();
+						
+						
+						
+						
 
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "올바르게 입력해주십시오", "입력오류", JOptionPane.WARNING_MESSAGE);
@@ -335,6 +353,8 @@ public class RegistFrame extends JFrame {
 					} catch (SQLException e2) {
 						e2.printStackTrace();
 					} finally {
+						DBUtil.close(stmt);
+						DBUtil.close(connForCopy);
 						DBUtil.close(inputAuctionSetNo);
 						DBUtil.close(getRecentSetNo);
 						DBUtil.close(recentEnrollId);
@@ -344,6 +364,7 @@ public class RegistFrame extends JFrame {
 						DBUtil.close(inputProductDate);
 						DBUtil.close(inputProduct);
 						DBUtil.close(conn);
+						
 					}
 				} else {
 				}

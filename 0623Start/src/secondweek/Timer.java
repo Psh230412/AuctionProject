@@ -132,9 +132,12 @@ public class Timer implements ITimer {
 		return list;
 	}
 
+	
+	
 	public void inputSuccessbidinfo() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		PreparedStatement stmtForDelete = null;
 
 		try {
 			conn = DBUtil.getConnection();
@@ -147,10 +150,19 @@ public class Timer implements ITimer {
 					+ "    AND C.productno = B.productno\r\n" + ")");
 
 			stmt.executeUpdate();
+//			deadline 지난것은 successbidinfo로 보내고 auction에서 삭제 시킨다.
+			
+			stmtForDelete = conn.prepareStatement("DELETE FROM auction\r\n" + 
+					"WHERE deadline<current_timestamp();");
+			
+			stmtForDelete.executeUpdate();
+			
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-
+			DBUtil.close(stmtForDelete);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
@@ -163,6 +175,7 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 
+			
 			stmt = conn.prepareStatement("UPDATE successbidinfo\r\n" + "set isbid = 0\r\n"
 					+ "where successbidinfo.auctioncopyno IN (SELECT A.auctionno from copy_auction A\r\n"
 					+ "WHERE A.deadline < current_time() AND A.auctionno NOT IN  (SELECT auctionno FROM participate));");
