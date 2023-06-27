@@ -193,7 +193,6 @@ public class MypageFrame extends JFrame {
 		prices[2] = lblPrice13;
 		prices[3] = lblPrice14;
 		prices[4] = lblPrice15;
-
 		// 입찰패널 가격라벨
 		prices[5] = lblPrice21;
 		prices[6] = lblPrice22;
