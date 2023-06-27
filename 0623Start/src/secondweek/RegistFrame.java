@@ -1,15 +1,14 @@
 package secondweek;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,10 +17,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -30,8 +30,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import dbutil.DBUtil;
 
@@ -40,7 +45,6 @@ public class RegistFrame extends JFrame {
 	private JTextField detailBox;
 	private JTextField productNameInput;
 	private JTextField productPriceInput;
-	private LocalDate ldt;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -63,17 +67,24 @@ public class RegistFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JTextField imageRoot = new JTextField("이미지등록");
-		imageRoot.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				imageRoot.setText("");
-			}
-		});
-		imageRoot.setBounds(104, 293, 177, 31);
+		JLabel registeredImage = new JLabel(); // 미리보기
+		registeredImage.setBounds(35, 54, 400, 400);
+		contentPane.add(registeredImage);
+
+		JTextField imageRoot = new JTextField();
+		imageRoot.setVisible(false);
 		contentPane.add(imageRoot);
 
+		JLabel imageVolume = new JLabel("0 / 2mb");
+
+		imageVolume.setBounds(104, 343, 100, 50);
+		contentPane.add(imageVolume);
+
+		Font myFont1 = new Font("Serif", Font.BOLD, 20);
+		imageVolume.setFont(myFont1);
+
 		JButton imageBtn = new JButton("파일 경로");
-		imageBtn.setBounds(104, 253, 100, 30);
+		imageBtn.setBounds(104, 303, 100, 30);
 		contentPane.add(imageBtn);
 		imageBtn.addActionListener(new ActionListener() {
 			@Override
@@ -85,9 +96,36 @@ public class RegistFrame extends JFrame {
 				int returnValue = fileChooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
+					double bytes = selectedFile.length();
+					double kilobytes = bytes / 1024;
+					double megabytes = kilobytes / 1024;
+
+					imageVolume.setText(String.format("%.2f / 2MB", megabytes));
+
+					if (megabytes > 2) {
+						imageVolume.setForeground(Color.RED);
+					} else {
+						imageVolume.setForeground(Color.BLACK);
+					}
+					BufferedImage originalImage;
+					try {
+						originalImage = ImageIO.read(selectedFile);
+
+						int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+
+						BufferedImage resizedImage = resizeImage(originalImage, type);
+						ImageIcon imageIcon = new ImageIcon(resizedImage);
+
+						registeredImage.setIcon(imageIcon);
+
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+
 					imageRoot.setText(selectedFile.getAbsolutePath());
 				}
 			}
+
 		});
 		detailBox = new JTextField(); // 상세정보 입력칸
 		detailBox.setBounds(287, 260, 391, 154);
@@ -98,32 +136,20 @@ public class RegistFrame extends JFrame {
 		registrationBtn.setBounds(301, 483, 97, 23);
 		contentPane.add(registrationBtn);
 
-		String[] auctionTimeOptions = { "1시간", "4시간", "24시간", "사용자 정의" };
+		String[] auctionTimeOptions = { "1시간", "4시간", "24시간" };
 		JComboBox<String> auctionTimeBox = new JComboBox<>(auctionTimeOptions);
-		auctionTimeBox.setBounds(240, 200, 70, 21); // 위치와 크기를 설정해주세요.
+		auctionTimeBox.setBounds(240, 200, 100, 30); // 위치와 크기를 설정해주세요.
 		contentPane.add(auctionTimeBox);
 
-		JTextField hourInput = new JTextField();
-		hourInput.setBounds(340, 200, 100, 21); // 위치와 크기를 설정해주세요.
-		contentPane.add(hourInput);
-
-		JLabel hourLabel = new JLabel("사용자 입력(시간)");
-		hourLabel.setBounds(450, 200, 100, 21);
+		JLabel hourLabel = new JLabel("마감시간 선택");
+		hourLabel.setBounds(230, 170, 100, 21);
 		contentPane.add(hourLabel);
-
-		JTextField minuteInput = new JTextField();
-		minuteInput.setBounds(340, 230, 100, 21); // 위치와 크기를 설정해주세요.
-		contentPane.add(minuteInput);
-
-		JLabel minuteLabel = new JLabel("사용자 입력(분)");
-		minuteLabel.setBounds(450, 230, 100, 21);
-		contentPane.add(minuteLabel);
 
 		registrationBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int response = JOptionPane.showConfirmDialog(null, "정말로 등록하시겠습니까?", "예",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				int response = JOptionPane.showConfirmDialog(null, "정말로 등록하시겠습니까?", "예", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
 				if (response == JOptionPane.YES_OPTION) {
 					Connection conn = null;
 					PreparedStatement inputProduct = null;
@@ -145,7 +171,7 @@ public class RegistFrame extends JFrame {
 						Integer initialPrice = Integer.valueOf(productPriceInput.getText());
 						File imageFile = new File(path); // 사용자가 입력한 파일 경로
 						// 파일 용량 제한 (2mb)
-						if (imageFile.length() > 2 * 1024 * 1024) { // 파일의 크기가 2MB보다 클때
+						if (imageFile.length() > 2 * 1024 * 1024) { // 파일의 크기가 3MB보다 클때
 							JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
 							return;
 						}
@@ -180,27 +206,21 @@ public class RegistFrame extends JFrame {
 						String selectedOption = (String) auctionTimeBox.getSelectedItem();
 						LocalDateTime deadline;
 
-						if ("사용자 정의".equals(selectedOption)) {
-							int hoursToAdd = Integer.parseInt(hourInput.getText()); // 사용자가 입력한 시간을 가져옵니다.
-							int minutesToAdd = Integer.parseInt(minuteInput.getText()); // 사용자가 입력한 분을 가져옵니다.
-							deadline = now.plusHours(hoursToAdd).plusMinutes(minutesToAdd); // 종료 시간
-						} else {
-							int hoursToAdd;
-							switch (selectedOption) {
-							case "1시간":
-								hoursToAdd = 1;
-								break;
-							case "4시간":
-								hoursToAdd = 4;
-								break;
-							case "24시간":
-								hoursToAdd = 24;
-								break;
-							default:
-								throw new IllegalArgumentException("존재하지않는 옵션입니다: " + selectedOption);
-							}
-							deadline = now.plusHours(hoursToAdd);
+						int hoursToAdd;
+						switch (selectedOption) {
+						case "1시간":
+							hoursToAdd = 1;
+							break;
+						case "4시간":
+							hoursToAdd = 4;
+							break;
+						case "24시간":
+							hoursToAdd = 24;
+							break;
+						default:
+							throw new IllegalArgumentException("존재하지않는 옵션입니다: " + selectedOption);
 						}
+						deadline = now.plusHours(hoursToAdd);
 
 						Timestamp timestampDeadline = Timestamp.valueOf(deadline); // LocalDateTime을 Timestamp로 변환
 						inputProductDate.setTimestamp(2, timestampDeadline);
@@ -219,7 +239,6 @@ public class RegistFrame extends JFrame {
 						getRecentProductId = recentProductId.executeQuery();
 						while (getRecentProductId.next()) {
 							int productNum = getRecentProductId.getInt("MAX(productno)");
-
 							inputTogether = conn
 									.prepareStatement("insert into enrollmentinfo(userno,productno) values(?,?)");
 							inputTogether.setInt(1, currentLoginUserId);
@@ -238,6 +257,12 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo.executeUpdate();
 						}
 
+					} catch (NumberFormatException e2) {
+						JOptionPane.showMessageDialog(null, "올바르게 입력해주십시오", "입력오류", JOptionPane.WARNING_MESSAGE);
+						e2.printStackTrace();
+					} catch (IIOException e2) {
+						JOptionPane.showMessageDialog(null, "파일의 경로가 잘못되었습니다.", "입력오류", JOptionPane.WARNING_MESSAGE);
+						e2.printStackTrace();
 					} catch (IOException e2) {
 						e2.printStackTrace();
 					} catch (SQLException e2) {
@@ -257,14 +282,15 @@ public class RegistFrame extends JFrame {
 				}
 			}
 		});
-
 		JButton returnMain = new JButton("메인화면가기");
 		returnMain.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
 				setVisible(false);
 			}
 		});
+
 		returnMain.setBounds(35, 21, 97, 23);
 		contentPane.add(returnMain);
 
@@ -288,6 +314,15 @@ public class RegistFrame extends JFrame {
 
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	public static BufferedImage resizeImage(BufferedImage originalImage, int type) {
+		BufferedImage resizedImage = new BufferedImage(200, 200, type);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, 400, 400, null);
+		g.dispose();
+
+		return resizedImage;
 	}
 
 }
