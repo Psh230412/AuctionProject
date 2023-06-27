@@ -222,11 +222,17 @@ public class MypageFrame extends JFrame {
 
 		JButton resetBtn = new JButton("개인정보변경");
 		resetBtn.setBounds(400, 123, 149, 67);
+		resetBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ChangeInformation(data);
+				setVisible(false);
+			}
+		});
 		pnl.add(resetBtn);
 
 		JButton resgistBtn = new JButton("물품등록하기");
 		resgistBtn.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new RegistFrame(data);

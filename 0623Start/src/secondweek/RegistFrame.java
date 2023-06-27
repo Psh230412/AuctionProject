@@ -29,20 +29,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import dbutil.DBUtil;
 
 public class RegistFrame extends JFrame {
 	private JPanel contentPane;
-	private JTextField detailBox;
+	private JTextArea detailBox;
 	private JTextField productNameInput;
 	private JTextField productPriceInput;
 
@@ -127,10 +123,11 @@ public class RegistFrame extends JFrame {
 			}
 
 		});
-		detailBox = new JTextField(); // 상세정보 입력칸
+		detailBox = new JTextArea(5,20); // 상세정보 입력칸
 		detailBox.setBounds(287, 260, 391, 154);
 		contentPane.add(detailBox);
 		detailBox.setColumns(10);
+		detailBox.setLineWrap(true);
 
 		JButton registrationBtn = new JButton("등록하기");
 		registrationBtn.setBounds(301, 483, 97, 23);
@@ -168,6 +165,9 @@ public class RegistFrame extends JFrame {
 						String path = imageRoot.getText();
 						String productname = productNameInput.getText();
 						String detailinfo = detailBox.getText();
+						String sanitizedText = detailinfo.replace("\n", "").replace("\r", "");
+						
+						
 						Integer initialPrice = Integer.valueOf(productPriceInput.getText());
 						File imageFile = new File(path); // 사용자가 입력한 파일 경로
 						// 파일 용량 제한 (2mb)
@@ -191,7 +191,7 @@ public class RegistFrame extends JFrame {
 								"insert into product(productname, initialprice, detailinfo, image) values (?,?,?,?)");
 						inputProduct.setString(1, productname);
 						inputProduct.setObject(2, initialPrice, Types.INTEGER);
-						inputProduct.setString(3, detailinfo);
+						inputProduct.setString(3, sanitizedText);
 						inputProduct.setBytes(4, imageInByte);
 
 						inputProduct.executeUpdate();
