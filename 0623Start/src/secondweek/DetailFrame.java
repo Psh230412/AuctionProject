@@ -33,10 +33,6 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import dbutil.DBUtil;
-import secondweek.AuctionFrame;
-import secondweek.DataBase;
-import secondweek.Product;
-import secondweek.Timer;
 
 public class DetailFrame extends JFrame {
 	private Scheduler scheduler;
@@ -66,7 +62,22 @@ public class DetailFrame extends JFrame {
 		JPanel pnl = new JPanel();
 
 		lblImage = new JLabel("이미지");
-		lblImage.setBounds(168, 230, 94, 15);
+//		lblImage.setBounds(168, 230, 94, 15);
+		lblImage.setBounds(50, 200, 300, 300);
+		
+		for(int i=0;i<ImageRetriever.llistForDetail.size();i++) {
+			if(ImageRetriever.llistForDetail.get(i).getProductno()==data.getProduct().getProductNo()) {
+				
+				ImageIcon imageIcon = ImageRetriever.llistForDetail.get(i).getImageicon();
+				if (imageIcon != null) {
+					lblImage.setIcon(iconSize(imageIcon));
+				}
+			}
+			
+		}
+		
+		
+		
 		lblName = new JLabel("제품명");
 		lblName.setBounds(514, 150, 94, 15);
 		lblDetail = new JLabel("상세설명");

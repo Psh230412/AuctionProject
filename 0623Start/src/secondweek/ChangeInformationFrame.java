@@ -281,7 +281,6 @@ public class ChangeInformationFrame extends JFrame {
 		passwordIdentifyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		);
 			}
 		});
 		 JButton returnBtn = new JButton("뒤로가기");
@@ -446,7 +445,7 @@ public class ChangeInformationFrame extends JFrame {
 		PlainDocument docLast = (PlainDocument) phoneNumberLast.getDocument();
 		docLast.setDocumentFilter(new NumberOnlyFilter(4));
 		
-		JButton informationResetBtn = new JButton();
+		JButton informationResetBtn = new JButton("초기화");
 		ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
 		informationResetBtn.setContentAreaFilled(false); 
 		informationResetBtn.setBorderPainted(false);
@@ -468,7 +467,6 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		
 
-		JButton informationResetBtn = new JButton("초기화");
 		informationResetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			    nickNameText.setText("");
