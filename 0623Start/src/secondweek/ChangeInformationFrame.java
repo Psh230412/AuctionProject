@@ -1,29 +1,34 @@
 package secondweek;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
+
+import com.sun.prism.paint.Color;
 
 import dbutil.DBUtil;
 
@@ -38,50 +43,143 @@ public class ChangeInformationFrame extends JFrame {
 	private JTextField newPassword;
 	private JTextField newPasswordMatch;
 	private int selectedGender;
+	private JRadioButton manBtn;
+	private JRadioButton womanBtn;
+	private JComboBox<String> bigAreaCombo = new JComboBox();
+	private JComboBox<String> mediumAreaCombo = new JComboBox();
+	private JComboBox<String> smallAreaCombo = new JComboBox();
 
 	public int getSelectedGender() {
 		return selectedGender;
 	}
-	
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ChangeInformationFrame frame = new ChangeInformationFrame(null);
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+
 	class NumberOnlyFilter extends DocumentFilter {
-		private int maxLength;  // 최대 입력 길이
+		private int maxLength; // 최대 입력 길이
 
-	    public NumberOnlyFilter(int maxLength) {
-	        this.maxLength = maxLength;
-	    }
-		
-	    @Override
-	    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-	        // 입력 문자열이 숫자인 경우에만 삽입을 허용합니다.
-	        if (string.matches("\\d") && (fb.getDocument().getLength() + string.length()) <= maxLength) {
-	            super.insertString(fb, offset, string, attr);
-	        }
-	    }
+		public NumberOnlyFilter(int maxLength) {
+			this.maxLength = maxLength;
+		}
 
-	    @Override
-	    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-	        // 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
-	        if (text.matches("\\d") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
-	            super.replace(fb, offset, length, text, attrs);
-	        }
-	    }
+		@Override
+		public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 삽입을 허용합니다.
+			if (string.matches("\\d+") && (fb.getDocument().getLength() + string.length()) <= maxLength) {
+				super.insertString(fb, offset, string, attr);
+			}
+		}
+
+		@Override
+		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
+			if (text.matches("\\d+") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
+				super.replace(fb, offset, length, text, attrs);
+			}
+		}
 	}
-	
-	
-	
+
+	// 중복되는 닉네임 있는지 검색후 해당하는 개수 반환
+	public int searchNickName(String newNickName) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT COUNT(*) AS count FROM user WHERE nickname = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, newNickName);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("count");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return 1;
+	}
+
+	// 생성 가능한 닉네임인지?
+	public boolean correctNickName(String newNickName) {
+		if (searchNickName(newNickName) == 0 && matchNickName(newNickName)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 닉네임 조건 - 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하
+	public boolean matchNickName(String newNickName) {
+		Pattern p = Pattern.compile("[\\w\\uAC00-\\uD7AF]{4,20}");
+		Matcher m = p.matcher(newNickName);
+		return m.matches();
+	}
+
+	// 비밀번호 조건 - 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하
+	public boolean MatchPassword(String newPassword) {
+		Pattern p = Pattern.compile("[a-z+A-z+0-9+]{10,20}");
+		Matcher m = p.matcher(newPassword);
+		return m.matches();
+	}
+
+	public void returnOriginal(DataBase data) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT * FROM user where userno = ?";
+			stmt = conn.prepareStatement(sql);
+			int nowUser = data.getCurrentUser().getNo();
+			stmt.setInt(1, nowUser);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				String originalNickName =  rs.getString("nickname");
+				nickNameText.setText(originalNickName);
+				
+			    int gender = rs.getInt("gender");
+	            if (gender == 1) {
+	                manBtn.setSelected(true); // 남성 선택
+	            } else if (gender == 0) {
+	                womanBtn.setSelected(true); // 여성 선택
+	            }
+	            
+				String originalPhoneNumber = rs.getString("phonenumber");
+				String middle = originalPhoneNumber.substring(3,7);
+				String last = originalPhoneNumber.substring(7,11);
+				phoneNumberCenter.setText(middle);
+				phoneNumberLast.setText(last);
+				
+				String bigArea = rs.getString("bigarea");
+				String mediumArea = rs.getString("mediumarea");
+				String detailArea = rs.getString("detailarea");
+				if(bigAreaCombo.getItemCount() != 0 && bigAreaCombo.getSelectedItem().equals(bigArea)) {
+				    bigAreaCombo.setSelectedItem(bigArea);
+				}
+				if(mediumAreaCombo.getItemCount() != 0 && mediumAreaCombo.getSelectedItem().equals(mediumArea)) {
+				    mediumAreaCombo.setSelectedItem(mediumArea);
+				}
+				if(smallAreaCombo.getItemCount() != 0 && smallAreaCombo.getSelectedItem().equals(detailArea)) {
+				    smallAreaCombo.setSelectedItem(detailArea);
+				}
+				
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
 	public ChangeInformationFrame(DataBase data) {
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 735, 609);
 		contentPane = new JPanel();
@@ -95,41 +193,57 @@ public class ChangeInformationFrame extends JFrame {
 		contentPane.add(nickNameText);
 		nickNameText.setColumns(10);
 
-//		idText = new JTextField();
-//		idText.setBounds(336, 66, 370, 34);
-//		contentPane.add(idText);
-//		idText.setColumns(10);
+		idText = new JTextField();
+		idText.setBounds(336, 66, 370, 34);
+		contentPane.add(idText);
+		idText.setColumns(10);
 
-		JRadioButton manBtn = new JRadioButton("남성");
+		JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
+		errorLabel.setBounds(10, 10, 200, 30);
+		contentPane.add(errorLabel);
+
+		JButton errorCheckBtn = new JButton();
+		errorCheckBtn.setBounds(10, 50, 50, 50);
+
+		errorCheckBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nickName = nickNameText.getText();
+				if (matchNickName(nickName) == false) {
+					errorLabel.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
+				} else if (searchNickName(nickName) != 0) {
+					errorLabel.setText("이미 존재하는 닉네임입니다.");
+				} else if (correctNickName(nickName) == true) {
+					errorLabel.setText("사용가능한 닉네임 입니다.");
+				}
+			}
+		});
+		contentPane.add(errorCheckBtn);
+
+		manBtn = new JRadioButton("남성");
 		manBtn.setBounds(596, 106, 49, 23);
 		contentPane.add(manBtn);
 
-		JRadioButton womanBtn = new JRadioButton("여성");
+		womanBtn = new JRadioButton("여성");
 		womanBtn.setBounds(657, 106, 49, 23);
 		contentPane.add(womanBtn);
 		ButtonGroup genderGroup = new ButtonGroup();
 		genderGroup.add(manBtn);
 		genderGroup.add(womanBtn);
-		
-		
+
 		manBtn.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        // 남성 선택 시 1 반환
-		        selectedGender = 1;
-		    }
+			public void actionPerformed(ActionEvent e) {
+				// 남성 선택 시 1 반환
+				selectedGender = 1;
+			}
 		});
 
 		womanBtn.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        // 여성 선택 시 0 반환
-		        selectedGender = 0;
-		    }
+			public void actionPerformed(ActionEvent e) {
+				// 여성 선택 시 0 반환
+				selectedGender = 0;
+			}
 		});
-		// 지역 콤보 박스 생성
-		JComboBox<String> bigAreaCombo = new JComboBox();
-		JComboBox<String> mediumAreaCombo = new JComboBox();
-		JComboBox<String> smallAreaCombo = new JComboBox();
-
 		bigAreaCombo.setBounds(336, 176, 118, 21);
 		contentPane.add(bigAreaCombo);
 		mediumAreaCombo.setBounds(466, 176, 118, 21);
@@ -148,22 +262,22 @@ public class ChangeInformationFrame extends JFrame {
 		for (String bigArea : bigAreas) {
 			bigAreaCombo.addItem(bigArea);
 		}
-		
+
 		// 대분류 -> 중분류 연결
 		bigAreaCombo.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String selectedBigArea = (String) bigAreaCombo.getSelectedItem();
-				
+
 				mediumAreaCombo.removeAllItems();
 				smallAreaCombo.removeAllItems();
-				
+
 				List<String> mediumAreas = getMediumAreas(selectedBigArea);
 				for (String mediumArea : mediumAreas) {
 					mediumAreaCombo.addItem(mediumArea);
 				}
-				
+
 			}
 		});
 
@@ -171,13 +285,12 @@ public class ChangeInformationFrame extends JFrame {
 		mediumAreaCombo.addActionListener(e -> {
 			String selectedMediumArea = (String) mediumAreaCombo.getSelectedItem();
 			smallAreaCombo.removeAllItems();
-			
-			
-			if(selectedMediumArea != null) {
-			List<String> smallAreas = getSmallAreas(selectedMediumArea);
-			for (String smallArea : smallAreas) {
-				smallAreaCombo.addItem(smallArea);
-			}
+
+			if (selectedMediumArea != null) {
+				List<String> smallAreas = getSmallAreas(selectedMediumArea);
+				for (String smallArea : smallAreas) {
+					smallAreaCombo.addItem(smallArea);
+				}
 			}
 		});
 		// 휴대폰 번호 입력
@@ -185,7 +298,7 @@ public class ChangeInformationFrame extends JFrame {
 		phoneNumberCenter.setBounds(596, 135, 49, 21);
 		contentPane.add(phoneNumberCenter);
 		phoneNumberCenter.setColumns(10);
-		
+
 		PlainDocument docCenter = (PlainDocument) phoneNumberCenter.getDocument();
 		docCenter.setDocumentFilter(new NumberOnlyFilter(4));
 
@@ -193,10 +306,10 @@ public class ChangeInformationFrame extends JFrame {
 		phoneNumberLast.setColumns(10);
 		phoneNumberLast.setBounds(657, 135, 49, 21);
 		contentPane.add(phoneNumberLast);
-		
+
 		PlainDocument docLast = (PlainDocument) phoneNumberLast.getDocument();
 		docLast.setDocumentFilter(new NumberOnlyFilter(4));
-		
+
 		JButton informationResetBtn = new JButton("초기화");
 		informationResetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -215,18 +328,22 @@ public class ChangeInformationFrame extends JFrame {
 					PreparedStatement changeUserInformation = null;
 					try {
 						conn = DBUtil.getConnection();
-						
+
 						String nickName = nickNameText.getText();
+						if (correctNickName(nickName) == false) {
+							JOptionPane.showMessageDialog(null, "아이디를 다시 확인바랍니다", "입력오류", JOptionPane.WARNING_MESSAGE);
+							return;
+						}
 						String phoneNumber = "010" + phoneNumberCenter.getText() + phoneNumberLast.getText();
 						String bigArea = (String) bigAreaCombo.getSelectedItem();
 						String mediumArea = (String) mediumAreaCombo.getSelectedItem();
 						String detailArea = (String) smallAreaCombo.getSelectedItem();
 						int loginUser = data.getCurrentUser().getNo();
-						
-						changeUserInformation = conn.prepareStatement(
-								"update user set nickname = ?, phonenumber = ?, bigarea = ?,"
-								+ "mediumarea = ?, detailarea = ?  where no = ?");
-						
+
+						changeUserInformation = conn
+								.prepareStatement("update user set nickname = ?, phonenumber = ?, bigarea = ?,"
+										+ "mediumarea = ?, detailarea = ?  where userno = ?");
+
 						changeUserInformation.setString(1, nickName);
 						// changeUserInformation.setString(2, id);
 						changeUserInformation.setString(2, phoneNumber);
@@ -234,8 +351,7 @@ public class ChangeInformationFrame extends JFrame {
 						changeUserInformation.setString(4, mediumArea);
 						changeUserInformation.setString(5, detailArea);
 						changeUserInformation.setInt(6, loginUser);
-						
-						
+
 						changeUserInformation.executeUpdate();
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "올바르게 입력해주십시오", "입력오류", JOptionPane.WARNING_MESSAGE);
@@ -252,7 +368,6 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		changeBtn.setBounds(624, 236, 82, 34);
 		contentPane.add(changeBtn);
-
 
 		nowPassword = new JTextField();
 		nowPassword.setBounds(336, 352, 370, 34);
@@ -280,6 +395,9 @@ public class ChangeInformationFrame extends JFrame {
 		JButton passwordChangeBtn = new JButton("저장");
 		passwordChangeBtn.setBounds(624, 510, 82, 34);
 		contentPane.add(passwordChangeBtn);
+
+		returnOriginal(data);
+
 	}
 
 	private static List<String> getMediumAreas(String bigArea) {

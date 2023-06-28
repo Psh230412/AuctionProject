@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -243,24 +244,14 @@ public class RegistFrame extends JFrame {
 							JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
 							return;
 						}
-						// 파일 크기 100,100으로 조절
-						BufferedImage originalImage = ImageIO.read(imageFile);
-						BufferedImage resizedImage = new BufferedImage(100, 100, originalImage.getType());
-						Graphics2D g = resizedImage.createGraphics();
-						g.drawImage(originalImage, 0, 0, 100, 100, null);
-						g.dispose();
-						// Convert the resized image to a byte array
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-						ImageIO.write(resizedImage, "jpg", baos);
-						
-						byte[] imageInByte = baos.toByteArray();
+						byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
 						// 정보 sql에 등록
 						inputProduct = conn.prepareStatement(
 								"insert into product(productname, initialprice, detailinfo, image) values (?,?,?,?)");
 						inputProduct.setString(1, productname);
 						inputProduct.setObject(2, initialPrice, Types.INTEGER);
 						inputProduct.setString(3, sanitizedText);
-						inputProduct.setBytes(4, imageInByte);
+						inputProduct.setBytes(4, imageBytes);
 
 						inputProduct.executeUpdate();
 						// 옥션의 시작시간 , 마감시간 추가
