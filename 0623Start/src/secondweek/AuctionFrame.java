@@ -182,34 +182,8 @@ public class AuctionFrame extends JFrame {
 		JPanel pnl9 = new JPanel();
 		pnl9.setBounds(720, 520, 200, 300);
 		JPanel pnl10 = new JPanel();
-<<<<<<< HEAD
-		pnl10.setBounds(940, 470, 200, 250);
-		JButton viewProductBtn10 = new JButton("경매보기");
-
-		JButton[] btn = { viewProductBtn1, viewProductBtn2, viewProductBtn3, viewProductBtn4, viewProductBtn5,
-				viewProductBtn6, viewProductBtn7, viewProductBtn8, viewProductBtn9, viewProductBtn10 };
-
-		for (int i = 0; i < btn.length; i++) {
-			int index = i;
-			btn[i].addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-
-					
-					List<Product> products = timer.selectProduct();
-					if (products.size() >= index) {
-						Product product = products.get(index);
-						data.setProduct(product);
-						new DetailFrame(data);
-						frame.setVisible(false);
-					}
-				}
-			});
-		}
-=======
 		pnl10.setBounds(940, 520, 200, 300);
 		
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 		lblImage1 = new JLabel("");
 		pnl1.add(lblImage1);
 
@@ -494,12 +468,9 @@ public class AuctionFrame extends JFrame {
 					lblPrice1.setPreferredSize(new Dimension(200, lblPrice1.getPreferredSize().height));
 					lblPrice1.setHorizontalAlignment(SwingConstants.CENTER);
 
-<<<<<<< HEAD
-=======
 					lblName1.setText(timer.selectProduct().get(0).getProductName());
 					lblName1.setPreferredSize(new Dimension(200, lblName1.getPreferredSize().height));
 					lblName1.setHorizontalAlignment(SwingConstants.CENTER);
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(0);
 					if (imageIcon != null) {
 						lblImage1.setIcon(iconSize(imageIcon));
@@ -513,11 +484,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 1: {
-<<<<<<< HEAD
-					lblPrice2.setText(Integer.toString(timer.selectProduct().get(1).getProductPriceNow()));
-
-
-=======
 					lblPrice2.setText(formatInt(timer.selectProduct().get(1).getProductPriceNow()));
 					lblPrice2.setPreferredSize(new Dimension(200, lblPrice2.getPreferredSize().height));
 					lblPrice2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -526,7 +492,6 @@ public class AuctionFrame extends JFrame {
 					lblName2.setPreferredSize(new Dimension(200, lblName2.getPreferredSize().height));
 					lblName2.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(1);
 					if (imageIcon != null) {
 						lblImage2.setIcon(iconSize(imageIcon));
@@ -534,16 +499,12 @@ public class AuctionFrame extends JFrame {
 					String result2 = duration(timer.selectProduct().get(1).getEndTime(), now);
 					lblTime2.setText(result2);
 					lblTime2.setPreferredSize(new Dimension(200, lblTime2.getPreferredSize().height));
+					lblTime2.setHorizontalAlignment(SwingConstants.CENTER);
 					
 					btns[i].setVisible(true);
 					break;
 				}
 				case 2: {
-<<<<<<< HEAD
-					lblPrice3.setText(Integer.toString(timer.selectProduct().get(2).getProductPriceNow()));
-
-
-=======
 					lblPrice3.setText(formatInt(timer.selectProduct().get(2).getProductPriceNow()));
 					lblPrice3.setPreferredSize(new Dimension(200, lblPrice3.getPreferredSize().height));
 					lblPrice3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -552,7 +513,6 @@ public class AuctionFrame extends JFrame {
 					lblName3.setPreferredSize(new Dimension(200, lblName3.getPreferredSize().height));
 					lblName3.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(2);
 					if (imageIcon != null) {
 						lblImage3.setIcon(iconSize(imageIcon));
@@ -567,10 +527,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 3: {
-<<<<<<< HEAD
-					lblPrice4.setText(Integer.toString(timer.selectProduct().get(3).getProductPriceNow()));
-
-=======
 					lblPrice4.setText(formatInt(timer.selectProduct().get(3).getProductPriceNow()));
 					lblPrice4.setPreferredSize(new Dimension(200, lblPrice4.getPreferredSize().height));
 					lblPrice4.setHorizontalAlignment(SwingConstants.CENTER);
@@ -579,7 +535,6 @@ public class AuctionFrame extends JFrame {
 					lblName4.setPreferredSize(new Dimension(200, lblName4.getPreferredSize().height));
 					lblName4.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(3);
 					if (imageIcon != null) {
 						lblImage4.setIcon(iconSize(imageIcon));
@@ -594,10 +549,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 4: {
-<<<<<<< HEAD
-					lblPrice5.setText(Integer.toString(timer.selectProduct().get(4).getProductPriceNow()));
-
-=======
 					lblPrice5.setText(formatInt(timer.selectProduct().get(4).getProductPriceNow()));
 					lblPrice5.setPreferredSize(new Dimension(200, lblPrice5.getPreferredSize().height));
 					lblPrice5.setHorizontalAlignment(SwingConstants.CENTER);
@@ -606,7 +557,6 @@ public class AuctionFrame extends JFrame {
 					lblName5.setPreferredSize(new Dimension(200, lblName5.getPreferredSize().height));
 					lblName5.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(4);
 					if (imageIcon != null) {
 						lblImage5.setIcon(iconSize(imageIcon));
@@ -621,11 +571,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 5: {
-<<<<<<< HEAD
-					lblPrice6.setText(Integer.toString(timer.selectProduct().get(5).getProductPriceNow()));
-
-
-=======
 					lblPrice6.setText(formatInt(timer.selectProduct().get(5).getProductPriceNow()));
 					lblPrice6.setPreferredSize(new Dimension(200, lblPrice6.getPreferredSize().height));
 					lblPrice6.setHorizontalAlignment(SwingConstants.CENTER);
@@ -634,7 +579,6 @@ public class AuctionFrame extends JFrame {
 					lblName6.setPreferredSize(new Dimension(200, lblName6.getPreferredSize().height));
 					lblName6.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(5);
 					if (imageIcon != null) {
 						lblImage6.setIcon(iconSize(imageIcon));
@@ -649,10 +593,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 6: {
-<<<<<<< HEAD
-					lblPrice7.setText(Integer.toString(timer.selectProduct().get(6).getProductPriceNow()));
-
-=======
 					lblPrice7.setText(formatInt(timer.selectProduct().get(6).getProductPriceNow()));
 					lblPrice7.setPreferredSize(new Dimension(200, lblPrice7.getPreferredSize().height));
 					lblPrice7.setHorizontalAlignment(SwingConstants.CENTER);
@@ -661,7 +601,6 @@ public class AuctionFrame extends JFrame {
 					lblName7.setPreferredSize(new Dimension(200, lblName7.getPreferredSize().height));
 					lblName7.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(6);
 					if (imageIcon != null) {
 						lblImage7.setIcon(iconSize(imageIcon));
@@ -675,11 +614,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 7: {
-<<<<<<< HEAD
-					lblPrice8.setText(Integer.toString(timer.selectProduct().get(7).getProductPriceNow()));
-
-
-=======
 					lblPrice8.setText(formatInt(timer.selectProduct().get(7).getProductPriceNow()));
 					lblPrice8.setPreferredSize(new Dimension(200, lblPrice8.getPreferredSize().height));
 					lblPrice8.setHorizontalAlignment(SwingConstants.CENTER);
@@ -688,7 +622,6 @@ public class AuctionFrame extends JFrame {
 					lblName8.setPreferredSize(new Dimension(200, lblName8.getPreferredSize().height));
 					lblName8.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(7);
 					if (imageIcon != null) {
 						lblImage8.setIcon(iconSize(imageIcon));
@@ -702,10 +635,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 8: {
-<<<<<<< HEAD
-					lblPrice9.setText(Integer.toString(timer.selectProduct().get(8).getProductPriceNow()));
-
-=======
 					lblPrice9.setText(formatInt(timer.selectProduct().get(8).getProductPriceNow()));
 					lblPrice9.setPreferredSize(new Dimension(200, lblPrice9.getPreferredSize().height));
 					lblPrice9.setHorizontalAlignment(SwingConstants.CENTER);
@@ -714,7 +643,6 @@ public class AuctionFrame extends JFrame {
 					lblName9.setPreferredSize(new Dimension(200, lblName9.getPreferredSize().height));
 					lblName9.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(8);
 					if (imageIcon != null) {
 						lblImage9.setIcon(iconSize(imageIcon));
@@ -728,10 +656,6 @@ public class AuctionFrame extends JFrame {
 					break;
 				}
 				case 9: {
-<<<<<<< HEAD
-					lblPrice10.setText(Integer.toString(timer.selectProduct().get(9).getProductPriceNow()));
-
-=======
 					lblPrice10.setText(formatInt(timer.selectProduct().get(9).getProductPriceNow()));
 					lblPrice10.setPreferredSize(new Dimension(200, lblPrice10.getPreferredSize().height));
 					lblPrice10.setHorizontalAlignment(SwingConstants.CENTER);
@@ -740,7 +664,6 @@ public class AuctionFrame extends JFrame {
 					lblName10.setPreferredSize(new Dimension(200, lblName10.getPreferredSize().height));
 					lblName10.setHorizontalAlignment(SwingConstants.CENTER);
 					
->>>>>>> branch 'master' of https://github.com/Psh230412/0623Start.git
 					ImageIcon imageIcon = ImageRetriever.list.get(9);
 					if (imageIcon != null) {
 						lblImage10.setIcon(iconSize(imageIcon));
