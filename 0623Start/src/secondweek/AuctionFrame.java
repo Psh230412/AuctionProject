@@ -1,5 +1,6 @@
 package secondweek;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -445,6 +446,27 @@ public class AuctionFrame extends JFrame {
 		lblPrice9.setText("");
 		lblPrice10.setText("");
 		
+		lblTime1.setForeground(Color.BLACK);
+		lblTime1.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime2.setForeground(Color.BLACK);
+		lblTime2.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime3.setForeground(Color.BLACK);
+		lblTime3.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime4.setForeground(Color.BLACK);
+		lblTime4.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime5.setForeground(Color.BLACK);
+		lblTime5.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime6.setForeground(Color.BLACK);
+		lblTime6.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime7.setForeground(Color.BLACK);
+		lblTime7.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime8.setForeground(Color.BLACK);
+		lblTime8.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime9.setForeground(Color.BLACK);
+		lblTime9.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime10.setForeground(Color.BLACK);
+		lblTime10.setFont(lblTime1.getFont().deriveFont(12f));
+		
 		for (int i = 0; i < btns.length; i++) {
 			btns[i].setVisible(false);
 		}
@@ -480,6 +502,11 @@ public class AuctionFrame extends JFrame {
 					lblTime1.setPreferredSize(new Dimension(200, lblTime1.getPreferredSize().height));
 					lblTime1.setHorizontalAlignment(SwingConstants.CENTER);
 					
+					if (durationTen(timer.selectProduct().get(0).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
+					
 					btns[i].setVisible(true);
 					break;
 				}
@@ -500,6 +527,11 @@ public class AuctionFrame extends JFrame {
 					lblTime2.setText(result2);
 					lblTime2.setPreferredSize(new Dimension(200, lblTime2.getPreferredSize().height));
 					lblTime2.setHorizontalAlignment(SwingConstants.CENTER);
+					
+					if (durationTen(timer.selectProduct().get(1).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
 					
 					btns[i].setVisible(true);
 					break;
@@ -523,6 +555,11 @@ public class AuctionFrame extends JFrame {
 					lblTime3.setPreferredSize(new Dimension(200, lblTime3.getPreferredSize().height));
 					lblTime3.setHorizontalAlignment(SwingConstants.CENTER);
 					
+					if (durationTen(timer.selectProduct().get(2).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
+					
 					btns[i].setVisible(true);
 					break;
 				}
@@ -544,6 +581,11 @@ public class AuctionFrame extends JFrame {
 					lblTime4.setText(result4);
 					lblTime4.setPreferredSize(new Dimension(200, lblTime4.getPreferredSize().height));
 					lblTime4.setHorizontalAlignment(SwingConstants.CENTER);
+					
+					if (durationTen(timer.selectProduct().get(3).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
 					
 					btns[i].setVisible(true);
 					break;
@@ -567,6 +609,11 @@ public class AuctionFrame extends JFrame {
 					lblTime5.setPreferredSize(new Dimension(200, lblTime5.getPreferredSize().height));
 					lblTime5.setHorizontalAlignment(SwingConstants.CENTER);
 					
+					if (durationTen(timer.selectProduct().get(4).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
+					
 					btns[i].setVisible(true);
 					break;
 				}
@@ -589,6 +636,11 @@ public class AuctionFrame extends JFrame {
 					lblTime6.setPreferredSize(new Dimension(200, lblTime6.getPreferredSize().height));
 					lblTime6.setHorizontalAlignment(SwingConstants.CENTER);
 					
+					if (durationTen(timer.selectProduct().get(5).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
+					
 					btns[i].setVisible(true);
 					break;
 				}
@@ -609,6 +661,11 @@ public class AuctionFrame extends JFrame {
 					lblTime7.setText(result7);
 					lblTime7.setPreferredSize(new Dimension(200, lblTime7.getPreferredSize().height));
 					lblTime7.setHorizontalAlignment(SwingConstants.CENTER);
+					
+					if (durationTen(timer.selectProduct().get(6).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
 					
 					btns[i].setVisible(true);
 					break;
@@ -631,6 +688,11 @@ public class AuctionFrame extends JFrame {
 					lblTime8.setPreferredSize(new Dimension(200, lblTime8.getPreferredSize().height));
 					lblTime8.setHorizontalAlignment(SwingConstants.CENTER);
 					
+					if (durationTen(timer.selectProduct().get(7).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
+					
 					btns[i].setVisible(true);
 					break;
 				}
@@ -652,6 +714,11 @@ public class AuctionFrame extends JFrame {
 					lblTime9.setPreferredSize(new Dimension(200, lblTime9.getPreferredSize().height));
 					lblTime9.setHorizontalAlignment(SwingConstants.CENTER);
 					
+					if (durationTen(timer.selectProduct().get(8).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
+					
 					btns[i].setVisible(true);
 					break;
 				}
@@ -672,6 +739,11 @@ public class AuctionFrame extends JFrame {
 					lblTime10.setText(result10);
 					lblTime10.setPreferredSize(new Dimension(200, lblTime10.getPreferredSize().height));
 					lblTime10.setHorizontalAlignment(SwingConstants.CENTER);
+					
+					if (durationTen(timer.selectProduct().get(9).getEndTime(), now)) {
+						lblTime1.setForeground(Color.RED);
+						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
+					}
 					
 					btns[i].setVisible(true);
 					break;
@@ -695,6 +767,16 @@ public class AuctionFrame extends JFrame {
 		long seconds = duration.getSeconds() % 60;
 
 		return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
+	}
+	
+	public static boolean durationTen(LocalDateTime targetDateTime, LocalDateTime now) {
+	    Duration duration = Duration.between(now, targetDateTime);
+	    long seconds = duration.getSeconds();
+	    
+	    if (seconds <= 60) {
+	        return true;
+	    }
+	    return false;
 	}
 	
 	public static String formatInt(int price) {
