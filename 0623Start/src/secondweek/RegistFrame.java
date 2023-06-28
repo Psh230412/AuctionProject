@@ -47,18 +47,18 @@ public class RegistFrame extends JFrame {
 	private JTextField productNameInput;
 	private JTextField productPriceInput;
 	private JFrame frame;
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistFrame frame = new RegistFrame(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					RegistFrame frame = new RegistFrame(null);
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	public RegistFrame(DataBase data) {
 		 frame = new JFrame();
@@ -252,7 +252,7 @@ public class RegistFrame extends JFrame {
 						// Convert the resized image to a byte array
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
 						ImageIO.write(resizedImage, "jpg", baos);
-
+						
 						byte[] imageInByte = baos.toByteArray();
 						// 정보 sql에 등록
 						inputProduct = conn.prepareStatement(

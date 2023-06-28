@@ -33,11 +33,12 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import dbutil.DBUtil;
+import secondweek.AuctionFrame;
+import secondweek.DataBase;
+import secondweek.Product;
+import secondweek.Timer;
 
 public class DetailFrame extends JFrame {
-//	자기가 등록한 물건이면 settext로 안내메시지 띄워주고 
-//	
-
 	private Scheduler scheduler;
 	private static Timer timer;
 	private static JLabel lblImage;
@@ -57,7 +58,7 @@ public class DetailFrame extends JFrame {
 	private static JLabel lblisOwn;
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
 
-	public DetailFrame(DataBase data) {
+	public DetailFrame(DataBase data, int auctionNo) {
 
 		this.data = data;
 		timer = new Timer();
@@ -108,6 +109,7 @@ public class DetailFrame extends JFrame {
 								JOptionPane.YES_NO_OPTION);
 						if (choice == JOptionPane.YES_OPTION) {
 							// 입찰 쿼리문
+							timer.insertParticipate(data.getCurrentUser().getNo(), auctionNo);
 
 							int auctionno = timer.getAuctionNo(data.getProduct().getProductNo());
 							timer.plusOneMinute(auctionno);

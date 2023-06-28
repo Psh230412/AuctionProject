@@ -610,6 +610,27 @@ public class MypageFrame extends JFrame {
 
 		   
 	}
+	private static void initialLabel() {
+		for (int i = 0; i < names.length; i++) {
+			names[i].setText("");
+		}
+		
+		for (int i = 0; i < times.length; i++) {
+			times[i].setText("");
+		}
+		
+		for (int i = 0; i < bids.length; i++) {
+			bids[i].setText("");
+		}
+		
+		for (int i = 0; i < prices.length; i++) {
+			prices[i].setText("");
+		}
+		
+		for (int i = 0; i < images.length; i++) {
+			images[i].setIcon(null);
+		}
+	}
 
 	public static String TimeFormatString(LocalDateTime startTime) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd일 HH:mm:ss");
@@ -630,6 +651,9 @@ public class MypageFrame extends JFrame {
 			conn = DBUtil.getConnection();
 			List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
 			EnrollParticipate enroll = null;
+			
+			initialLabel();
+			
 			if (enrollList != null) {
 				for (int i = 0; i < enrollList.size(); i++) {
 					enroll = enrollList.get(i);
@@ -826,8 +850,4 @@ public class MypageFrame extends JFrame {
 			});
 		}
 	} 
-	public static void main(String[] args) {
-		DataBase data = new DataBase();
-		new MypageFrame(data);
-	}
 }

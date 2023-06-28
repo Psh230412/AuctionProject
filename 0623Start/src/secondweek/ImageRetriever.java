@@ -19,7 +19,7 @@ public class ImageRetriever {
 	public static void setImage(byte[] imageBytes) {
 		ImageIcon imageIcon = new ImageIcon(imageBytes);
 		
-		Image image = imageIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+		Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
 		
 	
 		list.add(new ImageIcon(image));
