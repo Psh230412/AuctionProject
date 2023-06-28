@@ -250,16 +250,16 @@ public class MypageFrame extends JFrame {
 		userNameLb.setBounds(190, 160, 188, 67);
 		userNameLb.setText(data.getCurrentUser().getName());
 		contentPane.add(userNameLb);
+
 		JButton resetBtn = new JButton("개인정보변경");
 		resetBtn.setBounds(400, 123, 149, 67);
 		resetBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new  ChangeInformationFrame(data);
-				frame.setVisible(false);
+				// new ChangeInformation(data);
+				setVisible(false);
 			}
 		});
-
 		contentPane.add(resetBtn);
 		resetBtn.setBounds(330, 123, 210, 120);
 		ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
@@ -271,7 +271,9 @@ public class MypageFrame extends JFrame {
 		    public void mouseExited(MouseEvent e) {
 			ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
 			resetBtn.setIcon(imgreset);
+			
 		    }
+		    
 		    @Override
 		    public void mouseEntered(MouseEvent e) {
 			ImageIcon imgreset = new ImageIcon("img/changeinfo.png");
@@ -310,7 +312,7 @@ public class MypageFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				 new RegistFrame(data);
+				new RegistFrame(data);
 				 frame.setVisible(false);
 			}
 		});
@@ -608,6 +610,27 @@ public class MypageFrame extends JFrame {
 
 		   
 	}
+	private static void initialLabel() {
+		for (int i = 0; i < names.length; i++) {
+			names[i].setText("");
+		}
+		
+		for (int i = 0; i < times.length; i++) {
+			times[i].setText("");
+		}
+		
+		for (int i = 0; i < bids.length; i++) {
+			bids[i].setText("");
+		}
+		
+		for (int i = 0; i < prices.length; i++) {
+			prices[i].setText("");
+		}
+		
+		for (int i = 0; i < images.length; i++) {
+			images[i].setIcon(null);
+		}
+	}
 
 	public static String TimeFormatString(LocalDateTime startTime) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd일 HH:mm:ss");
@@ -628,6 +651,9 @@ public class MypageFrame extends JFrame {
 			conn = DBUtil.getConnection();
 			List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
 			EnrollParticipate enroll = null;
+			
+			initialLabel();
+			
 			if (enrollList != null) {
 				for (int i = 0; i < enrollList.size(); i++) {
 					enroll = enrollList.get(i);
@@ -824,8 +850,4 @@ public class MypageFrame extends JFrame {
 			});
 		}
 	} 
-	public static void main(String[] args) {
-		DataBase data = new DataBase();
-		new MypageFrame(data);
-	}
 }

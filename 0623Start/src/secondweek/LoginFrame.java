@@ -178,6 +178,7 @@ public class LoginFrame extends JFrame {
 		contentPane.add(loginBtn);
 		contentPane.add(signupBtn);
 		contentPane.add(exitBtn);
+		
 
 		   frame.getContentPane().add(contentPane);
 
