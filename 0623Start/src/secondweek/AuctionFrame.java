@@ -185,6 +185,8 @@ public class AuctionFrame extends JFrame {
 			btn[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+
+					
 					List<Product> products = timer.selectProduct();
 					if (products.size() >= index) {
 						Product product = products.get(index);
@@ -380,12 +382,6 @@ public class AuctionFrame extends JFrame {
 				case 0: {
 					lblPrice1.setText(Integer.toString(timer.selectProduct().get(0).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 1);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage1.setIcon(iconSize(imageIcon));
-//               }
 					ImageIcon imageIcon = ImageRetriever.list.get(0);
 					if (imageIcon != null) {
 						lblImage1.setIcon(iconSize(imageIcon));
@@ -398,12 +394,6 @@ public class AuctionFrame extends JFrame {
 				case 1: {
 					lblPrice2.setText(Integer.toString(timer.selectProduct().get(1).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 2);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage2.setIcon(iconSize(imageIcon));
-//               }
 
 					ImageIcon imageIcon = ImageRetriever.list.get(1);
 					if (imageIcon != null) {
@@ -416,12 +406,6 @@ public class AuctionFrame extends JFrame {
 				case 2: {
 					lblPrice3.setText(Integer.toString(timer.selectProduct().get(2).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 3);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage3.setIcon(iconSize(imageIcon));
-//               }
 
 					ImageIcon imageIcon = ImageRetriever.list.get(2);
 					if (imageIcon != null) {
@@ -434,12 +418,6 @@ public class AuctionFrame extends JFrame {
 				}
 				case 3: {
 					lblPrice4.setText(Integer.toString(timer.selectProduct().get(3).getProductPriceNow()));
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 4);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage4.setIcon(iconSize(imageIcon));
-//               }
 
 					ImageIcon imageIcon = ImageRetriever.list.get(3);
 					if (imageIcon != null) {
@@ -453,13 +431,6 @@ public class AuctionFrame extends JFrame {
 				case 4: {
 					lblPrice5.setText(Integer.toString(timer.selectProduct().get(4).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 5);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage5.setIcon(iconSize(imageIcon));
-//               }
-
 					ImageIcon imageIcon = ImageRetriever.list.get(4);
 					if (imageIcon != null) {
 						lblImage5.setIcon(iconSize(imageIcon));
@@ -472,12 +443,6 @@ public class AuctionFrame extends JFrame {
 				case 5: {
 					lblPrice6.setText(Integer.toString(timer.selectProduct().get(5).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 6);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage6.setIcon(iconSize(imageIcon));
-//               }
 
 					ImageIcon imageIcon = ImageRetriever.list.get(5);
 					if (imageIcon != null) {
@@ -491,13 +456,6 @@ public class AuctionFrame extends JFrame {
 				case 6: {
 					lblPrice7.setText(Integer.toString(timer.selectProduct().get(6).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 7);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage7.setIcon(iconSize(imageIcon));
-//               }
-
 					ImageIcon imageIcon = ImageRetriever.list.get(6);
 					if (imageIcon != null) {
 						lblImage7.setIcon(iconSize(imageIcon));
@@ -509,12 +467,6 @@ public class AuctionFrame extends JFrame {
 				case 7: {
 					lblPrice8.setText(Integer.toString(timer.selectProduct().get(7).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 8);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage8.setIcon(iconSize(imageIcon));
-//               }
 
 					ImageIcon imageIcon = ImageRetriever.list.get(7);
 					if (imageIcon != null) {
@@ -527,12 +479,6 @@ public class AuctionFrame extends JFrame {
 				case 8: {
 					lblPrice9.setText(Integer.toString(timer.selectProduct().get(8).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 9);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage9.setIcon(iconSize(imageIcon));
-//               }
 					ImageIcon imageIcon = ImageRetriever.list.get(8);
 					if (imageIcon != null) {
 						lblImage9.setIcon(iconSize(imageIcon));
@@ -544,12 +490,6 @@ public class AuctionFrame extends JFrame {
 				case 9: {
 					lblPrice10.setText(Integer.toString(timer.selectProduct().get(9).getProductPriceNow()));
 
-//               ImageIcon imageIcon = ImageRetriever.retrieveImage(conn, 10);
-//
-//               if (imageIcon != null) {
-//
-//                  lblImage10.setIcon(iconSize(imageIcon));
-//               }
 					ImageIcon imageIcon = ImageRetriever.list.get(9);
 					if (imageIcon != null) {
 						lblImage10.setIcon(iconSize(imageIcon));

@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,12 +121,12 @@ public class Timer implements ITimer {
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
-				list.add(new Product(setNo, productNo, productName, productPriceNow, productContent, startTime, endTime));
+				list.add(new Product(setNo, productNo, productName, productPriceNow, productContent, startTime,
+						endTime));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
@@ -133,8 +134,6 @@ public class Timer implements ITimer {
 		return list;
 	}
 
-	
-	
 	public void inputSuccessbidinfo() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -152,14 +151,11 @@ public class Timer implements ITimer {
 
 			stmt.executeUpdate();
 //			deadline 지난것은 successbidinfo로 보내고 auction에서 삭제 시킨다.
-			
-			stmtForDelete = conn.prepareStatement("DELETE FROM auction\r\n" + 
-					"WHERE deadline<current_timestamp();");
-			
+
+			stmtForDelete = conn.prepareStatement("DELETE FROM auction\r\n" + "WHERE deadline<current_timestamp();");
+
 			stmtForDelete.executeUpdate();
-			
-			
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -176,7 +172,6 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 
-			
 			stmt = conn.prepareStatement("UPDATE successbidinfo\r\n" + "set isbid = 0\r\n"
 					+ "where successbidinfo.auctioncopyno IN (SELECT A.auctionno from copy_auction A\r\n"
 					+ "WHERE A.deadline < current_time() AND A.auctionno NOT IN  (SELECT auctionno FROM participate));");
@@ -199,12 +194,10 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 
-			stmt = conn.prepareStatement("update auction\r\n" + 
-					"set finalprice = ?\r\n" + 
-					"WHERE setno = ?;");
+			stmt = conn.prepareStatement("update auction\r\n" + "set finalprice = ?\r\n" + "WHERE setno = ?;");
 			stmt.setInt(1, Integer.parseInt(bid));
 			stmt.setInt(2, setNo);
-			
+
 			stmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -213,5 +206,135 @@ public class Timer implements ITimer {
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
+	}
+
+	public boolean isOwn(int userno, int presentProductno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("SELECT a.auctionno,a.setno,e.userno,e.productno FROM auction a \r\n"
+					+ "JOIN enrollmentinfo e\r\n" + "ON e.setno=a.setno and userno = ?;");
+			stmt.setInt(1, userno);
+
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				int productno = rs.getInt("productno");
+
+				if (productno == presentProductno) {
+					return false;
+
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+
+		return true;
+	}
+
+	public int getAuctionNo(int productno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("SELECT auctionno FROM auction where setno = (SELECT setno FROM enrollmentinfo where productno = ? );");
+
+			stmt.setInt(1, productno);
+
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				int auctionno= rs.getInt("auctionno");
+				System.out.println(auctionno);
+				return auctionno;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(rs);
+		}
+		return -1;
+
+	}
+
+	public boolean isLeftOneMinute(LocalDateTime deadline, LocalDateTime now) {
+		Duration duration = Duration.between(now, deadline);
+//		long days = duration.toDays();
+//		long hours = duration.toHours() % 24;
+//		long minutes = duration.toMinutes() % 60;
+//		long seconds = duration.getSeconds() % 60;
+
+		long seconds = duration.getSeconds();
+		System.out.println(seconds);
+
+		if (seconds <= 60) {
+			return true;
+		}
+		return false;
+
+	}
+
+	public void plusOneMinute(int auctionno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		PreparedStatement stmtForPlusDuration = null;
+		ResultSet rs = null;
+
+		LocalDateTime now = LocalDateTime.now();
+		
+		System.out.println(auctionno);
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("SELECT deadline FROM auction where auctionno = ? ;");
+
+			stmt.setInt(1, auctionno);
+
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Timestamp deadline = rs.getTimestamp("deadline");
+				System.out.println(deadline);
+
+				LocalDateTime localDateTime = deadline.toLocalDateTime();
+				System.out.println(localDateTime);
+
+				if (isLeftOneMinute(localDateTime, now)) {
+					stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
+							+ "SET deadline = DATE_ADD(deadline, INTERVAL 1 MINUTE)\r\n" + "where auctionno = ? ;");
+					stmtForPlusDuration.setInt(1, auctionno);
+					stmtForPlusDuration.executeUpdate();
+					
+				} else {
+					return;
+				}
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmtForPlusDuration);
+			DBUtil.close(stmt);
+			DBUtil.close(rs);
+		}
+
 	}
 }
