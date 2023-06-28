@@ -256,7 +256,7 @@ public class MypageFrame extends JFrame {
 		resetBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// new ChangeInformation(data);
+				new ChangeInformationFrame(data);
 				setVisible(false);
 			}
 		});

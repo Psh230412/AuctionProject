@@ -281,7 +281,6 @@ public class ChangeInformationFrame extends JFrame {
 		passwordIdentifyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		);
 			}
 		});
 		 JButton returnBtn = new JButton("뒤로가기");
@@ -354,27 +353,27 @@ public class ChangeInformationFrame extends JFrame {
 			}
 		});
 		*/	
-    JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
-		errorLabel.setBounds(10, 10, 200, 30);
-		contentPane.add(errorLabel);
-
-		JButton errorCheckBtn = new JButton();
-		errorCheckBtn.setBounds(10, 50, 50, 50);
-
-		errorCheckBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nickName = nickNameText.getText();
-				if (matchNickName(nickName) == false) {
-					errorLabel.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
-				} else if (searchNickName(nickName) != 0) {
-					errorLabel.setText("이미 존재하는 닉네임입니다.");
-				} else if (correctNickName(nickName) == true) {
-					errorLabel.setText("사용가능한 닉네임 입니다.");
-				}
-			}
-		});
-		contentPane.add(errorCheckBtn);
+//    JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
+//		errorLabel.setBounds(10, 10, 200, 30);
+//		contentPane.add(errorLabel);
+//
+//		JButton errorCheckBtn = new JButton();
+//		errorCheckBtn.setBounds(10, 50, 50, 50);
+//
+//		errorCheckBtn.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				String nickName = nickNameText.getText();
+//				if (matchNickName(nickName) == false) {
+//					errorLabel.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
+//				} else if (searchNickName(nickName) != 0) {
+//					errorLabel.setText("이미 존재하는 닉네임입니다.");
+//				} else if (correctNickName(nickName) == true) {
+//					errorLabel.setText("사용가능한 닉네임 입니다.");
+//				}
+//			}
+//		});
+//		contentPane.add(errorCheckBtn);
 		// 지역 콤보 박스 생성
 		JComboBox<String> bigAreaCombo = new JComboBox();
 		JComboBox<String> mediumAreaCombo = new JComboBox();
@@ -446,7 +445,7 @@ public class ChangeInformationFrame extends JFrame {
 		PlainDocument docLast = (PlainDocument) phoneNumberLast.getDocument();
 		docLast.setDocumentFilter(new NumberOnlyFilter(4));
 		
-		JButton informationResetBtn = new JButton();
+		JButton informationResetBtn = new JButton("초기화");
 		ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
 		informationResetBtn.setContentAreaFilled(false); 
 		informationResetBtn.setBorderPainted(false);
@@ -466,14 +465,11 @@ public class ChangeInformationFrame extends JFrame {
 			
 		    }
 		});
-		
-
-		JButton informationResetBtn = new JButton("초기화");
 		informationResetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			    nickNameText.setText("");
-			    phoneNumberCenter.setText("");
-			    phoneNumberLast.setText("");
+//			    nickNameText.setText("");
+//			    phoneNumberCenter.setText("");
+//			    phoneNumberLast.setText("");
 			}
 		});
 		informationResetBtn.setBounds(890, 330, 150, 80);
