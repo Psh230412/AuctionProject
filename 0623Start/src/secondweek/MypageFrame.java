@@ -250,16 +250,16 @@ public class MypageFrame extends JFrame {
 		userNameLb.setBounds(190, 160, 188, 67);
 		userNameLb.setText(data.getCurrentUser().getName());
 		contentPane.add(userNameLb);
-
 		JButton resetBtn = new JButton("개인정보변경");
 		resetBtn.setBounds(400, 123, 149, 67);
 		resetBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// new ChangeInformation(data);
-				setVisible(false);
+				new  ChangeInformationFrame(data);
+				frame.setVisible(false);
 			}
 		});
+
 		contentPane.add(resetBtn);
 		resetBtn.setBounds(330, 123, 210, 120);
 		ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
@@ -271,9 +271,7 @@ public class MypageFrame extends JFrame {
 		    public void mouseExited(MouseEvent e) {
 			ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
 			resetBtn.setIcon(imgreset);
-			
 		    }
-		    
 		    @Override
 		    public void mouseEntered(MouseEvent e) {
 			ImageIcon imgreset = new ImageIcon("img/changeinfo.png");
@@ -312,7 +310,7 @@ public class MypageFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new RegistFrame(data);
+				 new RegistFrame(data);
 				 frame.setVisible(false);
 			}
 		});
