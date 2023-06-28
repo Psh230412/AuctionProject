@@ -54,7 +54,7 @@ public class DetailFrame extends JFrame {
 
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
 
-	public DetailFrame(DataBase data) {
+	public DetailFrame(DataBase data, int auctionNo) {
 		this.data = data;
 		timer = new Timer();
 
@@ -88,7 +88,9 @@ public class DetailFrame extends JFrame {
 					if (product.getProductPriceNow() < Integer.parseInt(bid)) {
 						int setNo = product.getSetNo();
 						timer.updatePrice(setNo, bid);
+						timer.insertParticipate(data.getCurrentUser().getNo(), auctionNo);
 					} else {
+						JOptionPane.showMessageDialog(null, "기존 가격보다 낮은 가격으로 입찰은 불가능 합니다.");
 						System.out.println("가격이하");
 					}
 					new AuctionFrame(data);
