@@ -34,9 +34,9 @@ public class ListRepository{
 		try {
 			conn = DBUtil.getConnection();
 			String sql = "SELECT B.setno, A.userno, C.productno, C.productname, C.image, D.deadline, D.finalprice FROM user A\r\n" + 
-					"INNER JOIN enrollmentinfo B ON A.userno = B.userno \r\n" + 
+					"INNER JOIN enrollmentinfo B ON A.userno = B.userno\r\n" + 
 					"INNER JOIN product C ON B.productno = C.productno \r\n" + 
-					"INNER JOIN copy_auction D ON B.setno = D.setno \r\n" + 
+					"INNER JOIN copy_auction D ON B.setno = D.setno\r\n" + 
 					"WHERE A.userno = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, userno);
@@ -78,7 +78,7 @@ public class ListRepository{
 		List<EnrollParticipate> list = new ArrayList<>();
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT C.setno, A.userno, E.productno, E.productname, E.image, C.deadline, C.finalprice FROM user A\r\n" + 
+			String sql = "SELECT C.setno, A.userno, E.productno, E.productname, E.image, C.finalprice, C.deadline FROM user A\r\n" + 
 					"INNER JOIN participate B ON A.userno = B.userno \r\n" + 
 					"INNER JOIN copy_auction C ON B.auctionno = C.auctionno \r\n" + 
 					"INNER JOIN enrollmentinfo D ON C.setno = D.setno \r\n" + 
@@ -124,11 +124,11 @@ public class ListRepository{
 		List<Bidinfo> list = new ArrayList<>();
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT A.successbidno, B.userno, C.productno, C.productname, C.image, D.finalprice, A.isbid FROM successbidinfo A \r\n" + 
-					"INNER JOIN user B ON A.userno = B.userno \r\n" + 
-					"INNER JOIN product C ON A.productno = C.productno \r\n" + 
-					"INNER JOIN copy_auction D ON A.auctioncopyno = D.auctionno \r\n" + 
-					"WHERE B.userno = ?";
+			String sql = "SELECT B.successbidno, A.userno, C.productno, C.productname, C.image, D.finalprice, B.isbid FROM user A\r\n" + 
+					"INNER JOIN successbidinfo B ON A.userno = B.userno\r\n" + 
+					"INNER JOIN product C ON B.productno = C.productno\r\n" + 
+					"INNER JOIN copy_auction D ON B.auctioncopyno = D.auctionno\r\n" + 
+					"WHERE A.userno = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, userno);
 			rs = stmt.executeQuery();
