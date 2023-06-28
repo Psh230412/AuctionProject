@@ -19,8 +19,7 @@ public class ListRepository{
 	// 이미지파일 변환(김명완 작성본 복사)
 	public ImageIcon setImage(byte[] imageBytes) {
 		ImageIcon imageIcon = new ImageIcon(imageBytes);
-
-		Image image = imageIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+		Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
 
 		return new ImageIcon(image);
 	}
@@ -37,7 +36,9 @@ public class ListRepository{
 					"INNER JOIN enrollmentinfo B ON A.userno = B.userno\r\n" + 
 					"INNER JOIN product C ON B.productno = C.productno \r\n" + 
 					"INNER JOIN copy_auction D ON B.setno = D.setno\r\n" + 
-					"WHERE A.userno = ?";
+					"WHERE A.userno = ?\r\n"
+					+ "AND D.deadline > CURRENT_TIME()\r\n"
+					+ "ORDER BY D.deadline";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, userno);
 			rs = stmt.executeQuery();
@@ -78,12 +79,15 @@ public class ListRepository{
 		List<EnrollParticipate> list = new ArrayList<>();
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT C.setno, A.userno, E.productno, E.productname, E.image, C.finalprice, C.deadline FROM user A\r\n" + 
-					"INNER JOIN participate B ON A.userno = B.userno \r\n" + 
-					"INNER JOIN copy_auction C ON B.auctionno = C.auctionno \r\n" + 
-					"INNER JOIN enrollmentinfo D ON C.setno = D.setno \r\n" + 
-					"INNER JOIN product E ON D.productno = E.productno \r\n" + 
-					"WHERE A.userno = ?";
+			String sql = "SELECT C.setno, A.userno, E.productno, E.productname, E.image, C.finalprice, C.deadline \n" + 
+					"FROM user A\n" + 
+					"INNER JOIN participate B ON A.userno = B.userno\n" + 
+					"INNER JOIN copy_auction C ON B.auctionno = C.auctionno\n" + 
+					"INNER JOIN enrollmentinfo D ON C.setno = D.setno\n" + 
+					"INNER JOIN product E ON D.productno = E.productno\n" + 
+					"WHERE A.userno = ?\n" + 
+					"AND C.deadline > CURRENT_TIME()\n" + 
+					"ORDER BY C.deadline";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, userno);
 			rs = stmt.executeQuery();
@@ -105,7 +109,6 @@ public class ListRepository{
 				list.add(new EnrollParticipate(setnoParse, usernoParse, productnoParse, productname, imageIcon, endTime,
 						finalprice));
 			}
-			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -113,7 +116,7 @@ public class ListRepository{
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
-		return null;
+		return list;
 	}
 
 	// 낙찰/유찰 리스트

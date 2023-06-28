@@ -1,5 +1,6 @@
 package secondweek;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,9 +53,13 @@ public class DetailFrame extends JFrame {
 
 	private static DataBase data;
 
+	private static JLabel lblMessage;
+
+	private static JLabel lblisOwn;
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
 
-	public DetailFrame(DataBase data) {
+	public DetailFrame(DataBase data, int auctionNo) {
+
 		this.data = data;
 		timer = new Timer();
 
@@ -70,32 +75,58 @@ public class DetailFrame extends JFrame {
 		lblTime.setBounds(514, 346, 94, 15);
 		lblPrice = new JLabel("가격");
 		lblPrice.setBounds(514, 278, 94, 15);
+		lblMessage = new JLabel("입찰가격은 현재가격을 상회해야 합니다.");
+		lblMessage.setBounds(380, 562, 268, 35);
+		lblisOwn = new JLabel();
+		lblisOwn.setBounds(200, 562 + 35 + 49, 400, 35);
 
 		JTextField priceTF = new JTextField(10);
 		priceTF.setBounds(514, 478, 94, 35);
 
 		JButton participateBtn = new JButton("입찰하기");
 		participateBtn.setBounds(503, 416, 105, 23);
-		participateBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int choice = JOptionPane.showConfirmDialog(null, "입찰을 하면 취소할 수 없습니다.\n정말 입찰하시겠습니까?", "입찰",
-						JOptionPane.YES_NO_OPTION);
-				if (choice == JOptionPane.YES_OPTION) {
-					// 입찰 쿼리문
+
+		if (!timer.isOwn(data.getCurrentUser().getNo(), data.getProduct().getProductNo())) {
+			lblisOwn.setText(data.getProduct().getProductName() + "은(는) 본인이 등록한 상품입니다.");
+			participateBtn.setBackground(Color.black);
+			
+		} else {
+			participateBtn.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+
+					
 					Product product = data.getProduct();
 					String bid = priceTF.getText();
-					if (product.getProductPriceNow() < Integer.parseInt(bid)) {
-						int setNo = product.getSetNo();
-						timer.updatePrice(setNo, bid);
+					
+
+					if (product.getProductPriceNow() >= Integer.parseInt(bid)) {
+						lblMessage.setForeground(Color.RED);
+//					lblMessage.setText("입찰가격은 현재가격의 105% 이상이어야 합니다.");
 					} else {
-						System.out.println("가격이하");
+						int choice = JOptionPane.showConfirmDialog(null, "입찰을 하면 취소할 수 없습니다.\n정말 입찰하시겠습니까?", "입찰",
+								JOptionPane.YES_NO_OPTION);
+						if (choice == JOptionPane.YES_OPTION) {
+							// 입찰 쿼리문
+							timer.insertParticipate(data.getCurrentUser().getNo(), auctionNo);
+
+							int auctionno = timer.getAuctionNo(data.getProduct().getProductNo());
+							timer.plusOneMinute(auctionno);
+							
+							int setNo = product.getSetNo();
+							timer.updatePrice(setNo, bid);
+
+							new AuctionFrame(data);
+							setVisible(false);
+						}
+
 					}
-					new AuctionFrame(data);
-					setVisible(false);
+
 				}
-			}
-		});
+			});
+
+		}
 
 		JButton backButton = new JButton("뒤로가기");
 		backButton.setBounds(380, 416, 105, 23);
@@ -114,6 +145,8 @@ public class DetailFrame extends JFrame {
 		pnl.add(lblDetail);
 		pnl.add(lblTime);
 		pnl.add(lblPrice);
+		pnl.add(lblMessage);
+		pnl.add(lblisOwn);
 		pnl.add(participateBtn);
 		pnl.add(priceTF);
 		pnl.add(backButton);

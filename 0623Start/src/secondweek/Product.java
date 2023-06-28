@@ -4,17 +4,19 @@ import java.time.LocalDateTime;
 public class Product {
 	private int setNo;
 	private int productNo;
+	private int auctionNo;
 	private String productName;
 	private int productPriceNow;
 	private String productContent;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	
-	public Product(int setNo, int productNo, String productName, int productPriceNow, String productContent,
-			LocalDateTime startTime, LocalDateTime endTime) {
+	public Product(int setNo, int productNo, int auctionNo, String productName, int productPriceNow,
+			String productContent, LocalDateTime startTime, LocalDateTime endTime) {
 		super();
 		this.setNo = setNo;
 		this.productNo = productNo;
+		this.auctionNo = auctionNo;
 		this.productName = productName;
 		this.productPriceNow = productPriceNow;
 		this.productContent = productContent;
@@ -22,6 +24,14 @@ public class Product {
 		this.endTime = endTime;
 	}
 	
+	public int getAuctionNo() {
+		return auctionNo;
+	}
+
+	public void setAuctionNo(int auctionNo) {
+		this.auctionNo = auctionNo;
+	}
+
 	public int getSetNo() {
 		return setNo;
 	}
@@ -84,7 +94,4 @@ public class Product {
 				+ ", productPriceNow=" + productPriceNow + ", productContent=" + productContent + ", startTime="
 				+ startTime + ", endTime=" + endTime + "]";
 	}
-	
-	
 }
-

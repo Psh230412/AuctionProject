@@ -1,16 +1,13 @@
 
 package secondweek;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,79 +15,6 @@ import java.util.List;
 import dbutil.DBUtil;
 
 public class Timer implements ITimer {
-	public List<Product> selectProductId(int userId) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		List<Product> list = new ArrayList<>();
-
-		try {
-			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT * \r\n" + "FROM product A\r\n"
-					+ "WHERE A.productno IN (SELECT productno\r\n" + "                    FROM enrollmentinfo A\r\n"
-					+ "                    WHERE A.userno = (SELECT userno\r\n"
-					+ "                                        FROM `user`\r\n"
-					+ "                                        WHERE userno = ?\r\n" + "));");
-
-			stmt.setInt(1, userId);
-
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				int productNo = rs.getInt("productno");
-				String productName = rs.getString("productname");
-				int productPriceNow = rs.getInt("initialprice");
-				String productContent = rs.getString("detailinfo");
-				Blob image = rs.getBlob("image");
-
-				File file = new File("images/" + productName + ".jpg");
-				list.add(new Product(userId, productNo, productName, productPriceNow, productContent, null, null));
-
-				if (file.exists()) {
-					continue;
-				}
-
-				Files.copy(image.getBinaryStream(), Paths.get("images/" + productName + ".jpg"));
-			}
-			rs.close();
-			stmt.close();
-
-			stmt = conn.prepareStatement("SELECT * \r\n" + "FROM auction A\r\n" + "WHERE A.setno IN (SELECT setno\r\n"
-					+ "                    FROM enrollmentinfo A\r\n"
-					+ "                    WHERE A.userno = (SELECT userno\r\n"
-					+ "                                        FROM `user`\r\n"
-					+ "                                        WHERE userno = ?\r\n" + "))");
-
-			stmt.setInt(1, userId);
-
-			rs = stmt.executeQuery();
-			int i = 0;
-			while (rs.next()) {
-				Timestamp timestamp = rs.getTimestamp("starttime");
-				LocalDateTime startTime = timestamp.toLocalDateTime();
-
-				Timestamp timestamp2 = rs.getTimestamp("deadline");
-				LocalDateTime endTime = timestamp2.toLocalDateTime();
-
-				list.get(i).setStartTime(startTime);
-				list.get(i).setEndTime(endTime);
-				i++;
-			}
-
-			rs.close();
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return list;
-	}
-
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -111,6 +35,7 @@ public class Timer implements ITimer {
 			while (rs.next()) {
 				int setNo = rs.getInt("setno");
 				int productNo = rs.getInt("productno");
+				int auctionNo = rs.getInt("auctionno");
 				String productName = rs.getString("productname");
 				int productPriceNow = rs.getInt("finalprice");
 				String productContent = rs.getString("detailinfo");
@@ -120,7 +45,8 @@ public class Timer implements ITimer {
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
-				list.add(new Product(setNo, productNo, productName, productPriceNow, productContent, startTime, endTime));
+				
+				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent, startTime, endTime));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -207,6 +133,161 @@ public class Timer implements ITimer {
 			
 			stmt.executeUpdate();
 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	public boolean isOwn(int userno, int presentProductno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("SELECT a.auctionno,a.setno,e.userno,e.productno FROM auction a \r\n"
+					+ "JOIN enrollmentinfo e\r\n" + "ON e.setno=a.setno and userno = ?;");
+			stmt.setInt(1, userno);
+
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				int productno = rs.getInt("productno");
+
+				if (productno == presentProductno) {
+					return false;
+
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+
+		return true;
+	}
+
+	public int getAuctionNo(int productno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("SELECT auctionno FROM auction where setno = (SELECT setno FROM enrollmentinfo where productno = ? );");
+
+			stmt.setInt(1, productno);
+
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				int auctionno= rs.getInt("auctionno");
+				System.out.println(auctionno);
+				return auctionno;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(rs);
+		}
+		return -1;
+
+	}
+
+	public boolean isLeftOneMinute(LocalDateTime deadline, LocalDateTime now) {
+		Duration duration = Duration.between(now, deadline);
+//		long days = duration.toDays();
+//		long hours = duration.toHours() % 24;
+//		long minutes = duration.toMinutes() % 60;
+//		long seconds = duration.getSeconds() % 60;
+
+		long seconds = duration.getSeconds();
+		System.out.println(seconds);
+
+		if (seconds <= 60) {
+			return true;
+		}
+		return false;
+
+	}
+
+	public void plusOneMinute(int auctionno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		PreparedStatement stmtForPlusDuration = null;
+		ResultSet rs = null;
+
+		LocalDateTime now = LocalDateTime.now();
+		
+		System.out.println(auctionno);
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("SELECT deadline FROM auction where auctionno = ? ;");
+
+			stmt.setInt(1, auctionno);
+
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				Timestamp deadline = rs.getTimestamp("deadline");
+				System.out.println(deadline);
+
+				LocalDateTime localDateTime = deadline.toLocalDateTime();
+				System.out.println(localDateTime);
+
+				if (isLeftOneMinute(localDateTime, now)) {
+					stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
+							+ "SET deadline = DATE_ADD(deadline, INTERVAL 1 MINUTE)\r\n" + "where auctionno = ? ;");
+					stmtForPlusDuration.setInt(1, auctionno);
+					stmtForPlusDuration.executeUpdate();
+					
+				} else {
+					return;
+				}
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmtForPlusDuration);
+			DBUtil.close(stmt);
+			DBUtil.close(rs);
+		}
+
+	}
+
+	@Override
+	public void insertParticipate(int userNo, int auctionNo) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+
+			stmt = conn.prepareStatement("INSERT INTO participate (userno, auctionno, participatetime)\r\n" + 
+					"VALUES (?, ?, ?);");
+			
+			stmt.setInt(1, userNo);
+			stmt.setInt(2, auctionNo);
+			LocalDateTime now = LocalDateTime.now();
+			stmt.setTimestamp(3, Timestamp.valueOf(now));
+
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
