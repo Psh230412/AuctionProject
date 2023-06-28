@@ -1,8 +1,13 @@
 package secondweek;
 
 import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -30,6 +36,7 @@ import dbutil.DBUtil;
 public class ChangeInformationFrame extends JFrame {
 
 	private JPanel contentPane;
+	private JFrame frame;
 	private JTextField nickNameText;
 	private JTextField idText;
 	private JTextField phoneNumberCenter;
@@ -43,18 +50,18 @@ public class ChangeInformationFrame extends JFrame {
 		return selectedGender;
 	}
 	
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ChangeInformationFrame frame = new ChangeInformationFrame(null);
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ChangeInformationFrame frame = new ChangeInformationFrame(null);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	class NumberOnlyFilter extends DocumentFilter {
 		private int maxLength;  // 최대 입력 길이
 
@@ -82,24 +89,133 @@ public class ChangeInformationFrame extends JFrame {
 	
 	
 	public ChangeInformationFrame(DataBase data) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 735, 609);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		setVisible(true);
+	    frame = new JFrame();
+		frame.setSize(1200,800);
+	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
+	        contentPane = new JPanel(){
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+			Image image = toolkit.getImage("img/changeinfoPage.png");
+			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+		}
+	};
+	
+	
+	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+	setContentPane(contentPane);
+	contentPane.setLayout(null);
+ 
 
 		nickNameText = new JTextField();
-		nickNameText.setBounds(336, 22, 370, 34);
-		contentPane.add(nickNameText);
+		nickNameText.setBounds(670, 115, 310, 34);
 		nickNameText.setColumns(10);
+		contentPane.add(nickNameText);
+		
+		JButton nikconfirmBtn = new JButton();
+		nikconfirmBtn.setBounds(980, 112, 150, 55);
+		ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm_1.png");
+		nikconfirmBtn.setContentAreaFilled(false); 
+		nikconfirmBtn.setBorderPainted(false);
+		nikconfirmBtn.setIcon(imgnkconfirm);
+    
+		JButton passwordIdentifyBtn = new JButton();
+		ImageIcon imgpass = new ImageIcon("img/pwconfirm_1.png");
+		passwordIdentifyBtn.setBounds(980, 603, 150, 55);
+		passwordIdentifyBtn.setIcon(imgpass);
+		passwordIdentifyBtn.setVisible(true);
+		passwordIdentifyBtn.setContentAreaFilled(false); 
+		passwordIdentifyBtn.setBorderPainted(false);
+		
+	  
+		nikconfirmBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm_1.png");
+			nikconfirmBtn.setIcon(imgnkconfirm);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm.png");
+			nikconfirmBtn.setIcon(imgnkconfirm);
+			
+		    }
+		});
+	
+		passwordIdentifyBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgpass = new ImageIcon("img/pwconfirm_1.png");
+			passwordIdentifyBtn.setIcon(imgpass);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgpass = new ImageIcon("img/pwconfirm.png");
+			passwordIdentifyBtn.setIcon(imgpass);
+			
+		    }
+		});
+		nikconfirmBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+			}
+		});
+		passwordIdentifyBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		);
+			}
+		});
+		 JButton returnBtn = new JButton("뒤로가기");
+		 returnBtn.setBounds(50, 25, 130, 50);
+		 ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		 returnBtn.setContentAreaFilled(false); 
+		 returnBtn.setBorderPainted(false);
+		 returnBtn.setIcon(imgreturnBtn);
+		  
+		 returnBtn.addMouseListener(new MouseAdapter() {
+			    @Override
+			    public void mouseExited(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+				returnBtn.setIcon(imgreturnBtn);
+				
+			    }
+			    
+			    @Override
+			    public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
+				returnBtn.setIcon(imgreturnBtn);
+				
+			    }
+			});
+		
+		returnBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DataBase data = new DataBase();
+				new MypageFrame(data);
+				 frame.setVisible(false);
+			}
+		});
+		contentPane.add(returnBtn);
+		contentPane.add(nikconfirmBtn);
+		contentPane.add(passwordIdentifyBtn);
 
 //		idText = new JTextField();
 //		idText.setBounds(336, 66, 370, 34);
 //		contentPane.add(idText);
 //		idText.setColumns(10);
-
+/*
 		JRadioButton manBtn = new JRadioButton("남성");
 		manBtn.setBounds(596, 106, 49, 23);
 		contentPane.add(manBtn);
@@ -125,16 +241,17 @@ public class ChangeInformationFrame extends JFrame {
 		        selectedGender = 0;
 		    }
 		});
+		*/
 		// 지역 콤보 박스 생성
 		JComboBox<String> bigAreaCombo = new JComboBox();
 		JComboBox<String> mediumAreaCombo = new JComboBox();
 		JComboBox<String> smallAreaCombo = new JComboBox();
 
-		bigAreaCombo.setBounds(336, 176, 118, 21);
+		bigAreaCombo.setBounds(680, 280, 120, 25);
 		contentPane.add(bigAreaCombo);
-		mediumAreaCombo.setBounds(466, 176, 118, 21);
+		mediumAreaCombo.setBounds(838, 280,120, 25);
 		contentPane.add(mediumAreaCombo);
-		smallAreaCombo.setBounds(596, 176, 110, 21);
+		smallAreaCombo.setBounds(996, 280, 120, 25);
 		contentPane.add(smallAreaCombo);
 		// 지역 대 분류
 		List<String> bigAreas = new ArrayList<>();
@@ -182,7 +299,7 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		// 휴대폰 번호 입력
 		phoneNumberCenter = new JTextField();
-		phoneNumberCenter.setBounds(596, 135, 49, 21);
+		phoneNumberCenter.setBounds(800,  165, 100, 32);
 		contentPane.add(phoneNumberCenter);
 		phoneNumberCenter.setColumns(10);
 		
@@ -191,21 +308,64 @@ public class ChangeInformationFrame extends JFrame {
 
 		phoneNumberLast = new JTextField();
 		phoneNumberLast.setColumns(10);
-		phoneNumberLast.setBounds(657, 135, 49, 21);
+		phoneNumberLast.setBounds(980, 165, 100, 32);
 		contentPane.add(phoneNumberLast);
 		
 		PlainDocument docLast = (PlainDocument) phoneNumberLast.getDocument();
 		docLast.setDocumentFilter(new NumberOnlyFilter(4));
 		
-		JButton informationResetBtn = new JButton("초기화");
+		JButton informationResetBtn = new JButton();
+		ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
+		informationResetBtn.setContentAreaFilled(false); 
+		informationResetBtn.setBorderPainted(false);
+		informationResetBtn.setIcon(imgReset);
+		informationResetBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
+			informationResetBtn.setIcon(imgReset);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgReset = new ImageIcon("img/myreset.png");
+			informationResetBtn.setIcon(imgReset);
+			
+		    }
+		});
+		
 		informationResetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			    nickNameText.setText("");
+			    phoneNumberCenter.setText("");
+			    phoneNumberLast.setText("");
 			}
 		});
-		informationResetBtn.setBounds(534, 236, 84, 34);
+		informationResetBtn.setBounds(890, 330, 150, 80);
 		contentPane.add(informationResetBtn);
 
-		JButton changeBtn = new JButton("변경하기");
+		JButton changeBtn = new JButton();
+		ImageIcon imgchangeBtn = new ImageIcon("img/myset_1.png");
+		changeBtn.setContentAreaFilled(false); 
+		changeBtn.setBorderPainted(false);
+		changeBtn.setIcon(imgchangeBtn);
+		changeBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgchangeBtn = new ImageIcon("img/myset_1.png");
+			changeBtn.setIcon(imgchangeBtn);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgchangeBtn = new ImageIcon("img/myset.png");
+			changeBtn.setIcon(imgchangeBtn);
+			
+		    }
+		});
+		
 		changeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int response = JOptionPane.showConfirmDialog(null, "정말로 변경하시겠습니까?", "예", JOptionPane.YES_NO_OPTION,
@@ -250,36 +410,81 @@ public class ChangeInformationFrame extends JFrame {
 				}
 			}
 		});
-		changeBtn.setBounds(624, 236, 82, 34);
+		changeBtn.setBounds(1000, 330, 150, 80);
 		contentPane.add(changeBtn);
 
 
 		nowPassword = new JTextField();
-		nowPassword.setBounds(336, 352, 370, 34);
+		nowPassword.setBounds(690, 502, 290, 34);
 		contentPane.add(nowPassword);
 		nowPassword.setColumns(10);
 
 		newPassword = new JTextField();
 		newPassword.setColumns(10);
-		newPassword.setBounds(336, 396, 370, 34);
+		newPassword.setBounds(690, 555, 290, 34);
 		contentPane.add(newPassword);
 
 		newPasswordMatch = new JTextField();
 		newPasswordMatch.setColumns(10);
-		newPasswordMatch.setBounds(336, 442, 370, 34);
+		newPasswordMatch.setBounds(690, 605, 290, 34);
 		contentPane.add(newPasswordMatch);
 
-		JButton passwordResetBtn = new JButton("초기화");
+		JButton passwordResetBtn = new JButton();
+		ImageIcon imgpasswordReset = new ImageIcon("img/myreset_1.png");
+		passwordResetBtn.setContentAreaFilled(false); 
+		passwordResetBtn.setBorderPainted(false);
+		passwordResetBtn.setIcon(imgpasswordReset);
+		passwordResetBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgpasswordReset = new ImageIcon("img/myreset_1.png");
+			passwordResetBtn.setIcon(imgpasswordReset);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgpasswordReset = new ImageIcon("img/myreset.png");
+			passwordResetBtn.setIcon(imgpasswordReset);
+			
+		    }
+		});
+		
 		passwordResetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			    nowPassword.setText("");
+			    newPassword.setText("");
+			    newPasswordMatch.setText("");
 			}
 		});
-		passwordResetBtn.setBounds(534, 510, 84, 34);
+		passwordResetBtn.setBounds(890, 650,150, 80);
 		contentPane.add(passwordResetBtn);
 
-		JButton passwordChangeBtn = new JButton("저장");
-		passwordChangeBtn.setBounds(624, 510, 82, 34);
+		JButton passwordChangeBtn = new JButton();
+		ImageIcon imgpassChange = new ImageIcon("img/myset_1.png");
+		passwordChangeBtn.setContentAreaFilled(false); 
+		passwordChangeBtn.setBorderPainted(false);
+		passwordChangeBtn.setIcon(imgpassChange);
+		passwordChangeBtn.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgpassChange = new ImageIcon("img/myset_1.png");
+			passwordChangeBtn.setIcon(imgpassChange);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgpassChange = new ImageIcon("img/myset.png");
+			passwordChangeBtn.setIcon(imgpassChange);
+			
+		    }
+		});
+		
+		passwordChangeBtn.setBounds(1000, 650, 150, 80);
 		contentPane.add(passwordChangeBtn);
+		frame.getContentPane().add(contentPane);
+	        frame.setVisible(true);
 	}
 
 	private static List<String> getMediumAreas(String bigArea) {
