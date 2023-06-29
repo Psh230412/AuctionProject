@@ -122,12 +122,13 @@ public class MypageFrame extends JFrame {
 	private static JLabel[] prices = new JLabel[15];
 
 	private static JButton previousEnroll;
-
 	private static JButton nextEnroll;
+	private static JLabel lblNum1;
 
 	private static JButton previousParticipate;
-
 	private static JButton nextParticipate;
+	private static JLabel lblNum2;
+	
 
 //	private static JButton previousBidinfo;
 
@@ -372,19 +373,27 @@ public class MypageFrame extends JFrame {
 		pnl3.setOpaque(false);
 
 		previousEnroll = new JButton("이전");
-		previousEnroll.setBounds(60, 650, 150, 63);
+		previousEnroll.setBounds(200, 680, 80, 40);
 		frame.add(previousEnroll);
+		
+		lblNum1 = new JLabel(" - 1 - ");
+		lblNum1.setBounds(300, 680, 80, 40);
+		frame.add(lblNum1);
 
 		nextEnroll = new JButton("다음");
-		nextEnroll.setBounds(210, 650, 150, 63);
+		nextEnroll.setBounds(400, 680, 80, 40);
 		frame.add(nextEnroll);
 
 		previousParticipate = new JButton("이전");
-		previousParticipate.setBounds(450, 650, 150, 63);
+		previousParticipate.setBounds(730, 680, 80, 40);
 		frame.add(previousParticipate);
+		
+		lblNum2 = new JLabel(" - 1 - ");
+		lblNum2.setBounds(830, 680, 80, 40);
+		frame.add(lblNum2);
 
 		nextParticipate = new JButton("다음");
-		nextParticipate.setBounds(600, 650, 150, 63);
+		nextParticipate.setBounds(930, 680, 80, 40);
 		frame.add(nextParticipate);
 
 //		previousBidinfo = new JButton("이전");
@@ -568,7 +577,11 @@ public class MypageFrame extends JFrame {
 		nextEnroll.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				data.setIndex(data.getIndex() + 5);
+				ListRepository repo = new ListRepository();
+				List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
+				if (Math.floor(enrollList.size() / 5) > (data.getIndex() / 5)) {
+					data.setIndex(data.getIndex() + 5);
+				}
 			}
 		});
 
@@ -586,10 +599,14 @@ public class MypageFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				data.setIndexPar(data.getIndexPar() + 5);
-
+				ListRepository repo = new ListRepository();
+				List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
+				if (Math.floor(participateList.size() / 5) > (data.getIndexPar() / 5)) {
+					data.setIndex(data.getIndexPar() + 5);
+				}
 			}
 		});
+		
 
 		inputImages();
 		inputNames();
@@ -700,7 +717,6 @@ public class MypageFrame extends JFrame {
 			prices[i].setText("");
 			prices[i].setHorizontalAlignment(SwingConstants.RIGHT);
 			prices[i].setVerticalAlignment(SwingConstants.CENTER);
-			prices[i].setFont(prices[i].getFont().deriveFont(18f));
 			Font font = new Font("맑은 고딕", Font.BOLD, 18);
 			prices[i].setFont(font);
 		}
@@ -708,6 +724,14 @@ public class MypageFrame extends JFrame {
 		for (int i = 0; i < images.length; i++) {
 			images[i].setIcon(null);
 		}
+		lblNum1.setText(" - " + String.valueOf((data.getIndex() / 5) + 1) + " - ");
+		lblNum2.setText(" - " + String.valueOf((data.getIndexPar() / 5) + 1) + " - ");
+		lblNum1.setHorizontalAlignment(SwingConstants.CENTER);
+		Font font = new Font("맑은 고딕", Font.BOLD, 25);
+		lblNum1.setFont(font);
+		
+		lblNum2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNum2.setFont(font);
 	}
 
 	public static String TimeFormatString(LocalDateTime startTime) {
@@ -724,6 +748,8 @@ public class MypageFrame extends JFrame {
 	public static void updatLabel(LocalDateTime now) {
 		ListRepository repo = new ListRepository();
 		Connection conn = null;
+		lblNum1.setText(" - " + String.valueOf((data.getIndex() / 5) + 1) + " - ");
+		lblNum2.setText(" - " + String.valueOf((data.getIndexPar() / 5) + 1) + " - ");
 
 		try {
 			conn = DBUtil.getConnection();
