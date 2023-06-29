@@ -117,13 +117,12 @@ public class MypageFrame extends JFrame {
 	private static JLabel lblPrice34;
 	private static JLabel lblPrice35;
 
-
 	private static JLabel[] images = new JLabel[15];
 	private static JLabel[] names = new JLabel[15];
 	private static JLabel[] times = new JLabel[10];
 	private static JLabel[] bids = new JLabel[5];
 	private static JLabel[] prices = new JLabel[15];
-
+	
 	public static void inputImages() {
 		// 등록패널 제품이미지라벨
 		images[0] = lblImage11;
@@ -356,13 +355,13 @@ public class MypageFrame extends JFrame {
 	
 		contentPane.add(mainBtn);
 
-		JPanel pnl1 = new JPanel(new GridLayout(5, 0));
-		JPanel pnl2 = new JPanel(new GridLayout(5, 0));
+		JPanel pnl1 = new JPanel(new GridLayout(6, 0));
+		JPanel pnl2 = new JPanel(new GridLayout(6, 0));
 		JPanel pnl3 = new JPanel(new GridLayout(5, 0));
 
-		pnl1.setBounds(100, 300, 450, 350);
+		pnl1.setBounds(100, 300, 450, 420);
 		pnl1.setOpaque(false);
-		pnl2.setBounds(650, 300, 450, 350);
+		pnl2.setBounds(650, 300, 450, 420);
 		pnl2.setOpaque(false);
 		pnl3.setBounds(780, 350, 300, 300);
 		pnl3.setOpaque(false);
@@ -527,6 +526,27 @@ public class MypageFrame extends JFrame {
 		pnl34.add(lblPrice34);
 		lblPrice35 = new JLabel(" - ");
 		pnl35.add(lblPrice35);
+		
+		JPanel pnl111 = new JPanel();
+		JButton previousBtn = new JButton("이전");
+		JButton nextBtn = new JButton("다음");
+		
+		pnl111.add(previousBtn);
+		pnl111.add(nextBtn);
+		
+		previousBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				data.setIndex(data.getIndex() - 5);
+			}
+		});
+		
+		nextBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				data.setIndex(data.getIndex() + 5);
+			}
+		});
 
 		inputImages();
 		inputNames();
@@ -555,6 +575,8 @@ public class MypageFrame extends JFrame {
 		pnl1.add(pnl13);
 		pnl1.add(pnl14);
 		pnl1.add(pnl15);
+		pnl1.add(pnl111);
+		
 		pnl2.add(pnl21);
 		pnl2.add(pnl22);
 		pnl2.add(pnl23);
@@ -671,12 +693,17 @@ public class MypageFrame extends JFrame {
 			initialLabel();
 			
 			if (enrollList != null) {
-				for (int i = 0; i < enrollList.size(); i++) {
+				int count = 0;
+				for (int i = data.getIndex(); i < enrollList.size(); i++) {
 					enroll = enrollList.get(i);
+					count++;
+					if (count == 6) {
+						break;
+					}
 					if (enroll == null) {
 						continue;
 					} else {
-						switch (i) {
+						switch (i % 5) {
 						case 0: {
 							lblPrice11.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice11.setPreferredSize(new Dimension(140, lblPrice11.getPreferredSize().height));
