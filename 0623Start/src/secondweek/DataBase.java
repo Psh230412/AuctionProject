@@ -4,6 +4,7 @@ public class DataBase {
 	private User currentUser;
 	private Product particiapteProduct;
 	private int index = 0;
+	private int indexPar = 0;
 
 	public DataBase() {
 		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
@@ -32,5 +33,13 @@ public class DataBase {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	public int getIndexPar() {
+		return indexPar;
+	}
+
+	public void setIndexPar(int indexPar) {
+		this.indexPar = indexPar;
 	}
 }
