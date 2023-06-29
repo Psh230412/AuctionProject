@@ -62,7 +62,7 @@ public class DetailFrame extends JFrame {
 
 		lblImage = new JLabel("이미지");
 //		lblImage.setBounds(168, 230, 94, 15);
-		lblImage.setBounds(50, 200, 300, 300);
+		lblImage.setBounds(50, 100, 400, 400);
 		
 		for(int i=0;i<ImageRetriever.llistForDetail.size();i++) {
 			if(ImageRetriever.llistForDetail.get(i).getProductno()==data.getProduct().getProductNo()) {
