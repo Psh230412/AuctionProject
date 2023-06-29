@@ -4,6 +4,7 @@ package secondweek;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -534,7 +535,7 @@ public class MypageFrame extends JFrame {
 		inputPrices();
 
 		for (int i = 0; i < names.length; i++) {
-			names[i].setForeground(Color.GREEN);
+//			names[i].setForeground(Color.GREEN);
 		}
 		
 		for (int i = 0; i < times.length; i++) {
@@ -617,14 +618,16 @@ public class MypageFrame extends JFrame {
 			names[i].setText("");
 			names[i].setHorizontalAlignment(SwingConstants.RIGHT);
 			names[i].setVerticalAlignment(SwingConstants.CENTER);
-			names[i].setFont(names[i].getFont().deriveFont(18f));
+			Font font = new Font("맑은 고딕", Font.BOLD, 18);
+			names[i].setFont(font);
 		}
 		
 		for (int i = 0; i < times.length; i++) {
 			times[i].setText("");
 			times[i].setHorizontalAlignment(SwingConstants.CENTER);
 			times[i].setVerticalAlignment(SwingConstants.CENTER);
-			times[i].setFont(times[i].getFont().deriveFont(18f));
+			Font font = new Font("맑은 고딕", Font.BOLD, 18);
+			times[i].setFont(font);
 		}
 		
 		for (int i = 0; i < bids.length; i++) {
@@ -636,6 +639,8 @@ public class MypageFrame extends JFrame {
 			prices[i].setHorizontalAlignment(SwingConstants.RIGHT);
 			prices[i].setVerticalAlignment(SwingConstants.CENTER);
 			prices[i].setFont(prices[i].getFont().deriveFont(18f));
+			Font font = new Font("맑은 고딕", Font.BOLD, 18);
+			prices[i].setFont(font);
 		}
 		
 		for (int i = 0; i < images.length; i++) {
