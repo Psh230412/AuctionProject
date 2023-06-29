@@ -46,10 +46,9 @@ public class DetailFrame extends JFrame {
 	private static JLabel lblTime;
 
 	private static JLabel lblPrice;
+	private static JLabel lblPriceMin;
 
 	private static DataBase data;
-
-	private static JLabel lblMessage;
 
 	private static JLabel lblisOwn;
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
@@ -86,8 +85,10 @@ public class DetailFrame extends JFrame {
 		lblTime.setBounds(514, 346, 94, 15);
 		lblPrice = new JLabel("가격");
 		lblPrice.setBounds(514, 278, 94, 15);
-		lblMessage = new JLabel("입찰가격은 현재가격을 상회해야 합니다.");
-		lblMessage.setBounds(380, 562, 268, 35);
+		lblPriceMin = new JLabel("최소입찰가 : 0원");
+		lblPriceMin.setBounds(324, 478, 194, 35);
+		JLabel lblMessage = new JLabel("입찰가격은 최소입찰가를 상회해야 합니다.");
+		lblMessage.setBounds(380, 562, 318, 35);
 		lblisOwn = new JLabel();
 		lblisOwn.setBounds(200, 562 + 35 + 49, 400, 35);
 
@@ -100,21 +101,22 @@ public class DetailFrame extends JFrame {
 		if (!timer.isOwn(data.getCurrentUser().getNo(), data.getProduct().getProductNo())) {
 			lblisOwn.setText(data.getProduct().getProductName() + "은(는) 본인이 등록한 상품입니다.");
 			participateBtn.setBackground(Color.black);
-			
+
 		} else {
 			participateBtn.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
-					
 					Product product = data.getProduct();
 					String bid = priceTF.getText();
-					
 
-					if (product.getProductPriceNow() >= Integer.parseInt(bid)) {
+					if (PriceMin(product.getProductPriceNow()) >= Integer.parseInt(bid)) {
 						lblMessage.setForeground(Color.RED);
-//					lblMessage.setText("입찰가격은 현재가격의 105% 이상이어야 합니다.");
+						lblMessage.setText("입찰가격은 현재가격의 105% 이상이어야 합니다.");
+					} else if (!bidMin(bid)) {
+						lblMessage.setForeground(Color.RED);
+						lblMessage.setText("입찰단위는 100원입니다.");
 					} else {
 						int choice = JOptionPane.showConfirmDialog(null, "입찰을 하면 취소할 수 없습니다.\n정말 입찰하시겠습니까?", "입찰",
 								JOptionPane.YES_NO_OPTION);
@@ -124,19 +126,16 @@ public class DetailFrame extends JFrame {
 
 							int auctionno = timer.getAuctionNo(data.getProduct().getProductNo());
 							timer.plusOneMinute(auctionno);
-							
+
 							int setNo = product.getSetNo();
 							timer.updatePrice(setNo, bid);
 
 							new AuctionFrame(data);
 							setVisible(false);
 						}
-
 					}
-
 				}
 			});
-
 		}
 
 		JButton backButton = new JButton("뒤로가기");
@@ -156,6 +155,7 @@ public class DetailFrame extends JFrame {
 		pnl.add(lblDetail);
 		pnl.add(lblTime);
 		pnl.add(lblPrice);
+		pnl.add(lblPriceMin);
 		pnl.add(lblMessage);
 		pnl.add(lblisOwn);
 		pnl.add(participateBtn);
@@ -192,6 +192,17 @@ public class DetailFrame extends JFrame {
 		setResizable(false);
 	}
 
+	public boolean bidMin(String bid) {
+		int result = Integer.parseInt(bid);
+		return (result % 100 == 0);
+	}
+
+	public static int PriceMin(int price) {
+		double result = price * 1.05;
+		int roundedResult = (int) Math.ceil(result / 100) * 100;
+		return roundedResult;
+	}
+
 	public static String TimeFormatString(LocalDateTime startTime) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd일 HH:mm:ss");
 		return startTime.format(formatter);
@@ -216,6 +227,7 @@ public class DetailFrame extends JFrame {
 			String result1 = duration(product.getEndTime(), now);
 			lblTime.setText(result1);
 			lblPrice.setText(formatInt(product.getProductPriceNow()));
+			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow())));
 
 		} catch (SQLException e) {
 

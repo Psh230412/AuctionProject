@@ -3,6 +3,7 @@ package secondweek;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -324,6 +325,8 @@ public class AuctionFrame extends JFrame {
 
 		for (int i = 0; i < btns.length; i++) {
 			int index = i;
+			Font font = new Font("맑은 고딕", Font.BOLD, 14);
+			btns[i].setFont(font);
 			btns[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -412,6 +415,8 @@ public class AuctionFrame extends JFrame {
 		lblImage8.setIcon(new ImageIcon("img/임시이미지.png"));
 		lblImage9.setIcon(new ImageIcon("img/임시이미지.png"));
 		lblImage10.setIcon(new ImageIcon("img/임시이미지.png"));
+		
+		Font font = new Font("맑은 고딕", Font.BOLD, 12);
 	
 		lblName1.setText("");
 		lblName2.setText("");
@@ -423,6 +428,17 @@ public class AuctionFrame extends JFrame {
 		lblName8.setText("");
 		lblName9.setText("");
 		lblName10.setText("");
+		lblName1.setFont(font);
+		lblName2.setFont(font);
+		lblName3.setFont(font);
+		lblName4.setFont(font);
+		lblName5.setFont(font);
+		lblName6.setFont(font);
+		lblName7.setFont(font);
+		lblName8.setFont(font);
+		lblName9.setFont(font);
+		lblName10.setFont(font);
+		
 		
 		lblTime1.setText("");
 		lblTime2.setText("");
@@ -445,27 +461,37 @@ public class AuctionFrame extends JFrame {
 		lblPrice8.setText("");
 		lblPrice9.setText("");
 		lblPrice10.setText("");
+		lblPrice1.setFont(font);
+		lblPrice2.setFont(font);
+		lblPrice3.setFont(font);
+		lblPrice4.setFont(font);
+		lblPrice5.setFont(font);
+		lblPrice6.setFont(font);
+		lblPrice7.setFont(font);
+		lblPrice8.setFont(font);
+		lblPrice9.setFont(font);
+		lblPrice10.setFont(font);
 		
 		lblTime1.setForeground(Color.BLACK);
-		lblTime1.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime1.setFont(font);
 		lblTime2.setForeground(Color.BLACK);
-		lblTime2.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime2.setFont(font);
 		lblTime3.setForeground(Color.BLACK);
-		lblTime3.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime3.setFont(font);
 		lblTime4.setForeground(Color.BLACK);
-		lblTime4.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime4.setFont(font);
 		lblTime5.setForeground(Color.BLACK);
-		lblTime5.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime5.setFont(font);
 		lblTime6.setForeground(Color.BLACK);
-		lblTime6.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime6.setFont(font);
 		lblTime7.setForeground(Color.BLACK);
-		lblTime7.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime7.setFont(font);
 		lblTime8.setForeground(Color.BLACK);
-		lblTime8.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime8.setFont(font);
 		lblTime9.setForeground(Color.BLACK);
-		lblTime9.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime9.setFont(font);
 		lblTime10.setForeground(Color.BLACK);
-		lblTime10.setFont(lblTime1.getFont().deriveFont(12f));
+		lblTime10.setFont(font);
 		
 		for (int i = 0; i < btns.length; i++) {
 			btns[i].setVisible(false);
