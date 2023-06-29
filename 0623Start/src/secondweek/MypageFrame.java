@@ -114,12 +114,21 @@ public class MypageFrame extends JFrame {
 	private static JLabel lblPrice34;
 	private static JLabel lblPrice35;
 
-
 	private static JLabel[] images = new JLabel[15];
 	private static JLabel[] names = new JLabel[15];
 	private static JLabel[] times = new JLabel[10];
 	private static JLabel[] bids = new JLabel[5];
 	private static JLabel[] prices = new JLabel[15];
+
+	private static JButton previousEnroll;
+
+	private static JButton nextEnroll;
+
+	private static JButton previousParticipate;
+
+	private static JButton nextParticipate;
+
+	private static JButton previousBidinfo;
 
 	public static void inputImages() {
 		// 등록패널 제품이미지라벨
@@ -221,30 +230,27 @@ public class MypageFrame extends JFrame {
 
 		timer.inputSuccessbidinfo();
 		timer.setIsBid();
-		 
-		 frame = new JFrame();
-				frame.setSize(1200,800);
-			        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-			        contentPane = new JPanel(){
 
-				@Override
-				protected void paintComponent(Graphics g) {
-					super.paintComponent(g);
+		frame = new JFrame();
+		frame.setSize(1200, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-					Toolkit toolkit = Toolkit.getDefaultToolkit();
+		contentPane = new JPanel() {
 
-					Image image = toolkit.getImage("img/myPage.png");
-					g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-				}
-			};
-			
-			
-			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-			setContentPane(contentPane);
-			contentPane.setLayout(null);
-		
-	
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+				Image image = toolkit.getImage("img/myPage.png");
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
+
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
 		JLabel userNameLb = new JLabel("user_name");
 		userNameLb.setBounds(190, 160, 188, 67);
@@ -263,60 +269,60 @@ public class MypageFrame extends JFrame {
 		contentPane.add(resetBtn);
 		resetBtn.setBounds(330, 123, 210, 120);
 		ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
-		resetBtn.setContentAreaFilled(false); 
+		resetBtn.setContentAreaFilled(false);
 		resetBtn.setBorderPainted(false);
 		resetBtn.setIcon(imgreset);
 		resetBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
-			resetBtn.setIcon(imgreset);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgreset = new ImageIcon("img/changeinfo.png");
-			resetBtn.setIcon(imgreset);
-			
-		    }
-		 
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
+				resetBtn.setIcon(imgreset);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreset = new ImageIcon("img/changeinfo.png");
+				resetBtn.setIcon(imgreset);
+
+			}
+
 		});
-		
+
 		contentPane.add(resetBtn);
 
 		JButton resgistBtn = new JButton("물품등록하기");
 		resgistBtn.setBounds(600, 123, 210, 120);
 		ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
-		resgistBtn.setContentAreaFilled(false); 
+		resgistBtn.setContentAreaFilled(false);
 		resgistBtn.setBorderPainted(false);
 		resgistBtn.setIcon(imgresgist);
 		resgistBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
-			resgistBtn.setIcon(imgresgist);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgreset = new ImageIcon("img/myregist.png");
-			resgistBtn.setIcon(imgreset);
-			
-		    }
-		 
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
+				resgistBtn.setIcon(imgresgist);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreset = new ImageIcon("img/myregist.png");
+				resgistBtn.setIcon(imgreset);
+
+			}
+
 		});
-		
+
 		resgistBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new RegistFrame(data);
-				 frame.setVisible(false);
+				frame.setVisible(false);
 			}
 		});
-		
+
 		contentPane.add(resgistBtn);
 
 		JButton mainBtn = new JButton("메인화면");
@@ -356,15 +362,37 @@ public class MypageFrame extends JFrame {
 		JPanel pnl1 = new JPanel(new GridLayout(5, 0));
 		JPanel pnl2 = new JPanel(new GridLayout(5, 0));
 		JPanel pnl3 = new JPanel(new GridLayout(5, 0));
-		
-		
 
 		pnl1.setBounds(60, 350, 300, 300);
 		pnl1.setOpaque(false);
 		pnl2.setBounds(450, 350, 300, 300);
 		pnl2.setOpaque(false);
-		pnl3.setBounds(780, 350, 300, 300);
+		pnl3.setBounds(820, 350, 300, 300);
 		pnl3.setOpaque(false);
+
+		previousEnroll = new JButton("이전");
+		previousEnroll.setBounds(60, 650, 150, 63);
+		frame.add(previousEnroll);
+
+		nextEnroll = new JButton("다음");
+		nextEnroll.setBounds(210, 650, 150, 63);
+		frame.add(nextEnroll);
+
+		previousParticipate = new JButton("이전");
+		previousParticipate.setBounds(450, 650, 150, 63);
+		frame.add(previousParticipate);
+
+		nextParticipate = new JButton("다음");
+		nextParticipate.setBounds(600, 650, 150, 63);
+		frame.add(nextParticipate);
+
+		previousBidinfo = new JButton("이전");
+		previousBidinfo.setBounds(820, 650, 150, 63);
+		frame.add(previousBidinfo);
+
+		nextBidinfo = new JButton("다음");
+		nextBidinfo.setBounds(970, 650, 150, 63);
+		frame.add(nextBidinfo);
 
 		JPanel pnl11 = new JPanel();
 		pnl11.setOpaque(false);
@@ -644,6 +672,10 @@ public class MypageFrame extends JFrame {
 		return new ImageIcon(changeSize);
 	}
 
+	static int cntEnroll = 0;
+
+	private static JButton nextBidinfo;
+
 	public static void updatLabel(LocalDateTime now) {
 		ListRepository repo = new ListRepository();
 		Connection conn = null;
@@ -658,42 +690,70 @@ public class MypageFrame extends JFrame {
 			initialLabel();
 
 			if (enrollList != null) {
-				for (int i = 0; i < enrollList.size(); i++) {
+
+				if (cntEnroll >= 4) {
+					previousEnroll.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							cntEnroll -= 4;
+	
+						}
+					});
+
+				}
+
+				nextEnroll.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						cntEnroll += 4;
+	
+					}
+				});
+				
+				
+				
+				for (int i=cntEnroll; i<cntEnroll+4 && i<enrollList.size(); i++) {
+					
 					enroll = enrollList.get(i);
+					
 					if (enroll == null) {
 						continue;
 					} else {
-						switch (i) {
+						
+						switch (i%4) {
+						
 						case 0: {
 							lblPrice11.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice11.setPreferredSize(new Dimension(90, lblPrice11.getPreferredSize().height));
 							lblPrice11.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage11.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result11 = duration(enroll.getEndTime(), now);
 							lblTime11.setText(result11);
 							lblTime11.setPreferredSize(new Dimension(90, lblTime11.getPreferredSize().height));
 							lblTime11.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName11.setText(enroll.getProductname());
 							lblName11.setPreferredSize(new Dimension(50, lblName11.getPreferredSize().height));
 							lblName11.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							break;
 						}
 						case 1: {
 							lblPrice12.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice12.setPreferredSize(new Dimension(90, lblPrice12.getPreferredSize().height));
 							lblPrice12.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage12.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result12 = duration(enroll.getEndTime(), now);
 							lblTime12.setText(result12);
 							lblTime12.setPreferredSize(new Dimension(90, lblTime12.getPreferredSize().height));
 							lblTime12.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName12.setText(enroll.getProductname());
 							lblName12.setPreferredSize(new Dimension(50, lblName12.getPreferredSize().height));
 							lblName12.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -703,14 +763,14 @@ public class MypageFrame extends JFrame {
 							lblPrice13.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice13.setPreferredSize(new Dimension(90, lblPrice13.getPreferredSize().height));
 							lblPrice13.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage13.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result13 = duration(enroll.getEndTime(), now);
 							lblTime13.setText(result13);
 							lblTime13.setPreferredSize(new Dimension(90, lblTime13.getPreferredSize().height));
 							lblTime13.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName13.setText(enroll.getProductname());
 							lblName13.setPreferredSize(new Dimension(50, lblName13.getPreferredSize().height));
 							lblName13.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -720,14 +780,14 @@ public class MypageFrame extends JFrame {
 							lblPrice14.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice14.setPreferredSize(new Dimension(90, lblPrice14.getPreferredSize().height));
 							lblPrice14.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage14.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result14 = duration(enroll.getEndTime(), now);
 							lblTime14.setText(result14);
 							lblTime14.setPreferredSize(new Dimension(90, lblTime14.getPreferredSize().height));
 							lblTime14.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName14.setText(enroll.getProductname());
 							lblName14.setPreferredSize(new Dimension(50, lblName14.getPreferredSize().height));
 							lblName14.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -737,14 +797,14 @@ public class MypageFrame extends JFrame {
 							lblPrice15.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice15.setPreferredSize(new Dimension(90, lblPrice15.getPreferredSize().height));
 							lblPrice15.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage15.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result15 = duration(enroll.getEndTime(), now);
 							lblTime15.setText(result15);
 							lblTime15.setPreferredSize(new Dimension(90, lblTime15.getPreferredSize().height));
 							lblTime15.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName15.setText(enroll.getProductname());
 							lblName15.setPreferredSize(new Dimension(50, lblName15.getPreferredSize().height));
 							lblName15.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -753,6 +813,10 @@ public class MypageFrame extends JFrame {
 						}
 					}
 				}
+
+				
+				
+
 			}
 
 			List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
@@ -768,14 +832,14 @@ public class MypageFrame extends JFrame {
 							lblPrice21.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice21.setPreferredSize(new Dimension(90, lblPrice21.getPreferredSize().height));
 							lblPrice21.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage21.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result21 = duration(enroll.getEndTime(), now);
 							lblTime21.setText(result21);
 							lblTime21.setPreferredSize(new Dimension(90, lblTime21.getPreferredSize().height));
 							lblTime21.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName21.setText(enroll.getProductname());
 							lblName21.setPreferredSize(new Dimension(50, lblName21.getPreferredSize().height));
 							lblName21.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -785,14 +849,14 @@ public class MypageFrame extends JFrame {
 							lblPrice22.setText(formatInt(participate.getProductPriceNow()));
 							lblPrice22.setPreferredSize(new Dimension(90, lblPrice22.getPreferredSize().height));
 							lblPrice22.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage22.setIcon(iconSize(participate.getImage()));
-							
+
 							String result22 = duration(participate.getEndTime(), now);
 							lblTime22.setText(result22);
 							lblTime22.setPreferredSize(new Dimension(90, lblTime22.getPreferredSize().height));
 							lblTime22.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName22.setText(participate.getProductname());
 							lblName22.setPreferredSize(new Dimension(50, lblName22.getPreferredSize().height));
 							lblName22.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -802,14 +866,14 @@ public class MypageFrame extends JFrame {
 							lblPrice23.setText(formatInt(participate.getProductPriceNow()));
 							lblPrice23.setPreferredSize(new Dimension(90, lblPrice23.getPreferredSize().height));
 							lblPrice23.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage23.setIcon(iconSize(participate.getImage()));
-							
+
 							String result23 = duration(participate.getEndTime(), now);
 							lblTime23.setText(result23);
 							lblTime23.setPreferredSize(new Dimension(90, lblTime23.getPreferredSize().height));
 							lblTime23.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName23.setText(participate.getProductname());
 							lblName23.setPreferredSize(new Dimension(50, lblName23.getPreferredSize().height));
 							lblName23.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -819,14 +883,14 @@ public class MypageFrame extends JFrame {
 							lblPrice24.setText(formatInt(participate.getProductPriceNow()));
 							lblPrice24.setPreferredSize(new Dimension(90, lblPrice24.getPreferredSize().height));
 							lblPrice24.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage24.setIcon(iconSize(participate.getImage()));
-							
+
 							String result24 = duration(participate.getEndTime(), now);
 							lblTime24.setText(result24);
 							lblTime24.setPreferredSize(new Dimension(90, lblTime24.getPreferredSize().height));
 							lblTime24.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName24.setText(participate.getProductname());
 							lblName24.setPreferredSize(new Dimension(50, lblName24.getPreferredSize().height));
 							lblName24.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -836,18 +900,18 @@ public class MypageFrame extends JFrame {
 							lblPrice25.setText(formatInt(participate.getProductPriceNow()));
 							lblPrice25.setPreferredSize(new Dimension(90, lblPrice25.getPreferredSize().height));
 							lblPrice25.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage25.setIcon(iconSize(participate.getImage()));
-							
+
 							String result25 = duration(participate.getEndTime(), now);
 							lblTime25.setText(result25);
 							lblTime25.setPreferredSize(new Dimension(90, lblTime25.getPreferredSize().height));
 							lblTime25.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName25.setText(participate.getProductname());
 							lblName25.setPreferredSize(new Dimension(50, lblName25.getPreferredSize().height));
 							lblName25.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							break;
 						}
 						}
@@ -868,14 +932,14 @@ public class MypageFrame extends JFrame {
 							lblPrice31.setText(formatInt(bid.getProductPriceFinal()));
 							lblPrice31.setPreferredSize(new Dimension(90, lblPrice31.getPreferredSize().height));
 							lblPrice31.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage31.setIcon(iconSize(bid.getImage()));
-							
+
 							lblBid1.setText(bidOrNot(bid.isBid()));
-							
+
 							lblBid1.setPreferredSize(new Dimension(30, lblBid1.getPreferredSize().height));
 							lblBid1.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName31.setText(bid.getProductname());
 							lblName31.setPreferredSize(new Dimension(50, lblName31.getPreferredSize().height));
 							lblName31.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -885,72 +949,72 @@ public class MypageFrame extends JFrame {
 							lblPrice32.setText(formatInt(bid.getProductPriceFinal()));
 							lblPrice32.setPreferredSize(new Dimension(90, lblPrice32.getPreferredSize().height));
 							lblPrice32.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage32.setIcon(iconSize(bid.getImage()));
-							
+
 							lblBid2.setText(bidOrNot(bid.isBid()));
-							
+
 							lblBid2.setPreferredSize(new Dimension(30, lblBid2.getPreferredSize().height));
 							lblBid2.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName32.setText(bid.getProductname());
 							lblName32.setPreferredSize(new Dimension(50, lblName32.getPreferredSize().height));
 							lblName32.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							break;
 						}
 						case 2: {
 							lblPrice33.setText(formatInt(bid.getProductPriceFinal()));
 							lblPrice33.setPreferredSize(new Dimension(90, lblPrice33.getPreferredSize().height));
 							lblPrice33.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage33.setIcon(iconSize(bid.getImage()));
-							
+
 							lblBid3.setText(bidOrNot(bid.isBid()));
-							
+
 							lblBid3.setPreferredSize(new Dimension(30, lblBid3.getPreferredSize().height));
 							lblBid3.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName33.setText(bid.getProductname());
 							lblName33.setPreferredSize(new Dimension(50, lblName33.getPreferredSize().height));
 							lblName33.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							break;
 						}
 						case 3: {
 							lblPrice34.setText(formatInt(bid.getProductPriceFinal()));
 							lblPrice34.setPreferredSize(new Dimension(90, lblPrice34.getPreferredSize().height));
 							lblPrice34.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage34.setIcon(iconSize(bid.getImage()));
-							
+
 							lblBid4.setText(bidOrNot(bid.isBid()));
-							
+
 							lblBid4.setPreferredSize(new Dimension(30, lblBid4.getPreferredSize().height));
 							lblBid4.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName34.setText(bid.getProductname());
 							lblName34.setPreferredSize(new Dimension(50, lblName34.getPreferredSize().height));
 							lblName34.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							break;
 						}
 						case 4: {
 							lblPrice35.setText(formatInt(bid.getProductPriceFinal()));
 							lblPrice35.setPreferredSize(new Dimension(90, lblPrice35.getPreferredSize().height));
 							lblPrice35.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblImage35.setIcon(iconSize(bid.getImage()));
-							
+
 							lblBid5.setText(bidOrNot(bid.isBid()));
-							
+
 							lblBid5.setPreferredSize(new Dimension(30, lblBid5.getPreferredSize().height));
 							lblBid5.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							lblName35.setText(bid.getProductname());
 							lblName35.setPreferredSize(new Dimension(50, lblName35.getPreferredSize().height));
 							lblName35.setHorizontalAlignment(SwingConstants.RIGHT);
-							
+
 							break;
 						}
 						}
