@@ -9,8 +9,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Blob;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +26,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -45,7 +51,8 @@ public class AuctionFrame extends JFrame {
 
 	private Scheduler scheduler;
 	private static Timer timer;
-	
+
+	private static JTextField searchTab;
 	private static JLabel lblImage1;
 	private static JLabel lblImage2;
 	private static JLabel lblImage3;
@@ -56,6 +63,8 @@ public class AuctionFrame extends JFrame {
 	private static JLabel lblImage8;
 	private static JLabel lblImage9;
 	private static JLabel lblImage10;
+
+	JLabel[] lblImageArr = new JLabel[10];
 
 	private static JLabel lblTime1;
 	private static JLabel lblTime2;
@@ -68,6 +77,8 @@ public class AuctionFrame extends JFrame {
 	private static JLabel lblTime9;
 	private static JLabel lblTime10;
 
+	JLabel[] lblTimeArr = new JLabel[10];
+
 	private static JLabel lblPrice1;
 	private static JLabel lblPrice2;
 	private static JLabel lblPrice3;
@@ -79,6 +90,8 @@ public class AuctionFrame extends JFrame {
 	private static JLabel lblPrice9;
 	private static JLabel lblPrice10;
 
+	JLabel[] lblPriceArr = new JLabel[10];
+
 	private static JLabel lblName1;
 	private static JLabel lblName2;
 	private static JLabel lblName3;
@@ -89,12 +102,27 @@ public class AuctionFrame extends JFrame {
 	private static JLabel lblName8;
 	private static JLabel lblName9;
 	private static JLabel lblName10;
-	
+
+	JLabel[] lblNameArr = new JLabel[10];
+
 	private JFrame frame;
 	private JPanel contentPane;
 	private static JButton[] btns;
 
 	public AuctionFrame(DataBase data) {
+		for (int i = 0; i < lblImageArr.length; i++) {
+			lblImageArr[i] = new JLabel();
+		}
+		for (int i = 0; i < lblNameArr.length; i++) {
+			lblNameArr[i] = new JLabel();
+		}
+		for (int i = 0; i < lblPriceArr.length; i++) {
+			lblPriceArr[i] = new JLabel();
+		}
+		for (int i = 0; i < lblTimeArr.length; i++) {
+			lblTimeArr[i] = new JLabel();
+		}
+
 		timer = new Timer();
 		frame = new JFrame();
 		frame.setSize(1200, 1000);
@@ -128,6 +156,14 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				new MypageFrame(data);
 				frame.setVisible(false);
+
+//				try {
+//					scheduler.shutdown();
+//				} catch (SchedulerException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+
 			}
 		});
 
@@ -158,11 +194,101 @@ public class AuctionFrame extends JFrame {
 				}
 			}
 		});
+		JButton searchBtn = new JButton("S");
+		searchBtn.setBounds(53, 150, 52, 40);
+		searchBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (searchTab.getText().length() > 0) {
+					ImageRetriever.listForSearch.clear();
+
+					resetLabel();
+					String searchObject = searchTab.getText();
+					LocalDateTime now = LocalDateTime.now();
+
+					Connection conn = null;
+					PreparedStatement stmt = null;
+					ResultSet rs = null;
+
+					List<Auction> list = ImageRetriever.listForSearch;
+
+					try {
+
+						scheduler.shutdown();
+						conn = DBUtil.getConnection();
+
+//					이미지 이름 가격 남은 시간
+						stmt = conn.prepareStatement(
+								"SELECT p.productname,p.image,a.finalprice,a.deadline  FROM enrollmentinfo e\r\n"
+										+ "INNER JOIN auction a ON a.setno = e.setno\r\n"
+										+ "INNER JOIN product p ON e.productno=p.productno\r\n"
+										+ "WHERE productname LIKE ?;");
+						stmt.setString(1, "%" + searchObject + "%");
+						rs = stmt.executeQuery();
+
+						while (rs.next()) {
+							Blob imageBlob = rs.getBlob("image");
+							byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
+
+							String productname = rs.getString("productname");
+							int finalprice = rs.getInt("finalprice");
+							Timestamp deadline = rs.getTimestamp("deadline");
+
+							ImageRetriever.setImageForSearch(imageBytes, productname, finalprice, deadline);
+
+						}
+
+						for (int i = 0; i < list.size() && i < lblPriceArr.length; i++) {
+							lblPriceArr[i].setText(formatInt(list.get(i).getFinalprice()));
+							lblPriceArr[i]
+									.setPreferredSize(new Dimension(200, lblPriceArr[i].getPreferredSize().height));
+							lblPriceArr[i].setHorizontalAlignment(SwingConstants.CENTER);
+
+							lblNameArr[i].setText(list.get(i).getProductname());
+							lblNameArr[i].setPreferredSize(new Dimension(200, lblNameArr[i].getPreferredSize().height));
+							lblNameArr[i].setHorizontalAlignment(SwingConstants.CENTER);
+
+							lblImageArr[i].setIcon(iconSize(list.get(i).getImageIcon()));
+
+							String result = duration(list.get(i).getDeadline().toLocalDateTime(), now);
+							lblTimeArr[i].setText(result);
+							lblTimeArr[i].setPreferredSize(new Dimension(200, lblTimeArr[i].getPreferredSize().height));
+							lblTimeArr[i].setHorizontalAlignment(SwingConstants.CENTER);
+
+							if (durationTen(list.get(i).getDeadline().toLocalDateTime(), now)) {
+								lblTimeArr[i].setForeground(Color.RED);
+								lblTimeArr[i].setFont(lblTimeArr[i].getFont().deriveFont(15f));
+							}
+
+							btns[i].setVisible(true);
+						}
+
+//					btns[i].setVisible(true);
+
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					} catch (SchedulerException e1) {
+						e1.printStackTrace();
+					} finally {
+						DBUtil.close(rs);
+						DBUtil.close(stmt);
+						DBUtil.close(conn);
+					}
+
+				}
+			}
+		});
+
+		searchTab = new JTextField();
+		searchTab.setBounds(105, 150, 300, 40);
 
 		contentPane.add(userLbl);
 		contentPane.add(mypageBtn);
 		contentPane.add(logoutBtn);
 		contentPane.add(exitBtn);
+		contentPane.add(searchTab);
+		contentPane.add(searchBtn);
 
 		JPanel pnl1 = new JPanel();
 		pnl1.setLayout(new FlowLayout());
@@ -185,128 +311,125 @@ public class AuctionFrame extends JFrame {
 		pnl9.setBounds(720, 520, 200, 300);
 		JPanel pnl10 = new JPanel();
 		pnl10.setBounds(940, 520, 200, 300);
-		
-		lblImage1 = new JLabel("");
+
+		lblImage1 = lblImageArr[0];
 		pnl1.add(lblImage1);
 
-		lblImage2 = new JLabel("");
+		lblImage2 = lblImageArr[1];
 		pnl2.add(lblImage2);
 
-		lblImage3 = new JLabel("");
+		lblImage3 = lblImageArr[2];
 		pnl3.add(lblImage3);
 
-		lblImage4 = new JLabel("");
+		lblImage4 = lblImageArr[3];
 		pnl4.add(lblImage4);
 
-		lblImage5 = new JLabel("");
+		lblImage5 = lblImageArr[4];
 		pnl5.add(lblImage5);
 
-		lblImage6 = new JLabel("");
+		lblImage6 = lblImageArr[5];
 		pnl6.add(lblImage6);
 
-		lblImage7 = new JLabel("");
+		lblImage7 = lblImageArr[6];
 		pnl7.add(lblImage7);
 
-		lblImage8 = new JLabel("");
+		lblImage8 = lblImageArr[7];
 		pnl8.add(lblImage8);
 
-		lblImage9 = new JLabel("");
+		lblImage9 = lblImageArr[8];
 		pnl9.add(lblImage9);
 
-		lblImage10 = new JLabel("");
+		lblImage10 = lblImageArr[9];
 		pnl10.add(lblImage10);
-		
-		
-		lblName1 = new JLabel("");
+
+		lblName1 = lblNameArr[0];
 		pnl1.add(lblName1);
-		
-		lblName2 = new JLabel("");
+
+		lblName2 = lblNameArr[1];
 		pnl2.add(lblName2);
 
-		lblName3 = new JLabel("");
+		lblName3 = lblNameArr[2];
 		pnl3.add(lblName3);
-		
-		lblName4 = new JLabel("");
+
+		lblName4 = lblNameArr[3];
 		pnl4.add(lblName4);
-		
-		lblName5 = new JLabel("");
+
+		lblName5 = lblNameArr[4];
 		pnl5.add(lblName5);
-		
-		lblName6 = new JLabel("");
+
+		lblName6 = lblNameArr[5];
 		pnl6.add(lblName6);
-		
-		lblName7 = new JLabel("");
+
+		lblName7 = lblNameArr[6];
 		pnl7.add(lblName7);
-		
-		lblName8 = new JLabel("");
+
+		lblName8 = lblNameArr[7];
 		pnl8.add(lblName8);
-		
-		lblName9 = new JLabel("");
+
+		lblName9 = lblNameArr[8];
 		pnl9.add(lblName9);
-		
-		lblName10 = new JLabel("");
+
+		lblName10 = lblNameArr[9];
 		pnl10.add(lblName10);
 
-		
-		lblPrice1 = new JLabel("");
+		lblPrice1 = lblPriceArr[0];
 		pnl1.add(lblPrice1);
 
-		lblPrice2 = new JLabel("");
+		lblPrice2 = lblPriceArr[1];
 		pnl2.add(lblPrice2);
 
-		lblPrice3 = new JLabel("");
+		lblPrice3 = lblPriceArr[2];
 		pnl3.add(lblPrice3);
 
-		lblPrice4 = new JLabel("");
+		lblPrice4 = lblPriceArr[3];
 		pnl4.add(lblPrice4);
 
-		lblPrice5 = new JLabel("");
+		lblPrice5 = lblPriceArr[4];
 		pnl5.add(lblPrice5);
 
-		lblPrice6 = new JLabel("");
+		lblPrice6 = lblPriceArr[5];
 		pnl6.add(lblPrice6);
 
-		lblPrice7 = new JLabel("");
+		lblPrice7 = lblPriceArr[6];
 		pnl7.add(lblPrice7);
 
-		lblPrice8 = new JLabel("");
+		lblPrice8 = lblPriceArr[7];
 		pnl8.add(lblPrice8);
 
-		lblPrice9 = new JLabel("");
+		lblPrice9 = lblPriceArr[8];
 		pnl9.add(lblPrice9);
 
-		lblPrice10 = new JLabel("");
+		lblPrice10 = lblPriceArr[9];
 		pnl10.add(lblPrice10);
-		
-		
-		lblTime1 = new JLabel("");
+
+		lblTime1 = lblTimeArr[0];
 		pnl1.add(lblTime1);
 
-		lblTime2 = new JLabel("");
+		lblTime2 = lblTimeArr[1];
 		pnl2.add(lblTime2);
 
-		lblTime3 = new JLabel("");
+		lblTime3 = lblTimeArr[2];
 		pnl3.add(lblTime3);
 
-		lblTime4 = new JLabel("");
+		lblTime4 = lblTimeArr[3];
 		pnl4.add(lblTime4);
 
-		lblTime5 = new JLabel("");
+		lblTime5 = lblTimeArr[4];
 		pnl5.add(lblTime5);
 
-		lblTime6 = new JLabel("");
+		lblTime6 = lblTimeArr[5];
 		pnl6.add(lblTime6);
 
-		lblTime7 = new JLabel("");
+		lblTime7 = lblTimeArr[6];
 		pnl7.add(lblTime7);
 
-		lblTime8 = new JLabel("");
+		lblTime8 = lblTimeArr[7];
 		pnl8.add(lblTime8);
 
-		lblTime9 = new JLabel("");
+		lblTime9 = lblTimeArr[8];
 		pnl9.add(lblTime9);
 
-		lblTime10 = new JLabel("");
+		lblTime10 = lblTimeArr[9];
 		pnl10.add(lblTime10);
 
 		JButton viewProductBtn1 = new JButton("경매보기");
@@ -323,6 +446,7 @@ public class AuctionFrame extends JFrame {
 		btns = new JButton[] { viewProductBtn1, viewProductBtn2, viewProductBtn3, viewProductBtn4, viewProductBtn5,
 				viewProductBtn6, viewProductBtn7, viewProductBtn8, viewProductBtn9, viewProductBtn10 };
 
+		
 		for (int i = 0; i < btns.length; i++) {
 			int index = i;
 			Font font = new Font("맑은 고딕", Font.BOLD, 14);
@@ -340,7 +464,7 @@ public class AuctionFrame extends JFrame {
 				}
 			});
 		}
-		
+
 		pnl1.add(viewProductBtn1);
 		pnl2.add(viewProductBtn2);
 		pnl3.add(viewProductBtn3);
@@ -351,7 +475,7 @@ public class AuctionFrame extends JFrame {
 		pnl8.add(viewProductBtn8);
 		pnl9.add(viewProductBtn9);
 		pnl10.add(viewProductBtn10);
-		
+
 		contentPane.add(pnl1);
 		contentPane.add(pnl2);
 		contentPane.add(pnl3);
@@ -362,7 +486,7 @@ public class AuctionFrame extends JFrame {
 		contentPane.add(pnl8);
 		contentPane.add(pnl9);
 		contentPane.add(pnl10);
-		
+
 		frame.getContentPane().add(contentPane);
 		frame.setVisible(true);
 
@@ -387,6 +511,7 @@ public class AuctionFrame extends JFrame {
 			}
 
 			scheduler.start();
+
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
@@ -403,7 +528,7 @@ public class AuctionFrame extends JFrame {
 		Image changeSize = img.getScaledInstance(170, 170, Image.SCALE_SMOOTH);
 		return new ImageIcon(changeSize);
 	}
-	
+
 	public static void resetLabel() {
 		lblImage1.setIcon(new ImageIcon("img/임시이미지.png"));
 		lblImage2.setIcon(new ImageIcon("img/임시이미지.png"));
@@ -415,9 +540,9 @@ public class AuctionFrame extends JFrame {
 		lblImage8.setIcon(new ImageIcon("img/임시이미지.png"));
 		lblImage9.setIcon(new ImageIcon("img/임시이미지.png"));
 		lblImage10.setIcon(new ImageIcon("img/임시이미지.png"));
-		
+
 		Font font = new Font("맑은 고딕", Font.BOLD, 12);
-	
+
 		lblName1.setText("");
 		lblName2.setText("");
 		lblName3.setText("");
@@ -438,8 +563,7 @@ public class AuctionFrame extends JFrame {
 		lblName8.setFont(font);
 		lblName9.setFont(font);
 		lblName10.setFont(font);
-		
-		
+
 		lblTime1.setText("");
 		lblTime2.setText("");
 		lblTime3.setText("");
@@ -450,7 +574,7 @@ public class AuctionFrame extends JFrame {
 		lblTime8.setText("");
 		lblTime9.setText("");
 		lblTime10.setText("");
-		
+
 		lblPrice1.setText("");
 		lblPrice2.setText("");
 		lblPrice3.setText("");
@@ -471,7 +595,7 @@ public class AuctionFrame extends JFrame {
 		lblPrice8.setFont(font);
 		lblPrice9.setFont(font);
 		lblPrice10.setFont(font);
-		
+
 		lblTime1.setForeground(Color.BLACK);
 		lblTime1.setFont(font);
 		lblTime2.setForeground(Color.BLACK);
@@ -492,7 +616,7 @@ public class AuctionFrame extends JFrame {
 		lblTime9.setFont(font);
 		lblTime10.setForeground(Color.BLACK);
 		lblTime10.setFont(font);
-		
+
 		for (int i = 0; i < btns.length; i++) {
 			btns[i].setVisible(false);
 		}
@@ -504,12 +628,11 @@ public class AuctionFrame extends JFrame {
 		try {
 			conn = DBUtil.getConnection();
 			ImageRetriever.retrieveImage(conn);
-			
+
 			resetLabel();
-			
+
 			for (int i = 0; i < timer.selectProduct().size(); i++) {
-				
-				
+
 				switch (i) {
 				case 0: {
 					lblPrice1.setText(formatInt(timer.selectProduct().get(0).getProductPriceNow()));
@@ -519,7 +642,7 @@ public class AuctionFrame extends JFrame {
 					lblName1.setText(timer.selectProduct().get(0).getProductName());
 					lblName1.setPreferredSize(new Dimension(200, lblName1.getPreferredSize().height));
 					lblName1.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(0);
 					ImageIcon imageIcon = ImageRetriever.llist.get(0).getImageicon();
 					if (imageIcon != null) {
@@ -529,12 +652,12 @@ public class AuctionFrame extends JFrame {
 					lblTime1.setText(result1);
 					lblTime1.setPreferredSize(new Dimension(200, lblTime1.getPreferredSize().height));
 					lblTime1.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(0).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -542,11 +665,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice2.setText(formatInt(timer.selectProduct().get(1).getProductPriceNow()));
 					lblPrice2.setPreferredSize(new Dimension(200, lblPrice2.getPreferredSize().height));
 					lblPrice2.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName2.setText(timer.selectProduct().get(1).getProductName());
 					lblName2.setPreferredSize(new Dimension(200, lblName2.getPreferredSize().height));
 					lblName2.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(1);
 					ImageIcon imageIcon = ImageRetriever.llist.get(1).getImageicon();
 					if (imageIcon != null) {
@@ -556,12 +679,12 @@ public class AuctionFrame extends JFrame {
 					lblTime2.setText(result2);
 					lblTime2.setPreferredSize(new Dimension(200, lblTime2.getPreferredSize().height));
 					lblTime2.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(1).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -569,11 +692,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice3.setText(formatInt(timer.selectProduct().get(2).getProductPriceNow()));
 					lblPrice3.setPreferredSize(new Dimension(200, lblPrice3.getPreferredSize().height));
 					lblPrice3.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName3.setText(timer.selectProduct().get(2).getProductName());
 					lblName3.setPreferredSize(new Dimension(200, lblName3.getPreferredSize().height));
 					lblName3.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(2);
 					ImageIcon imageIcon = ImageRetriever.llist.get(2).getImageicon();
 					if (imageIcon != null) {
@@ -584,12 +707,12 @@ public class AuctionFrame extends JFrame {
 					lblTime3.setText(result3);
 					lblTime3.setPreferredSize(new Dimension(200, lblTime3.getPreferredSize().height));
 					lblTime3.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(2).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -597,11 +720,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice4.setText(formatInt(timer.selectProduct().get(3).getProductPriceNow()));
 					lblPrice4.setPreferredSize(new Dimension(200, lblPrice4.getPreferredSize().height));
 					lblPrice4.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName4.setText(timer.selectProduct().get(3).getProductName());
 					lblName4.setPreferredSize(new Dimension(200, lblName4.getPreferredSize().height));
 					lblName4.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(3);
 					ImageIcon imageIcon = ImageRetriever.llist.get(3).getImageicon();
 					if (imageIcon != null) {
@@ -612,12 +735,12 @@ public class AuctionFrame extends JFrame {
 					lblTime4.setText(result4);
 					lblTime4.setPreferredSize(new Dimension(200, lblTime4.getPreferredSize().height));
 					lblTime4.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(3).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -625,11 +748,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice5.setText(formatInt(timer.selectProduct().get(4).getProductPriceNow()));
 					lblPrice5.setPreferredSize(new Dimension(200, lblPrice5.getPreferredSize().height));
 					lblPrice5.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName5.setText(timer.selectProduct().get(4).getProductName());
 					lblName5.setPreferredSize(new Dimension(200, lblName5.getPreferredSize().height));
 					lblName5.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(4);
 					ImageIcon imageIcon = ImageRetriever.llist.get(4).getImageicon();
 					if (imageIcon != null) {
@@ -640,12 +763,12 @@ public class AuctionFrame extends JFrame {
 					lblTime5.setText(result5);
 					lblTime5.setPreferredSize(new Dimension(200, lblTime5.getPreferredSize().height));
 					lblTime5.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(4).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -653,11 +776,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice6.setText(formatInt(timer.selectProduct().get(5).getProductPriceNow()));
 					lblPrice6.setPreferredSize(new Dimension(200, lblPrice6.getPreferredSize().height));
 					lblPrice6.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName6.setText(timer.selectProduct().get(5).getProductName());
 					lblName6.setPreferredSize(new Dimension(200, lblName6.getPreferredSize().height));
 					lblName6.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(5);
 					ImageIcon imageIcon = ImageRetriever.llist.get(5).getImageicon();
 					if (imageIcon != null) {
@@ -668,12 +791,12 @@ public class AuctionFrame extends JFrame {
 					lblTime6.setText(result6);
 					lblTime6.setPreferredSize(new Dimension(200, lblTime6.getPreferredSize().height));
 					lblTime6.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(5).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -681,11 +804,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice7.setText(formatInt(timer.selectProduct().get(6).getProductPriceNow()));
 					lblPrice7.setPreferredSize(new Dimension(200, lblPrice7.getPreferredSize().height));
 					lblPrice7.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName7.setText(timer.selectProduct().get(6).getProductName());
 					lblName7.setPreferredSize(new Dimension(200, lblName7.getPreferredSize().height));
 					lblName7.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(6);
 					ImageIcon imageIcon = ImageRetriever.llist.get(6).getImageicon();
 					if (imageIcon != null) {
@@ -695,12 +818,12 @@ public class AuctionFrame extends JFrame {
 					lblTime7.setText(result7);
 					lblTime7.setPreferredSize(new Dimension(200, lblTime7.getPreferredSize().height));
 					lblTime7.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(6).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -708,11 +831,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice8.setText(formatInt(timer.selectProduct().get(7).getProductPriceNow()));
 					lblPrice8.setPreferredSize(new Dimension(200, lblPrice8.getPreferredSize().height));
 					lblPrice8.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName8.setText(timer.selectProduct().get(7).getProductName());
 					lblName8.setPreferredSize(new Dimension(200, lblName8.getPreferredSize().height));
 					lblName8.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(7);
 					ImageIcon imageIcon = ImageRetriever.llist.get(7).getImageicon();
 					if (imageIcon != null) {
@@ -722,12 +845,12 @@ public class AuctionFrame extends JFrame {
 					lblTime8.setText(result8);
 					lblTime8.setPreferredSize(new Dimension(200, lblTime8.getPreferredSize().height));
 					lblTime8.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(7).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -735,11 +858,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice9.setText(formatInt(timer.selectProduct().get(8).getProductPriceNow()));
 					lblPrice9.setPreferredSize(new Dimension(200, lblPrice9.getPreferredSize().height));
 					lblPrice9.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName9.setText(timer.selectProduct().get(8).getProductName());
 					lblName9.setPreferredSize(new Dimension(200, lblName9.getPreferredSize().height));
 					lblName9.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(8);
 					ImageIcon imageIcon = ImageRetriever.llist.get(8).getImageicon();
 					if (imageIcon != null) {
@@ -749,12 +872,12 @@ public class AuctionFrame extends JFrame {
 					lblTime9.setText(result9);
 					lblTime9.setPreferredSize(new Dimension(200, lblTime9.getPreferredSize().height));
 					lblTime9.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(8).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -762,11 +885,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice10.setText(formatInt(timer.selectProduct().get(9).getProductPriceNow()));
 					lblPrice10.setPreferredSize(new Dimension(200, lblPrice10.getPreferredSize().height));
 					lblPrice10.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName10.setText(timer.selectProduct().get(9).getProductName());
 					lblName10.setPreferredSize(new Dimension(200, lblName10.getPreferredSize().height));
 					lblName10.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(9);
 					ImageIcon imageIcon = ImageRetriever.llist.get(9).getImageicon();
 					if (imageIcon != null) {
@@ -776,12 +899,12 @@ public class AuctionFrame extends JFrame {
 					lblTime10.setText(result10);
 					lblTime10.setPreferredSize(new Dimension(200, lblTime10.getPreferredSize().height));
 					lblTime10.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(9).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -805,22 +928,23 @@ public class AuctionFrame extends JFrame {
 
 		return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
 	}
-	
+
 	public static boolean durationTen(LocalDateTime targetDateTime, LocalDateTime now) {
-	    Duration duration = Duration.between(now, targetDateTime);
-	    long seconds = duration.getSeconds();
-	    
-	    if (seconds <= 60) {
-	        return true;
-	    }
-	    return false;
+		Duration duration = Duration.between(now, targetDateTime);
+		long seconds = duration.getSeconds();
+
+		if (seconds <= 60) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	public static String formatInt(int price) {
 		return String.format("%,d원", price);
 	}
 
 	public static class AutionUpdateJob implements Job {
+
 		public void execute(JobExecutionContext context) throws JobExecutionException {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {

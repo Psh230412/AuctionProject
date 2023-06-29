@@ -337,6 +337,13 @@ public class MypageFrame extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
 				mainBtn.setIcon(imgmain);
+				
+//				try {
+//					scheduler.shutdown();
+//				} catch (SchedulerException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
 
 			}
 
