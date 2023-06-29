@@ -1,5 +1,6 @@
 package secondweek;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Graphics;
@@ -38,9 +39,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
-
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
-import com.sun.prism.paint.Color;
 
 import dbutil.DBUtil;
 
@@ -277,39 +275,21 @@ public class ChangeInformationFrame extends JFrame {
 		passwordIdentifyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Connection conn = null;
-				PreparedStatement checkPassword = null;
-				ResultSet rs = null;
+				String newPass = newPassword.getText();
+				String nowPass = nowPassword.getText();
+				String checkPass = newPasswordMatch.getText();
+				int loginUser = data.getCurrentUser().getNo();/* 해당 사용자의 번호를 얻는 코드 */;
 				try {
-					String newPass = newPassword.getText();
-					String nowPass = nowPassword.getText();
-					String checkPass = newPasswordMatch.getText();
-					conn = DBUtil.getConnection();
-					int loginUser = data.getCurrentUser().getNo();
-					checkPassword = conn.prepareStatement("SELECT COUNT(*) AS count FROM user WHERE userno = ? AND password = ?");
-					checkPassword.setInt(1, loginUser);
-					checkPassword.setString(2, nowPass);
-					
-					rs = checkPassword.executeQuery();
-					rs.next();
-					int count = rs.getInt("count");
-
-					if (count == 0) { 
-						passwordCheckLabel.setText("현재 비밀번호가 틀립니다.");
-					} else if (MatchPassword(newPass) == false) {
-						passwordCheckLabel.setText("비밀번호의 조건 : 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하");
-					} else if (!newPass.equals(checkPass)) {
-						passwordCheckLabel.setText("새비밀번호와 비밀번호 확인이 동일하지 않습니다");
-					} else {
+					String validityCheck = checkPasswordValidity(loginUser, newPass, nowPass, checkPass);
+					if ("OK".equals(validityCheck)) {
+						passwordCheckLabel.setForeground(Color.GREEN);
 						passwordCheckLabel.setText("적절한 비밀번호 입니다.");
+					} else {
+						passwordCheckLabel.setForeground(Color.RED);
+						passwordCheckLabel.setText(validityCheck);
 					}
-					
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				} finally {
-					DBUtil.close(rs);
-					DBUtil.close(checkPassword);
-					DBUtil.close(conn);
+				} catch (SQLException ex) {
+					ex.printStackTrace();
 				}
 			}
 		});
@@ -533,11 +513,24 @@ public class ChangeInformationFrame extends JFrame {
 							JOptionPane.showMessageDialog(null, "닉네임을 다시 확인바랍니다", "입력오류", JOptionPane.WARNING_MESSAGE);
 							return;
 						}
-						String phoneNumber = "010" + phoneNumberCenter.getText() + phoneNumberLast.getText();
-						String bigArea = (String) bigAreaCombo.getSelectedItem();
-						String mediumArea = (String) mediumAreaCombo.getSelectedItem();
-						String detailArea = (String) smallAreaCombo.getSelectedItem();
-						int loginUser = data.getCurrentUser().getNo();
+						String phoneNumberCenter1 = phoneNumberCenter.getText();
+		                String phoneNumberLast2 = phoneNumberLast.getText();
+		                if (phoneNumberCenter1.isEmpty() || phoneNumberLast2.isEmpty()) {
+		                    JOptionPane.showMessageDialog(null, "전화번호를 모두 입력해주세요", "입력오류", JOptionPane.WARNING_MESSAGE);
+		                    return;
+		                }
+		                String phoneNumber = "010" + phoneNumberCenter + phoneNumberLast;
+
+		                String bigArea = (String) bigAreaCombo.getSelectedItem();
+		                String mediumArea = (String) mediumAreaCombo.getSelectedItem();
+		                String detailArea = (String) smallAreaCombo.getSelectedItem();
+
+		                if (bigArea == null || mediumArea == null || detailArea == null) {
+		                    JOptionPane.showMessageDialog(null, "지역 선택을 모두 완료해주세요", "입력오류", JOptionPane.WARNING_MESSAGE);
+		                    return;
+		                }
+
+		                int loginUser = data.getCurrentUser().getNo();
 
 						changeUserInformation = conn
 								.prepareStatement("update user set nickname = ?, phonenumber = ?, bigarea = ?,"
@@ -621,27 +614,33 @@ public class ChangeInformationFrame extends JFrame {
 		passwordChangeBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String newPass = newPassword.getText();
+				String nowPass = nowPassword.getText();
+				String checkPass = newPasswordMatch.getText();
+				String validityCheck = null;
+				int loginUser = data.getCurrentUser().getNo();
+				try {
+					validityCheck = checkPasswordValidity(loginUser, newPass, nowPass, checkPass);
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+				if (!"OK".equals(validityCheck)) {
+					JOptionPane.showMessageDialog(null, validityCheck, "비밀번호 오류", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
 				int response = JOptionPane.showConfirmDialog(null, "정말로 변경하시겠습니까?", "예", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
 				if (response == JOptionPane.YES_OPTION) {
-					
 					Connection conn = null;
 					PreparedStatement changeUserPassword = null;
 					try {
 						conn = DBUtil.getConnection();
-
-						
-						
-						int loginUser = data.getCurrentUser().getNo();
-						String newPassword = newPasswordMatch.getText();
 						changeUserPassword = conn
 								.prepareStatement("update user set password = ? where userno = ?");
-						changeUserPassword.setString(1, newPassword);
+						changeUserPassword.setString(1, newPass);
 						changeUserPassword.setInt(2, loginUser);
 						changeUserPassword.executeUpdate();
-					} catch (NumberFormatException e2) {
-						e2.printStackTrace();
-					} catch (SQLException e2) {
+					} catch (NumberFormatException | SQLException e2) {
 						e2.printStackTrace();
 					} finally {
 						DBUtil.close(changeUserPassword);
@@ -679,7 +678,26 @@ public class ChangeInformationFrame extends JFrame {
 		returnOriginal(data);
 
 	}
+	private String checkPasswordValidity(int loginUser, String newPass, String nowPass, String checkPass) throws SQLException {
+		Connection conn = DBUtil.getConnection();
+		PreparedStatement checkPassword = conn.prepareStatement("SELECT COUNT(*) AS count FROM user WHERE userno = ? AND password = ?");
+		checkPassword.setInt(1, loginUser);
+		checkPassword.setString(2, nowPass);
 
+		ResultSet rs = checkPassword.executeQuery();
+		rs.next();
+		int count = rs.getInt("count");
+
+		if (count == 0) { 
+			return "현재 비밀번호가 틀립니다.";
+		} else if (MatchPassword(newPass) == false) {
+			return "비밀번호의 조건 : 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하";
+		} else if (!newPass.equals(checkPass)) {
+			return "새비밀번호와 비밀번호 확인이 동일하지 않습니다";
+		} else {
+			return "OK";
+		}
+	}
 	private static List<String> getMediumAreas(String bigArea) {
 		List<String> mediumAreas = new ArrayList<>();
 		if (bigArea.equals("수도권")) {
