@@ -7,7 +7,10 @@ public class User {
 	private String name;
 	private String password;
 	private int deposit;
-	
+	private String bigArea;
+	private String mediumArea;
+	private String smallArea;
+
 	public User(String name, String password, int deposit) {
 		super();
 		this.name = name;
@@ -21,6 +24,18 @@ public class User {
 		this.name = name;
 		this.password = password;
 		this.deposit = deposit;
+	}
+
+	public User(Integer userno, String name, String password, int deposit, String bigArea, String mediumArea,
+			String smallArea) {
+		super();
+		this.userno = userno;
+		this.name = name;
+		this.password = password;
+		this.deposit = deposit;
+		this.bigArea = bigArea;
+		this.mediumArea = mediumArea;
+		this.smallArea = smallArea;
 	}
 
 	public Integer getNo() {
@@ -58,6 +73,30 @@ public class User {
 	@Override
 	public int hashCode() {
 		return Objects.hash(name, password);
+	}
+
+	public String getBigArea() {
+		return bigArea;
+	}
+
+	public void setBigArea(String bigArea) {
+		this.bigArea = bigArea;
+	}
+
+	public String getMediumArea() {
+		return mediumArea;
+	}
+
+	public void setMediumArea(String mediumArea) {
+		this.mediumArea = mediumArea;
+	}
+
+	public String getSmallArea() {
+		return smallArea;
+	}
+
+	public void setSmallArea(String smallArea) {
+		this.smallArea = smallArea;
 	}
 
 	@Override
