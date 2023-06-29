@@ -13,20 +13,35 @@ import javax.swing.ImageIcon;
 
 public class ImageRetriever {
 	
-	static List<ImageIcon> list = new ArrayList<>();
 	
 	
-	public static void setImage(byte[] imageBytes) {
+//	static List<ImageIcon> list = new ArrayList<>();
+	
+	static List<ImageAndNum> llist = new ArrayList<>();
+	static List<ImageAndNum> llistForDetail = new ArrayList<>();
+	
+	public static void setImageForDetail(byte[] imageBytes,int productno) {
 		ImageIcon imageIcon = new ImageIcon(imageBytes);
 		
 		Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
 		
+		llistForDetail.add(new ImageAndNum(new ImageIcon(image), productno));
+	}
 	
-		list.add(new ImageIcon(image));
+	
+	public static void setImage(byte[] imageBytes,int productno) {
+		ImageIcon imageIcon = new ImageIcon(imageBytes);
+		
+		Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+		
+
+//		list.add(new ImageIcon(image));
+		llist.add(new ImageAndNum(new ImageIcon(image), productno));
 	}
 
 	public static void retrieveImage(Connection conn) throws SQLException {
-		list.clear();
+//		list.clear();
+		llist.clear();
 		
 		String sql = "SELECT auction.starttime,auction.deadline,\r\n" + 
 				"			enrollmentinfo.productno,\r\n" + 
@@ -45,8 +60,10 @@ public class ImageRetriever {
 			while(resultSet.next()) {
 				Blob imageBlob = resultSet.getBlob("image");
 				byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
+				int productno = resultSet.getInt("productno");
 				
-				setImage(imageBytes);
+				setImage(imageBytes,productno);
+				setImageForDetail(imageBytes,productno);
 			}
 			
 		}

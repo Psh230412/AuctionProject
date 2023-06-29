@@ -151,12 +151,12 @@ public class ChangeInformationFrame extends JFrame {
 				String originalNickName =  rs.getString("nickname");
 				nickNameText.setText(originalNickName);
 				
-			    int gender = rs.getInt("gender");
-	            if (gender == 1) {
-	                manBtn.setSelected(true); // 남성 선택
-	            } else if (gender == 0) {
-	                womanBtn.setSelected(true); // 여성 선택
-	            }
+//			    int gender = rs.getInt("gender");
+//	            if (gender == 1) {
+//	                manBtn.setSelected(true); // 남성 선택
+//	            } else if (gender == 0) {
+//	                womanBtn.setSelected(true); // 여성 선택
+//	            }
 	            
 				String originalPhoneNumber = rs.getString("phonenumber");
 				String middle = originalPhoneNumber.substring(3,7);
@@ -211,14 +211,6 @@ public class ChangeInformationFrame extends JFrame {
 	setContentPane(contentPane);
 	contentPane.setLayout(null);
  
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 735, 609);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		setVisible(true);
 
 		nickNameText = new JTextField();
 		nickNameText.setBounds(670, 115, 310, 34);

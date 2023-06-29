@@ -1,7 +1,5 @@
 package secondweek;
 
-
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -46,12 +44,12 @@ import dbutil.DBUtil;
 
 public class MypageFrame extends JFrame {
 	private static DataBase data;
-	
+
 	private Scheduler scheduler;
 	private JPanel contentPane;
 	private JFrame frame;
 	private Timer timer;
-	
+
 	private static JLabel lblImage11;
 	private static JLabel lblImage12;
 	private static JLabel lblImage13;
@@ -83,7 +81,7 @@ public class MypageFrame extends JFrame {
 	private static JLabel lblName33;
 	private static JLabel lblName34;
 	private static JLabel lblName35;
-	
+
 	private static JLabel lblTime11;
 	private static JLabel lblTime12;
 	private static JLabel lblTime13;
@@ -122,7 +120,17 @@ public class MypageFrame extends JFrame {
 	private static JLabel[] times = new JLabel[10];
 	private static JLabel[] bids = new JLabel[5];
 	private static JLabel[] prices = new JLabel[15];
-	
+
+	private static JButton previousEnroll;
+
+	private static JButton nextEnroll;
+
+	private static JButton previousParticipate;
+
+	private static JButton nextParticipate;
+
+//	private static JButton previousBidinfo;
+
 	public static void inputImages() {
 		// 등록패널 제품이미지라벨
 		images[0] = lblImage11;
@@ -223,30 +231,27 @@ public class MypageFrame extends JFrame {
 
 		timer.inputSuccessbidinfo();
 		timer.setIsBid();
-		 
-		 frame = new JFrame();
-				frame.setSize(1200,800);
-			        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-			        contentPane = new JPanel(){
 
-				@Override
-				protected void paintComponent(Graphics g) {
-					super.paintComponent(g);
+		frame = new JFrame();
+		frame.setSize(1200, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-					Toolkit toolkit = Toolkit.getDefaultToolkit();
+		contentPane = new JPanel() {
 
-					Image image = toolkit.getImage("img/myPage.png");
-					g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-				}
-			};
-			
-			
-			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-			setContentPane(contentPane);
-			contentPane.setLayout(null);
-		
-	
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+				Image image = toolkit.getImage("img/myPage.png");
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
+
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
 		JLabel userNameLb = new JLabel("user_name");
 		userNameLb.setBounds(190, 160, 188, 67);
@@ -258,101 +263,101 @@ public class MypageFrame extends JFrame {
 		resetBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// new ChangeInformation(data);
+				new ChangeInformationFrame(data);
 				setVisible(false);
 			}
 		});
 		contentPane.add(resetBtn);
 		resetBtn.setBounds(330, 123, 210, 120);
 		ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
-		resetBtn.setContentAreaFilled(false); 
+		resetBtn.setContentAreaFilled(false);
 		resetBtn.setBorderPainted(false);
 		resetBtn.setIcon(imgreset);
 		resetBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
-			resetBtn.setIcon(imgreset);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgreset = new ImageIcon("img/changeinfo.png");
-			resetBtn.setIcon(imgreset);
-			
-		    }
-		 
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
+				resetBtn.setIcon(imgreset);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreset = new ImageIcon("img/changeinfo.png");
+				resetBtn.setIcon(imgreset);
+
+			}
+
 		});
-		
+
 		contentPane.add(resetBtn);
 
 		JButton resgistBtn = new JButton("물품등록하기");
 		resgistBtn.setBounds(600, 123, 210, 120);
 		ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
-		resgistBtn.setContentAreaFilled(false); 
+		resgistBtn.setContentAreaFilled(false);
 		resgistBtn.setBorderPainted(false);
 		resgistBtn.setIcon(imgresgist);
 		resgistBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
-			resgistBtn.setIcon(imgresgist);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgreset = new ImageIcon("img/myregist.png");
-			resgistBtn.setIcon(imgreset);
-			
-		    }
-		 
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
+				resgistBtn.setIcon(imgresgist);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreset = new ImageIcon("img/myregist.png");
+				resgistBtn.setIcon(imgreset);
+
+			}
+
 		});
-		
+
 		resgistBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new RegistFrame(data);
-				 frame.setVisible(false);
+				frame.setVisible(false);
 			}
 		});
-		
+
 		contentPane.add(resgistBtn);
 
 		JButton mainBtn = new JButton("메인화면");
 		mainBtn.setBounds(75, 60, 150, 80);
 		ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
-		mainBtn.setContentAreaFilled(false); 
+		mainBtn.setContentAreaFilled(false);
 		mainBtn.setBorderPainted(false);
 		mainBtn.setIcon(imgmain);
 		mainBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
-			mainBtn.setIcon(imgmain);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgmain = new ImageIcon("img/gomain.png");
-			mainBtn.setIcon(imgmain);
-			
-		    }
-		 
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
+				mainBtn.setIcon(imgmain);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgmain = new ImageIcon("img/gomain.png");
+				mainBtn.setIcon(imgmain);
+
+			}
+
 		});
-		
+
 		mainBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
-				 frame.setVisible(false);
+				frame.setVisible(false);
 			}
 		});
-	
+
 		contentPane.add(mainBtn);
 
 		JPanel pnl1 = new JPanel(new GridLayout(6, 0));
@@ -365,6 +370,30 @@ public class MypageFrame extends JFrame {
 		pnl2.setOpaque(false);
 		pnl3.setBounds(780, 350, 300, 300);
 		pnl3.setOpaque(false);
+
+		previousEnroll = new JButton("이전");
+		previousEnroll.setBounds(60, 650, 150, 63);
+		frame.add(previousEnroll);
+
+		nextEnroll = new JButton("다음");
+		nextEnroll.setBounds(210, 650, 150, 63);
+		frame.add(nextEnroll);
+
+		previousParticipate = new JButton("이전");
+		previousParticipate.setBounds(450, 650, 150, 63);
+		frame.add(previousParticipate);
+
+		nextParticipate = new JButton("다음");
+		nextParticipate.setBounds(600, 650, 150, 63);
+		frame.add(nextParticipate);
+
+//		previousBidinfo = new JButton("이전");
+//		previousBidinfo.setBounds(820, 650, 150, 63);
+//		frame.add(previousBidinfo);
+//
+//		nextBidinfo = new JButton("다음");
+//		nextBidinfo.setBounds(970, 650, 150, 63);
+//		frame.add(nextBidinfo);
 
 		JPanel pnl11 = new JPanel();
 		pnl11.setOpaque(false);
@@ -407,7 +436,7 @@ public class MypageFrame extends JFrame {
 		pnl14.add(lblImage14);
 		lblImage15 = new JLabel("");
 		pnl15.add(lblImage15);
-		
+
 		lblImage21 = new JLabel("");
 		pnl21.add(lblImage21);
 		lblImage22 = new JLabel("");
@@ -418,7 +447,7 @@ public class MypageFrame extends JFrame {
 		pnl24.add(lblImage24);
 		lblImage25 = new JLabel("");
 		pnl25.add(lblImage25);
-		
+
 		lblImage31 = new JLabel("");
 		pnl31.add(lblImage31);
 		lblImage32 = new JLabel("");
@@ -440,7 +469,7 @@ public class MypageFrame extends JFrame {
 		pnl14.add(lblName14);
 		lblName15 = new JLabel("");
 		pnl15.add(lblName15);
-		
+
 		lblName21 = new JLabel("");
 		pnl21.add(lblName21);
 		lblName22 = new JLabel("");
@@ -451,7 +480,7 @@ public class MypageFrame extends JFrame {
 		pnl24.add(lblName24);
 		lblName25 = new JLabel("");
 		pnl25.add(lblName25);
-		
+
 		lblName31 = new JLabel("");
 		pnl31.add(lblName31);
 		lblName32 = new JLabel("");
@@ -473,7 +502,7 @@ public class MypageFrame extends JFrame {
 		pnl14.add(lblTime14);
 		lblTime15 = new JLabel("00 : 00 : 00");
 		pnl15.add(lblTime15);
-		
+
 		lblTime21 = new JLabel("00 : 00 : 00");
 		pnl21.add(lblTime21);
 		lblTime22 = new JLabel("00 : 00 : 00");
@@ -527,12 +556,7 @@ public class MypageFrame extends JFrame {
 		lblPrice35 = new JLabel(" - ");
 		pnl35.add(lblPrice35);
 		
-		JPanel pnl111 = new JPanel();
-		JButton previousBtn = new JButton("이전");
-		JButton nextBtn = new JButton("다음");
 		
-		pnl111.add(previousBtn);
-		pnl111.add(nextBtn);
 		
 		previousBtn.addActionListener(new ActionListener() {
 			@Override
@@ -555,17 +579,17 @@ public class MypageFrame extends JFrame {
 		inputPrices();
 
 		for (int i = 0; i < names.length; i++) {
-//			names[i].setForeground(Color.GREEN);
+			names[i].setForeground(Color.GREEN);
 		}
-		
+
 		for (int i = 0; i < times.length; i++) {
 			times[i].setForeground(Color.RED);
 		}
-		
+
 		for (int i = 0; i < bids.length; i++) {
 			bids[i].setForeground(Color.BLACK);
 		}
-		
+
 		for (int i = 0; i < prices.length; i++) {
 			prices[i].setForeground(Color.BLUE);
 		}
@@ -575,8 +599,6 @@ public class MypageFrame extends JFrame {
 		pnl1.add(pnl13);
 		pnl1.add(pnl14);
 		pnl1.add(pnl15);
-		pnl1.add(pnl111);
-		
 		pnl2.add(pnl21);
 		pnl2.add(pnl22);
 		pnl2.add(pnl23);
@@ -592,7 +614,6 @@ public class MypageFrame extends JFrame {
 		contentPane.add(pnl2);
 //		contentPane.add(pnl3);
 
-		
 //
 //		JLabel lblNewLabel = new JLabel("등록물품");
 //		lblNewLabel.setBounds(138, 258, 125, 15);
@@ -606,8 +627,8 @@ public class MypageFrame extends JFrame {
 //		lblNewLabel_2.setBounds(842, 258, 125, 15);
 //		contentPane.add(lblNewLabel_2);
 		frame.getContentPane().add(contentPane);
-        frame.setVisible(true);
-        
+		frame.setVisible(true);
+
 		LocalDateTime now = LocalDateTime.now();
 		updatLabel(now);
 
@@ -623,18 +644,18 @@ public class MypageFrame extends JFrame {
 			Trigger trigger2 = TriggerBuilder.newTrigger().withIdentity("labelUpdateTriggerMain", "group2").startNow()
 					.withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(1).repeatForever())
 					.build();
-			
+
 			// 스케줄러가 job의 key를 가지고 있으면 다시 scheduleJob을 생성하지 않도록
-    	    if (!scheduler.checkExists(job2.getKey())) {
-    	        scheduler.scheduleJob(job2, trigger2);
-    	    }
+			if (!scheduler.checkExists(job2.getKey())) {
+				scheduler.scheduleJob(job2, trigger2);
+			}
 			scheduler.start();
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
 
-		   
 	}
+
 	private static void initialLabel() {
 		for (int i = 0; i < names.length; i++) {
 			names[i].setText("");
@@ -643,7 +664,7 @@ public class MypageFrame extends JFrame {
 			Font font = new Font("맑은 고딕", Font.BOLD, 18);
 			names[i].setFont(font);
 		}
-		
+
 		for (int i = 0; i < times.length; i++) {
 			times[i].setText("");
 			times[i].setHorizontalAlignment(SwingConstants.CENTER);
@@ -651,11 +672,11 @@ public class MypageFrame extends JFrame {
 			Font font = new Font("맑은 고딕", Font.BOLD, 18);
 			times[i].setFont(font);
 		}
-		
+
 		for (int i = 0; i < bids.length; i++) {
 			bids[i].setText("");
 		}
-		
+
 		for (int i = 0; i < prices.length; i++) {
 			prices[i].setText("");
 			prices[i].setHorizontalAlignment(SwingConstants.RIGHT);
@@ -664,7 +685,7 @@ public class MypageFrame extends JFrame {
 			Font font = new Font("맑은 고딕", Font.BOLD, 18);
 			prices[i].setFont(font);
 		}
-		
+
 		for (int i = 0; i < images.length; i++) {
 			images[i].setIcon(null);
 		}
@@ -736,13 +757,13 @@ public class MypageFrame extends JFrame {
 						case 2: {
 							lblPrice13.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice13.setPreferredSize(new Dimension(140, lblPrice13.getPreferredSize().height));
-							
+
 							lblImage13.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result13 = durationFailed(enroll.getEndTime(), now);
 							lblTime13.setText(result13);
 							lblTime13.setPreferredSize(new Dimension(120, lblTime13.getPreferredSize().height));
-							
+
 							lblName13.setText(enroll.getProductname());
 							lblName13.setPreferredSize(new Dimension(100, lblName13.getPreferredSize().height));
 							break;
@@ -750,13 +771,13 @@ public class MypageFrame extends JFrame {
 						case 3: {
 							lblPrice14.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice14.setPreferredSize(new Dimension(140, lblPrice14.getPreferredSize().height));
-							
+
 							lblImage14.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result14 = durationFailed(enroll.getEndTime(), now);
 							lblTime14.setText(result14);
 							lblTime14.setPreferredSize(new Dimension(120, lblTime14.getPreferredSize().height));
-							
+
 							lblName14.setText(enroll.getProductname());
 							lblName14.setPreferredSize(new Dimension(100, lblName14.getPreferredSize().height));
 							break;
@@ -764,13 +785,13 @@ public class MypageFrame extends JFrame {
 						case 4: {
 							lblPrice15.setText(formatInt(enroll.getProductPriceNow()));
 							lblPrice15.setPreferredSize(new Dimension(140, lblPrice15.getPreferredSize().height));
-							
+
 							lblImage15.setIcon(iconSize(enroll.getImage()));
-							
+
 							String result15 = durationFailed(enroll.getEndTime(), now);
 							lblTime15.setText(result15);
 							lblTime15.setPreferredSize(new Dimension(120, lblTime15.getPreferredSize().height));
-							
+
 							lblName15.setText(enroll.getProductname());
 							lblName15.setPreferredSize(new Dimension(100, lblName15.getPreferredSize().height));
 							break;
@@ -979,33 +1000,32 @@ public class MypageFrame extends JFrame {
 	}
 
 	public static String durationFailed(LocalDateTime targetDateTime, LocalDateTime now) {
-	    Duration duration = Duration.between(now, targetDateTime);
-	    long days = duration.toDays();
-	    long hours = duration.toHours() % 24;
-	    long minutes = duration.toMinutes() % 60;
-	    long seconds = duration.getSeconds() % 60;
+		Duration duration = Duration.between(now, targetDateTime);
+		long days = duration.toDays();
+		long hours = duration.toHours() % 24;
+		long minutes = duration.toMinutes() % 60;
+		long seconds = duration.getSeconds() % 60;
 
-	    if (duration.isNegative()) {
-	        return "유찰";
-	    } else {
-	        return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
-	    }
+		if (duration.isNegative()) {
+			return "유찰";
+		} else {
+			return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
+		}
 	}
-	
+
 	public static String durationBid(LocalDateTime targetDateTime, LocalDateTime now) {
-	    Duration duration = Duration.between(now, targetDateTime);
-	    long days = duration.toDays();
-	    long hours = duration.toHours() % 24;
-	    long minutes = duration.toMinutes() % 60;
-	    long seconds = duration.getSeconds() % 60;
+		Duration duration = Duration.between(now, targetDateTime);
+		long days = duration.toDays();
+		long hours = duration.toHours() % 24;
+		long minutes = duration.toMinutes() % 60;
+		long seconds = duration.getSeconds() % 60;
 
-	    if (duration.isNegative()) {
-	        return "낙찰";
-	    } else {
-	        return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
-	    }
+		if (duration.isNegative()) {
+			return "낙찰";
+		} else {
+			return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
+		}
 	}
-
 
 	public static class AutionUpdateJob implements Job {
 		public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -1017,5 +1037,5 @@ public class MypageFrame extends JFrame {
 				}
 			});
 		}
-	} 
+	}
 }
