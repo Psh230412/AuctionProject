@@ -495,7 +495,7 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (Math.floor(timer.selectProduct().size() / 10) > (data.getIndexMain() / 10)) {
+				if (((timer.selectProduct().size() - 1) / 10) > (data.getIndexMain() / 10)) {
 					data.setIndexMain(data.getIndexMain() + 10);
 				}
 			}
