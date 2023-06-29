@@ -694,7 +694,7 @@ public class MypageFrame extends JFrame {
 			
 			if (enrollList != null) {
 				int count = 0;
-				for (int i = data.getIndex(); i < enrollList.size(); i++) {
+				for (int i = data.registIndex(); i < enrollList.size(); i++) {
 					enroll = enrollList.get(i);
 					count++;
 					if (count == 6) {
