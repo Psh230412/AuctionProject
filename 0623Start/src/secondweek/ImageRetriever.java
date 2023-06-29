@@ -23,7 +23,7 @@ public class ImageRetriever {
 	public static void setImageForDetail(byte[] imageBytes,int productno) {
 		ImageIcon imageIcon = new ImageIcon(imageBytes);
 		
-		Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
 		
 		llistForDetail.add(new ImageAndNum(new ImageIcon(image), productno));
 	}
