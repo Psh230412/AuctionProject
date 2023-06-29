@@ -1,5 +1,6 @@
 package secondweek;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -38,6 +39,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
 
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 import com.sun.prism.paint.Color;
 
 import dbutil.DBUtil;
@@ -59,10 +61,13 @@ public class ChangeInformationFrame extends JFrame {
 	private JComboBox<String> bigAreaCombo = new JComboBox();
 	private JComboBox<String> mediumAreaCombo = new JComboBox();
 	private JComboBox<String> smallAreaCombo = new JComboBox();
-
+	private JLabel nameLabel;
+	private JLabel areaLabel;
+	private JLabel passwordCheckLabel;
 	public int getSelectedGender() {
 		return selectedGender;
 	}
+
 	class NumberOnlyFilter extends DocumentFilter {
 		private int maxLength; // 최대 입력 길이
 
@@ -88,7 +93,6 @@ public class ChangeInformationFrame extends JFrame {
 			}
 		}
 	}
-
 	// 중복되는 닉네임 있는지 검색후 해당하는 개수 반환
 	public int searchNickName(String newNickName) {
 		Connection conn = null;
@@ -148,36 +152,31 @@ public class ChangeInformationFrame extends JFrame {
 			stmt.setInt(1, nowUser);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				String originalNickName =  rs.getString("nickname");
+				String name = rs.getString("name");
+				nameLabel.setText(name);
+				
+				String originalNickName = rs.getString("nickname");
 				nickNameText.setText(originalNickName);
 				
-//			    int gender = rs.getInt("gender");
-//	            if (gender == 1) {
-//	                manBtn.setSelected(true); // 남성 선택
-//	            } else if (gender == 0) {
-//	                womanBtn.setSelected(true); // 여성 선택
-//	            }
-	            
 				String originalPhoneNumber = rs.getString("phonenumber");
-				String middle = originalPhoneNumber.substring(3,7);
-				String last = originalPhoneNumber.substring(7,11);
+				String middle = originalPhoneNumber.substring(3, 7);
+				String last = originalPhoneNumber.substring(7, 11);
 				phoneNumberCenter.setText(middle);
 				phoneNumberLast.setText(last);
 				
 				String bigArea = rs.getString("bigarea");
 				String mediumArea = rs.getString("mediumarea");
 				String detailArea = rs.getString("detailarea");
-				if(bigAreaCombo.getItemCount() != 0 && bigAreaCombo.getSelectedItem().equals(bigArea)) {
-				    bigAreaCombo.setSelectedItem(bigArea);
-				}
-				if(mediumAreaCombo.getItemCount() != 0 && mediumAreaCombo.getSelectedItem().equals(mediumArea)) {
-				    mediumAreaCombo.setSelectedItem(mediumArea);
-				}
-				if(smallAreaCombo.getItemCount() != 0 && smallAreaCombo.getSelectedItem().equals(detailArea)) {
-				    smallAreaCombo.setSelectedItem(detailArea);
-				}
+				String totalArea = bigArea + " " + mediumArea + " " + detailArea; 
+				areaLabel.setText(totalArea);
 				
-				
+//				int gender = rs.getInt("gender");
+//				if (gender == 1) {
+//					manBtn.setSelected(true); // 남성 선택
+//				} else if (gender == 0) {
+//					womanBtn.setSelected(true); // 여성 선택
+//				}
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -189,137 +188,139 @@ public class ChangeInformationFrame extends JFrame {
 	}
 
 	public ChangeInformationFrame(DataBase data) {
-	    frame = new JFrame();
-		frame.setSize(1200,800);
-	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
-	        contentPane = new JPanel(){
+		frame = new JFrame();
+		frame.setSize(1200, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
+		contentPane = new JPanel() {
 
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
 
-			Image image = toolkit.getImage("img/changeinfoPage.png");
-			g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-		}
-	};
-	
-	
-	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-	setContentPane(contentPane);
-	contentPane.setLayout(null);
- 
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+				Image image = toolkit.getImage("img/changeinfoPage.png");
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
+
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
 		nickNameText = new JTextField();
 		nickNameText.setBounds(670, 115, 310, 34);
 		nickNameText.setColumns(10);
 		contentPane.add(nickNameText);
-		
+
 		JButton nikconfirmBtn = new JButton();
 		nikconfirmBtn.setBounds(980, 112, 150, 55);
 		ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm_1.png");
-		nikconfirmBtn.setContentAreaFilled(false); 
+		nikconfirmBtn.setContentAreaFilled(false);
 		nikconfirmBtn.setBorderPainted(false);
 		nikconfirmBtn.setIcon(imgnkconfirm);
-    
+
 		JButton passwordIdentifyBtn = new JButton();
 		ImageIcon imgpass = new ImageIcon("img/pwconfirm_1.png");
 		passwordIdentifyBtn.setBounds(980, 603, 150, 55);
 		passwordIdentifyBtn.setIcon(imgpass);
 		passwordIdentifyBtn.setVisible(true);
-		passwordIdentifyBtn.setContentAreaFilled(false); 
+		passwordIdentifyBtn.setContentAreaFilled(false);
 		passwordIdentifyBtn.setBorderPainted(false);
 		
-	  
+		nameLabel = new JLabel();
+		nameLabel.setBounds(670, 60, 310, 34);
+		contentPane.add(nameLabel);
+		
+		areaLabel = new JLabel();
+		areaLabel.setBounds(400, 60, 200, 34);
+		contentPane.add(areaLabel);
+		
 		nikconfirmBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm_1.png");
-			nikconfirmBtn.setIcon(imgnkconfirm);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm.png");
-			nikconfirmBtn.setIcon(imgnkconfirm);
-			
-		    }
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm_1.png");
+				nikconfirmBtn.setIcon(imgnkconfirm);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm.png");
+				nikconfirmBtn.setIcon(imgnkconfirm);
+
+			}
 		});
-	
+
 		passwordIdentifyBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgpass = new ImageIcon("img/pwconfirm_1.png");
-			passwordIdentifyBtn.setIcon(imgpass);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgpass = new ImageIcon("img/pwconfirm.png");
-			passwordIdentifyBtn.setIcon(imgpass);
-			
-		    }
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgpass = new ImageIcon("img/pwconfirm_1.png");
+				passwordIdentifyBtn.setIcon(imgpass);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgpass = new ImageIcon("img/pwconfirm.png");
+				passwordIdentifyBtn.setIcon(imgpass);
+
+			}
 		});
 		nikconfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			
+
 			}
 		});
 		passwordIdentifyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		 JButton returnBtn = new JButton("뒤로가기");
-		 returnBtn.setBounds(50, 25, 130, 50);
-		 ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
-		 returnBtn.setContentAreaFilled(false); 
-		 returnBtn.setBorderPainted(false);
-		 returnBtn.setIcon(imgreturnBtn);
-		  
-		 returnBtn.addMouseListener(new MouseAdapter() {
-			    @Override
-			    public void mouseExited(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
-				returnBtn.setIcon(imgreturnBtn);
-				
-			    }
-			    
-			    @Override
-			    public void mouseEntered(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
-				returnBtn.setIcon(imgreturnBtn);
-				
-			    }
-			});
-		
-		returnBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				DataBase data = new DataBase();
-				new MypageFrame(data);
-				 frame.setVisible(false);
-			}
-		});
-		contentPane.add(returnBtn);
-		contentPane.add(nikconfirmBtn);
-		contentPane.add(passwordIdentifyBtn);
+				Connection conn = null;
+				PreparedStatement checkPassword = null;
+				ResultSet rs = null;
+				try {
+					String newPass = newPassword.getText();
+					String nowPass = nowPassword.getText();
+					String checkPass = newPasswordMatch.getText();
+					conn = DBUtil.getConnection();
+					int loginUser = data.getCurrentUser().getNo();
+					checkPassword = conn.prepareStatement("SELECT COUNT(*) AS count FROM user WHERE userno = ? AND password = ?");
+					checkPassword.setInt(1, loginUser);
+					checkPassword.setString(2, nowPass);
+					
+					rs = checkPassword.executeQuery();
+					rs.next();
+					int count = rs.getInt("count");
 
-/*
+					if (count == 0) { 
+						passwordCheckLabel.setText("현재 비밀번호가 틀립니다.");
+					} else if (MatchPassword(newPass) == false) {
+						passwordCheckLabel.setText("비밀번호의 조건 : 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하");
+					} else if (!newPass.equals(checkPass)) {
+						passwordCheckLabel.setText("새비밀번호와 비밀번호 확인이 동일하지 않습니다");
+					} else {
+						passwordCheckLabel.setText("적절한 비밀번호 입니다.");
+					}
+					
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} finally {
+					DBUtil.close(rs);
+					DBUtil.close(checkPassword);
+					DBUtil.close(conn);
+				}
+			}
+		});
+		JButton returnBtn = new JButton("뒤로가기");
+		returnBtn.setBounds(50, 25, 130, 50);
+		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		returnBtn.setContentAreaFilled(false);
+		returnBtn.setBorderPainted(false);
+		returnBtn.setIcon(imgreturnBtn);
+
 		JRadioButton manBtn = new JRadioButton("남성");
-=======
-		idText = new JTextField();
-		idText.setBounds(336, 66, 370, 34);
-		contentPane.add(idText);
-		idText.setColumns(10);
-
-	
-
 		manBtn = new JRadioButton("남성");
 		manBtn.setBounds(596, 106, 49, 23);
 		contentPane.add(manBtn);
@@ -344,28 +345,57 @@ public class ChangeInformationFrame extends JFrame {
 				selectedGender = 0;
 			}
 		});
-		*/	
-//    JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
-//		errorLabel.setBounds(10, 10, 200, 30);
-//		contentPane.add(errorLabel);
-//
-//		JButton errorCheckBtn = new JButton();
-//		errorCheckBtn.setBounds(10, 50, 50, 50);
-//
-//		errorCheckBtn.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				String nickName = nickNameText.getText();
-//				if (matchNickName(nickName) == false) {
-//					errorLabel.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
-//				} else if (searchNickName(nickName) != 0) {
-//					errorLabel.setText("이미 존재하는 닉네임입니다.");
-//				} else if (correctNickName(nickName) == true) {
-//					errorLabel.setText("사용가능한 닉네임 입니다.");
-//				}
-//			}
-//		});
-//		contentPane.add(errorCheckBtn);
+			
+    JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
+		errorLabel.setBounds(10, 10, 200, 30);
+		contentPane.add(errorLabel);
+
+		JButton errorCheckBtn = new JButton();
+		errorCheckBtn.setBounds(10, 50, 50, 50);
+
+		errorCheckBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nickName = nickNameText.getText();
+				if (matchNickName(nickName) == false) {
+					errorLabel.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
+				} else if (searchNickName(nickName) != 0) {
+					errorLabel.setText("이미 존재하는 닉네임입니다.");
+				} else if (correctNickName(nickName) == true) {
+					errorLabel.setText("사용가능한 닉네임 입니다.");
+				}
+			}
+		});
+		contentPane.add(errorCheckBtn);
+
+		returnBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+				returnBtn.setIcon(imgreturnBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
+				returnBtn.setIcon(imgreturnBtn);
+
+			}
+		});
+
+		returnBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DataBase data = new DataBase();
+				new MypageFrame(data);
+				frame.setVisible(false);
+			}
+		});
+		contentPane.add(returnBtn);
+		contentPane.add(nikconfirmBtn);
+		contentPane.add(passwordIdentifyBtn);
+
 		// 지역 콤보 박스 생성
 		JComboBox<String> bigAreaCombo = new JComboBox();
 		JComboBox<String> mediumAreaCombo = new JComboBox();
@@ -373,7 +403,7 @@ public class ChangeInformationFrame extends JFrame {
 
 		bigAreaCombo.setBounds(680, 280, 120, 25);
 		contentPane.add(bigAreaCombo);
-		mediumAreaCombo.setBounds(838, 280,120, 25);
+		mediumAreaCombo.setBounds(838, 280, 120, 25);
 		contentPane.add(mediumAreaCombo);
 		smallAreaCombo.setBounds(996, 280, 120, 25);
 		contentPane.add(smallAreaCombo);
@@ -422,7 +452,7 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		// 휴대폰 번호 입력
 		phoneNumberCenter = new JTextField();
-		phoneNumberCenter.setBounds(800,  165, 100, 32);
+		phoneNumberCenter.setBounds(800, 165, 100, 32);
 		contentPane.add(phoneNumberCenter);
 		phoneNumberCenter.setColumns(10);
 
@@ -436,32 +466,32 @@ public class ChangeInformationFrame extends JFrame {
 
 		PlainDocument docLast = (PlainDocument) phoneNumberLast.getDocument();
 		docLast.setDocumentFilter(new NumberOnlyFilter(4));
-		
+
 		JButton informationResetBtn = new JButton("초기화");
 		ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
-		informationResetBtn.setContentAreaFilled(false); 
+		informationResetBtn.setContentAreaFilled(false);
 		informationResetBtn.setBorderPainted(false);
 		informationResetBtn.setIcon(imgReset);
 		informationResetBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
-			informationResetBtn.setIcon(imgReset);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgReset = new ImageIcon("img/myreset.png");
-			informationResetBtn.setIcon(imgReset);
-			
-		    }
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
+				informationResetBtn.setIcon(imgReset);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgReset = new ImageIcon("img/myreset.png");
+				informationResetBtn.setIcon(imgReset);
+
+			}
 		});
 		informationResetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//			    nickNameText.setText("");
-//			    phoneNumberCenter.setText("");
-//			    phoneNumberLast.setText("");
+			    nickNameText.setText("");
+			    phoneNumberCenter.setText("");
+			    phoneNumberLast.setText("");
 			}
 		});
 		informationResetBtn.setBounds(890, 330, 150, 80);
@@ -469,25 +499,25 @@ public class ChangeInformationFrame extends JFrame {
 
 		JButton changeBtn = new JButton();
 		ImageIcon imgchangeBtn = new ImageIcon("img/myset_1.png");
-		changeBtn.setContentAreaFilled(false); 
+		changeBtn.setContentAreaFilled(false);
 		changeBtn.setBorderPainted(false);
 		changeBtn.setIcon(imgchangeBtn);
 		changeBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgchangeBtn = new ImageIcon("img/myset_1.png");
-			changeBtn.setIcon(imgchangeBtn);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgchangeBtn = new ImageIcon("img/myset.png");
-			changeBtn.setIcon(imgchangeBtn);
-			
-		    }
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgchangeBtn = new ImageIcon("img/myset_1.png");
+				changeBtn.setIcon(imgchangeBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgchangeBtn = new ImageIcon("img/myset.png");
+				changeBtn.setIcon(imgchangeBtn);
+
+			}
 		});
-		
+
 		changeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int response = JOptionPane.showConfirmDialog(null, "정말로 변경하시겠습니까?", "예", JOptionPane.YES_NO_OPTION,
@@ -500,7 +530,7 @@ public class ChangeInformationFrame extends JFrame {
 
 						String nickName = nickNameText.getText();
 						if (correctNickName(nickName) == false) {
-							JOptionPane.showMessageDialog(null, "아이디를 다시 확인바랍니다", "입력오류", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "닉네임을 다시 확인바랍니다", "입력오류", JOptionPane.WARNING_MESSAGE);
 							return;
 						}
 						String phoneNumber = "010" + phoneNumberCenter.getText() + phoneNumberLast.getText();
@@ -514,7 +544,6 @@ public class ChangeInformationFrame extends JFrame {
 										+ "mediumarea = ?, detailarea = ?  where userno = ?");
 
 						changeUserInformation.setString(1, nickName);
-						// changeUserInformation.setString(2, id);
 						changeUserInformation.setString(2, phoneNumber);
 						changeUserInformation.setString(3, bigArea);
 						changeUserInformation.setString(4, mediumArea);
@@ -537,7 +566,7 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		changeBtn.setBounds(1000, 330, 150, 80);
 		contentPane.add(changeBtn);
-
+		// 비밀번호 칸 
 		nowPassword = new JTextField();
 		nowPassword.setBounds(690, 502, 290, 34);
 		contentPane.add(nowPassword);
@@ -555,60 +584,97 @@ public class ChangeInformationFrame extends JFrame {
 
 		JButton passwordResetBtn = new JButton();
 		ImageIcon imgpasswordReset = new ImageIcon("img/myreset_1.png");
-		passwordResetBtn.setContentAreaFilled(false); 
+		passwordResetBtn.setContentAreaFilled(false);
 		passwordResetBtn.setBorderPainted(false);
 		passwordResetBtn.setIcon(imgpasswordReset);
 		passwordResetBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgpasswordReset = new ImageIcon("img/myreset_1.png");
-			passwordResetBtn.setIcon(imgpasswordReset);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgpasswordReset = new ImageIcon("img/myreset.png");
-			passwordResetBtn.setIcon(imgpasswordReset);
-			
-		    }
-		});
-		
-		passwordResetBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			    nowPassword.setText("");
-			    newPassword.setText("");
-			    newPasswordMatch.setText("");
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgpasswordReset = new ImageIcon("img/myreset_1.png");
+				passwordResetBtn.setIcon(imgpasswordReset);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgpasswordReset = new ImageIcon("img/myreset.png");
+				passwordResetBtn.setIcon(imgpasswordReset);
+
 			}
 		});
-		passwordResetBtn.setBounds(890, 650,150, 80);
-		contentPane.add(passwordResetBtn);
 
+		passwordResetBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nowPassword.setText("");
+				newPassword.setText("");
+				newPasswordMatch.setText("");
+			}
+		});
+		passwordResetBtn.setBounds(890, 650, 150, 80);
+		contentPane.add(passwordResetBtn);
+		passwordCheckLabel = new JLabel();
+		passwordCheckLabel.setBounds(650, 650, 200, 50);
+		contentPane.add(passwordCheckLabel);
+		
+		
 		JButton passwordChangeBtn = new JButton();
+		passwordChangeBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int response = JOptionPane.showConfirmDialog(null, "정말로 변경하시겠습니까?", "예", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+				if (response == JOptionPane.YES_OPTION) {
+					
+					Connection conn = null;
+					PreparedStatement changeUserPassword = null;
+					try {
+						conn = DBUtil.getConnection();
+
+						
+						
+						int loginUser = data.getCurrentUser().getNo();
+						String newPassword = newPasswordMatch.getText();
+						changeUserPassword = conn
+								.prepareStatement("update user set password = ? where userno = ?");
+						changeUserPassword.setString(1, newPassword);
+						changeUserPassword.setInt(2, loginUser);
+						changeUserPassword.executeUpdate();
+					} catch (NumberFormatException e2) {
+						e2.printStackTrace();
+					} catch (SQLException e2) {
+						e2.printStackTrace();
+					} finally {
+						DBUtil.close(changeUserPassword);
+						DBUtil.close(conn);
+					}
+				} else {
+				}
+			}
+		});
 		ImageIcon imgpassChange = new ImageIcon("img/myset_1.png");
-		passwordChangeBtn.setContentAreaFilled(false); 
+		passwordChangeBtn.setContentAreaFilled(false);
 		passwordChangeBtn.setBorderPainted(false);
 		passwordChangeBtn.setIcon(imgpassChange);
 		passwordChangeBtn.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgpassChange = new ImageIcon("img/myset_1.png");
-			passwordChangeBtn.setIcon(imgpassChange);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgpassChange = new ImageIcon("img/myset.png");
-			passwordChangeBtn.setIcon(imgpassChange);
-			
-		    }
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgpassChange = new ImageIcon("img/myset_1.png");
+				passwordChangeBtn.setIcon(imgpassChange);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgpassChange = new ImageIcon("img/myset.png");
+				passwordChangeBtn.setIcon(imgpassChange);
+
+			}
 		});
-		
+
 		passwordChangeBtn.setBounds(1000, 650, 150, 80);
 		contentPane.add(passwordChangeBtn);
 		frame.getContentPane().add(contentPane);
-	        frame.setVisible(true);
+		frame.setVisible(true);
 
 		returnOriginal(data);
 
