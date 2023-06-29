@@ -62,7 +62,7 @@ public class DetailFrame extends JFrame {
 
 		lblImage = new JLabel("이미지");
 //		lblImage.setBounds(168, 230, 94, 15);
-		lblImage.setBounds(50, 100, 400, 400);
+		lblImage.setBounds(10, 10, 170, 170);
 		
 		for(int i=0;i<ImageRetriever.llistForDetail.size();i++) {
 			if(ImageRetriever.llistForDetail.get(i).getProductno()==data.getProduct().getProductNo()) {
@@ -210,7 +210,7 @@ public class DetailFrame extends JFrame {
 
 	public static ImageIcon iconSize(ImageIcon icon) {
 		Image img = icon.getImage();
-		Image changeSize = img.getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+		Image changeSize = img.getScaledInstance(170, 170, Image.SCALE_SMOOTH);
 		return new ImageIcon(changeSize);
 	}
 
