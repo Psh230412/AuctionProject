@@ -124,6 +124,9 @@ public class LoginSignupRepository {
 			return stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
 		}
 		return 0;
 	}
