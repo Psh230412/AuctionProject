@@ -586,7 +586,7 @@ public class MypageFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ListRepository repo = new ListRepository();
 				List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
-				if (Math.floor(enrollList.size() / 5) > (data.getIndex() / 5)) {
+				if ((Math.floor(enrollList.size() - 1) / 5) > (data.getIndex() / 5)) {
 					data.setIndex(data.getIndex() + 5);
 				}
 			}
@@ -609,7 +609,7 @@ public class MypageFrame extends JFrame {
 				ListRepository repo = new ListRepository();
 				List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
 				if (Math.floor(participateList.size() / 5) > (data.getIndexPar() / 5)) {
-					data.setIndex(data.getIndexPar() + 5);
+					data.setIndex((data.getIndexPar() - 1) + 5);
 				}
 			}
 		});
