@@ -10,5 +10,6 @@ public interface ITimer {
 
 	List<Product> selectProduct();
 	void updatePrice(int setNo, String bid);
-	void insertParticipate(int userNo, int auctionNo);
+//	void insertParticipate(int userNo, int auctionNo);
+	void insertParticipate(int userNo, int auctionNo, int price);
 }

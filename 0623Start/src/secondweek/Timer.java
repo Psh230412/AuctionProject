@@ -309,28 +309,61 @@ public class Timer implements ITimer {
 
 	}
 
-	@Override
-	public void insertParticipate(int userNo, int auctionNo) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
+	// 입찰가격 입력
+		@Override
+		public void insertParticipate(int userNo, int auctionNo, int price) {
+			Connection conn = null;
+			PreparedStatement stmt = null;
 
-		try {
-			conn = DBUtil.getConnection();
+			try {
+				conn = DBUtil.getConnection();
 
-			stmt = conn.prepareStatement(
-					"INSERT INTO participate (userno, auctionno, participatetime)\r\n" + "VALUES (?, ?, ?);");
+				stmt = conn.prepareStatement(
+						"INSERT INTO participate (userno, auctionno, participatetime, participateprice)\r\n"
+								+ "VALUES (?, ?, ?, ?);");
 
-			stmt.setInt(1, userNo);
-			stmt.setInt(2, auctionNo);
-			LocalDateTime now = LocalDateTime.now();
-			stmt.setTimestamp(3, Timestamp.valueOf(now));
+				stmt.setInt(1, userNo);
+				stmt.setInt(2, auctionNo);
+				LocalDateTime now = LocalDateTime.now();
+				stmt.setTimestamp(3, Timestamp.valueOf(now));
+				stmt.setInt(4, price);
 
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				DBUtil.close(stmt);
+				DBUtil.close(conn);
+			}
 		}
-	}
+
+		// 최근입찰가격용
+		public List<Integer> participateList(int auctionno, Connection conn) {
+//			Connection conn = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			List<Integer> list = new ArrayList<>();
+			try {
+				conn = DBUtil.getConnection();
+				String sql = "SELECT A.participateprice FROM participate A \r\n"
+						+ "INNER JOIN auction B ON A.auctionno = B.auctionno \r\n" + "WHERE B.auctionno = ?\r\n"
+						+ "ORDER BY A.participatetime DESC\r\n" + "LIMIT 4";
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, auctionno);
+				rs = stmt.executeQuery();
+
+				while (rs.next()) {
+					int participatePrice = rs.getInt("participateprice");
+					list.add(participatePrice);
+				}
+				return list;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				DBUtil.close(rs);
+				DBUtil.close(stmt);
+				DBUtil.close(conn);
+			}
+			return null;
+		}
 }

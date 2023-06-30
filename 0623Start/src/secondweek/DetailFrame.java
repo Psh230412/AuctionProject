@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,12 +46,10 @@ public class DetailFrame extends JFrame {
 	private static Timer timer;
 	private JPanel contentPane;
 	private JFrame frame;
+
 	private static JLabel lblImage;
-
 	private static JLabel lblName;
-
 	private static JLabel lblDetail;
-
 	private static JLabel lblTime;
 
 	private static JLabel lblPrice;
@@ -59,6 +58,12 @@ public class DetailFrame extends JFrame {
 	private static DataBase data;
 
 	private static JLabel lblisOwn;
+
+	private static JLabel prePriceLbl1;
+	private static JLabel prePriceLbl2;
+	private static JLabel prePriceLbl3;
+	private static JLabel prePriceLbl4;
+
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
 
 	public DetailFrame(DataBase data, int auctionNo) {
@@ -66,11 +71,11 @@ public class DetailFrame extends JFrame {
 		this.data = data;
 		timer = new Timer();
 
-		 frame = new JFrame();
-			frame.setSize(1200,800);
-		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		        contentPane = new JPanel(){
+		frame = new JFrame();
+		frame.setSize(1200, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		contentPane = new JPanel() {
 
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -82,23 +87,21 @@ public class DetailFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-		
-		
+
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		lblImage = new JLabel("이미지");
 		lblImage.setBounds(168, 240, 400, 400);
-	
-		
-		for(int i=0;i<ImageRetriever.llistForDetail.size();i++) {
-			if(ImageRetriever.llistForDetail.get(i).getProductno()==data.getProduct().getProductNo()) {
-				
+
+		for (int i = 0; i < ImageRetriever.llistForDetail.size(); i++) {
+			if (ImageRetriever.llistForDetail.get(i).getProductno() == data.getProduct().getProductNo()) {
+
 				ImageIcon imageIcon = ImageRetriever.llistForDetail.get(i).getImageicon();
 				if (imageIcon != null) {
 					lblImage.setIcon(iconSize(imageIcon));
-					
+
 				}
 			}
 		}
@@ -110,7 +113,7 @@ public class DetailFrame extends JFrame {
 		lblDetail.setForeground(Color.GRAY);
 		lblDetail.setBounds(740, 470, 226, 116);
 		lblTime = new JLabel("00:00:00");
-		lblTime.setFont(new Font("돋움", Font.BOLD,20));
+		lblTime.setFont(new Font("돋움", Font.BOLD, 20));
 		lblTime.setForeground(Color.RED);
 		lblTime.setFont(lblTime.getFont().deriveFont(16f));
 		lblTime.setBounds(850, 255, 150, 20);
@@ -132,29 +135,28 @@ public class DetailFrame extends JFrame {
 
 		JButton participateBtn = new JButton();
 		participateBtn.setBounds(730, 620, 350, 100);
-		participateBtn.setContentAreaFilled(false); 
+		participateBtn.setContentAreaFilled(false);
 		participateBtn.setBorderPainted(false);
 		ImageIcon imgbid = new ImageIcon("img/bid_1.png");
 		participateBtn.setIcon(imgbid);
 		contentPane.add(participateBtn);
 		participateBtn.addMouseListener(new MouseAdapter() {
-		
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgbid = new ImageIcon("img/bid_1.png");
-			participateBtn.setIcon(imgbid);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgbid = new ImageIcon("img/bid.png");
-			participateBtn.setIcon(imgbid);
-			
-		    }
-	 
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgbid = new ImageIcon("img/bid_1.png");
+				participateBtn.setIcon(imgbid);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgbid = new ImageIcon("img/bid.png");
+				participateBtn.setIcon(imgbid);
+
+			}
+
 		});
-		
 
 		if (!timer.isOwn(data.getCurrentUser().getNo(), data.getProduct().getProductNo())) {
 			lblisOwn.setText(data.getProduct().getProductName() + "은(는) 본인이 등록한 상품입니다.");
@@ -180,7 +182,7 @@ public class DetailFrame extends JFrame {
 								JOptionPane.YES_NO_OPTION);
 						if (choice == JOptionPane.YES_OPTION) {
 							// 입찰 쿼리문
-							timer.insertParticipate(data.getCurrentUser().getNo(), auctionNo);
+							timer.insertParticipate(data.getCurrentUser().getNo(), auctionNo, Integer.parseInt(bid));
 
 							int auctionno = timer.getAuctionNo(data.getProduct().getProductNo());
 							timer.plusOneMinute(auctionno);
@@ -198,26 +200,26 @@ public class DetailFrame extends JFrame {
 
 		JButton backButton = new JButton();
 		backButton.setBounds(50, 25, 130, 50);
-		 ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
-		 backButton.setContentAreaFilled(false); 
-		 backButton.setBorderPainted(false);
-		 backButton.setIcon(imgreturnBtn);
-		  
-		 backButton.addMouseListener(new MouseAdapter() {
-			    @Override
-			    public void mouseExited(MouseEvent e) {
+		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		backButton.setContentAreaFilled(false);
+		backButton.setBorderPainted(false);
+		backButton.setIcon(imgreturnBtn);
+
+		backButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
 				backButton.setIcon(imgreturnBtn);
-				
-			    }
-			    
-			    @Override
-			    public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
 				backButton.setIcon(imgreturnBtn);
-				
-			    }
-			});
+
+			}
+		});
 		backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -225,6 +227,28 @@ public class DetailFrame extends JFrame {
 				frame.setVisible(false);
 			}
 		});
+
+		// 이전가격 라벨 추가
+		JLabel prePriceInfoLbl = new JLabel("최근 입찰가 : ");
+		prePriceInfoLbl.setBounds(980, 225, 150, 25);
+		prePriceLbl1 = new JLabel("(가장오래된) 입찰가1");
+		prePriceLbl1.setBounds(1080, 225, 150, 25);
+		prePriceLbl1.setForeground(Color.GRAY);
+		prePriceLbl2 = new JLabel("입찰가2");
+		prePriceLbl2.setBounds(1080, 250, 150, 25);
+		prePriceLbl2.setForeground(Color.GRAY);
+		prePriceLbl3 = new JLabel("입찰가3");
+		prePriceLbl3.setBounds(1080, 275, 150, 25);
+		prePriceLbl3.setForeground(Color.GRAY);
+		prePriceLbl4 = new JLabel("(가장최근) 입찰가4");
+		prePriceLbl4.setBounds(1080, 300, 150, 25);
+		prePriceLbl4.setForeground(Color.GRAY);
+
+		contentPane.add(prePriceInfoLbl);
+		contentPane.add(prePriceLbl1);
+		contentPane.add(prePriceLbl2);
+		contentPane.add(prePriceLbl3);
+		contentPane.add(prePriceLbl4);
 
 		contentPane.add(lblImage);
 		contentPane.add(lblName);
@@ -237,7 +261,6 @@ public class DetailFrame extends JFrame {
 		contentPane.add(participateBtn);
 		contentPane.add(priceTF);
 		contentPane.add(backButton);
-	
 
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
@@ -300,6 +323,37 @@ public class DetailFrame extends JFrame {
 			lblTime.setText(result1);
 			lblPrice.setText(formatInt(product.getProductPriceNow()));
 			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow())));
+
+			prePriceLbl1.setText("");
+			prePriceLbl2.setText("");
+			prePriceLbl3.setText("");
+			prePriceLbl4.setText("");
+
+			List<Integer> priceList = timer.participateList(product.getAuctionNo(), conn);
+			if (priceList != null) {
+				for (int i = 0; i < priceList.size(); i++) {
+					if (priceList.get(i) != null) {
+						int price = priceList.get(i);
+						if (price == 0) {
+							continue;
+						}
+						switch (i + 1) {
+						case 1:
+							prePriceLbl4.setText(formatInt(price));
+							break;
+						case 2:
+							prePriceLbl3.setText(formatInt(price));
+							break;
+						case 3:
+							prePriceLbl2.setText(formatInt(price));
+							break;
+						case 4:
+							prePriceLbl1.setText(formatInt(price));
+							break;
+						}
+					}
+				}
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
