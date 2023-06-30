@@ -63,20 +63,18 @@ public class DetailFrame extends JFrame {
 		lblImage = new JLabel("이미지");
 //		lblImage.setBounds(168, 230, 94, 15);
 		lblImage.setBounds(10, 10, 170, 170);
-		
-		for(int i=0;i<ImageRetriever.llistForDetail.size();i++) {
-			if(ImageRetriever.llistForDetail.get(i).getProductno()==data.getProduct().getProductNo()) {
-				
+
+		for (int i = 0; i < ImageRetriever.llistForDetail.size(); i++) {
+			if (ImageRetriever.llistForDetail.get(i).getProductno() == data.getProduct().getProductNo()) {
+
 				ImageIcon imageIcon = ImageRetriever.llistForDetail.get(i).getImageicon();
 				if (imageIcon != null) {
 					lblImage.setIcon(iconSize(imageIcon));
 				}
 			}
-			
+
 		}
-		
-		
-		
+
 		lblName = new JLabel("제품명");
 		lblName.setBounds(514, 150, 94, 15);
 		lblDetail = new JLabel("상세설명");
