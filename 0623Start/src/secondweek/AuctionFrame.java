@@ -119,9 +119,6 @@ public class AuctionFrame extends JFrame {
 
 	private static List<Auction> list;
 
-	private static boolean checkBtn = false;
-	private static String searchText;
-
 	public AuctionFrame(DataBase data) {
 		for (int i = 0; i < lblImageArr.length; i++) {
 			lblImageArr[i] = new JLabel();
@@ -218,6 +215,9 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				data.setCheckBtn(false);
+				data.setSearchText("");
+				data.setIndexMainSearch(0);
+				searchTab.setText("");
 			}
 		});
 
@@ -230,6 +230,7 @@ public class AuctionFrame extends JFrame {
 
 				data.setCheckBtn(true);
 				data.setSearchText(searchTab.getText());
+				data.setIndexMain(0);
 //				if (searchTab.getText().length() > 0) {
 //					ImageRetriever.listForSearch.clear();
 //
@@ -513,8 +514,14 @@ public class AuctionFrame extends JFrame {
 		previousEnroll.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (data.getIndexMain() >= 10) {
-					data.setIndexMain(data.getIndexMain() - 10);
+				if (data.isCheckBtn()) {
+					if (data.getIndexMainSearch() >= 10) {
+						data.setIndexMainSearch(data.getIndexMainSearch() - 10);
+					}
+				} else {
+					if (data.getIndexMain() >= 10) {
+						data.setIndexMain(data.getIndexMain() - 10);
+					}
 				}
 			}
 		});
@@ -522,9 +529,14 @@ public class AuctionFrame extends JFrame {
 		nextEnroll.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				if (((timer.selectProduct().size() - 1) / 10) > (data.getIndexMain() / 10)) {
-					data.setIndexMain(data.getIndexMain() + 10);
+				if (data.isCheckBtn()) {
+					if (((timer.selectSearchProduct(data.getSearchText()).size() - 1) / 10) > (data.getIndexMainSearch() / 10)) {
+						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
+					}
+				} else {
+					if (((timer.selectProduct().size() - 1) / 10) > (data.getIndexMain() / 10)) {
+						data.setIndexMain(data.getIndexMain() + 10);
+					}
 				}
 			}
 		});
@@ -685,7 +697,7 @@ public class AuctionFrame extends JFrame {
 			btns[i].setVisible(false);
 		}
 
-		lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
+		lblNum1.setText(" - " + 1 + " - ");
 		lblNum1.setHorizontalAlignment(SwingConstants.CENTER);
 		Font font2 = new Font("맑은 고딕", Font.BOLD, 25);
 		lblNum1.setFont(font2);
@@ -1016,10 +1028,10 @@ public class AuctionFrame extends JFrame {
 			conn = DBUtil.getConnection();
 			ImageRetriever.retrieveImage(conn);
 
-			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
+			lblNum1.setText(" - " + String.valueOf((data.getIndexMainSearch() / 10) + 1) + " - ");
 
 			int count = 0;
-			for (int i = data.getIndexMain(); i < timer.selectSearchProduct(text).size(); i++) {
+			for (int i = data.getIndexMainSearch(); i < timer.selectSearchProduct(text).size(); i++) {
 				count++;
 				if (count == 11) {
 					break;
@@ -1038,11 +1050,12 @@ public class AuctionFrame extends JFrame {
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 
 //					ImageIcon imageIcon = list.get(i).getImage()
-					
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage1.setIcon(iconSize(imageIcon2));
 					}
@@ -1072,10 +1085,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage2.setIcon(iconSize(imageIcon2));
 					}
@@ -1104,10 +1118,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage3.setIcon(iconSize(imageIcon2));
 					}
@@ -1137,10 +1152,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage4.setIcon(iconSize(imageIcon2));
 					}
@@ -1170,10 +1186,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage5.setIcon(iconSize(imageIcon2));
 					}
@@ -1203,10 +1220,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage6.setIcon(iconSize(imageIcon2));
 					}
@@ -1236,10 +1254,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage7.setIcon(iconSize(imageIcon2));
 					}
@@ -1268,10 +1287,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage8.setIcon(iconSize(imageIcon2));
 					}
@@ -1300,10 +1320,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage9.setIcon(iconSize(imageIcon2));
 					}
@@ -1332,10 +1353,11 @@ public class AuctionFrame extends JFrame {
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 //					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1,
+							(int) ProductList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);
 					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
-					ImageIcon imageIcon2=new ImageIcon(image);
+					ImageIcon imageIcon2 = new ImageIcon(image);
 					if (imageIcon2 != null) {
 						lblImage10.setIcon(iconSize(imageIcon2));
 					}
@@ -1396,7 +1418,6 @@ public class AuctionFrame extends JFrame {
 
 					if (data.isCheckBtn()) {
 						updateSearchLabel(now, data.getSearchText());
-						System.out.println("뭐가실행?");
 					} else {
 						updatLabel(now);
 					}

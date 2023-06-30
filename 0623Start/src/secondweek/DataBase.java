@@ -6,6 +6,7 @@ public class DataBase {
 	private int index = 0;
 	private int indexPar = 0;
 	private int indexMain = 0;
+	private int indexMainSearch = 0;
 	private boolean checkBtn = false;
 	private String searchText;
 
@@ -52,6 +53,14 @@ public class DataBase {
 
 	public void setIndexMain(int indexMain) {
 		this.indexMain = indexMain;
+	}
+	
+	public int getIndexMainSearch() {
+		return indexMainSearch;
+	}
+
+	public void setIndexMainSearch(int indexMainSearch) {
+		this.indexMainSearch = indexMainSearch;
 	}
 
 	public boolean isCheckBtn() {
