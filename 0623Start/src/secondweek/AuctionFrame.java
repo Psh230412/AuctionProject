@@ -168,6 +168,8 @@ public class AuctionFrame extends JFrame {
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				data.setCheckBtn(false);
+				data.setSearchText("");
 				new MypageFrame(data);
 				frame.setVisible(false);
 
@@ -188,6 +190,8 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(null, "로그아웃하시겠습니까?", "로그아웃", JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
+					data.setCheckBtn(false);
+					data.setSearchText("");
 					JOptionPane.showMessageDialog(null, "로그아웃되었습니다.");
 					DataBase newdata = new DataBase();
 					new LoginFrame(newdata);
@@ -213,7 +217,7 @@ public class AuctionFrame extends JFrame {
 		searchAll.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				checkBtn = false;
+				data.setCheckBtn(false);
 			}
 		});
 
@@ -223,8 +227,8 @@ public class AuctionFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				checkBtn = true;
-				searchText = searchTab.getText();
+				data.setCheckBtn(true);
+				data.setSearchText(searchTab.getText());
 //				if (searchTab.getText().length() > 0) {
 //					ImageRetriever.listForSearch.clear();
 //
@@ -297,7 +301,7 @@ public class AuctionFrame extends JFrame {
 			}
 		});
 
-		searchTab = new JTextField();
+		searchTab = new JTextField(data.getSearchText());
 		searchTab.setBounds(105, 150, 300, 40);
 
 		contentPane.add(userLbl);
@@ -471,8 +475,8 @@ public class AuctionFrame extends JFrame {
 			btns[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (checkBtn) {
-						List<Product> products = timer.selectSearchProduct(searchTab.getText());
+					if (data.isCheckBtn()) {
+						List<Product> products = timer.selectSearchProduct(data.getSearchText());
 						if (products.size() >= index) {
 							Product product = products.get(list.get(index).getIndex());
 							data.setProduct(product);
@@ -1342,10 +1346,12 @@ public class AuctionFrame extends JFrame {
 				public void run() {
 
 					LocalDateTime now = LocalDateTime.now();
-					if (checkBtn) {
-						updateSearchLabel(now, searchText);
+					if (data.isCheckBtn()) {
+						updateSearchLabel(now, data.getSearchText());
+						System.out.println("뭐가실행?");
 					} else {
 						updatLabel(now);
+						System.out.println("이게실행?");
 					}
 				}
 			});
