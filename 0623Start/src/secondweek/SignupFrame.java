@@ -557,7 +557,7 @@ public class SignupFrame extends JFrame {
 				// 이름
 				String name = nameTF.getText();
 				if (!nameCheck(name)) {
-					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.");
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.이름");
 					return;
 				}
 				// 닉네임
@@ -572,7 +572,7 @@ public class SignupFrame extends JFrame {
 					phonenumber = phonenumConcat(phone1, phone2, phone3);
 				} else {
 					// 취소
-					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.");
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.전번");
 					return;
 				}
 				// 생년월일
@@ -582,7 +582,7 @@ public class SignupFrame extends JFrame {
 						date = dayCheck(selectedYear, selectedMonth, selectedDay); 
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.");
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.생년월일");
 					return;
 				}
 				// 성별
@@ -591,12 +591,12 @@ public class SignupFrame extends JFrame {
 					genderInt = genderParse(genderStr);
 				}
 				if (genderInt == -1) {
-					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.");
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.성별");
 					return;
 				}
 				// 주소
 				if (bigAreaComboStr == null || mediumAreaComboStr == null || smallAreaComboStr == null) {
-					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.");
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.주소");
 					return;
 				}
 
@@ -610,7 +610,7 @@ public class SignupFrame extends JFrame {
 						frame.setVisible(false);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.");
+					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.아이디비번");
 					initialLabel();
 				}
 			}
