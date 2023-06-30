@@ -171,7 +171,7 @@ public class LoginSignupRepository {
 		return m.matches();
 	}
 
-	// 이름 조건 - 영문자로만 이루어지거나, 한글로만 이루어져야 함.
+	// 이름 조건 - 영문자로만 이루어지거나(4자이상 20자이하), 한글로만 이루어져야 함(2자이상).
 	public boolean matchName(String name) {
 		Pattern p = Pattern.compile("[a-zA-Z]{4,20}"); // o
 		Matcher m = p.matcher(name);
@@ -182,9 +182,9 @@ public class LoginSignupRepository {
 		return (m.matches() || m2.matches());
 	}
 
-	// 닉네임 조건 - 영대소문자 or 한글 or 숫자 포함 2자리이상 20자리이하 // 수정
+	// 닉네임 조건 - 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하 // 수정
 	public boolean matchNickName(String newNickName) {
-		Pattern p = Pattern.compile("[\\w\\uAC00-\\uD7AF]{2,20}"); // o
+		Pattern p = Pattern.compile("[\\w\\uAC00-\\uD7AF]{4,20}"); // o
 
 		Matcher m = p.matcher(newNickName);
 		return m.matches();

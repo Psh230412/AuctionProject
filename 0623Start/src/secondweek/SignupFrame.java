@@ -436,13 +436,13 @@ public class SignupFrame extends JFrame {
 		idConditionLbl.setForeground(Color.GRAY);
 
 		JLabel passwordConditionLbl = new JLabel(
-				"비밀번호 : 영대소문자 & 숫자 각 1개 필수포함(10자이상 20자이하)");
+				"비밀번호 : 대문자, 소문자, 숫자 각 1개이상 필수포함(10자이상 20자이하)");
 		passwordConditionLbl.setBounds(650, 550, 450, 35);
 		passwordConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		passwordConditionLbl.setForeground(Color.GRAY);
 
 		JLabel nameConditionLbl = new JLabel(
-				"이름 : 영문자 or 한글 20자이하(영문-4자이상, 한글-2자이상)");
+				"이름 : 영문자 or 한글로만 20자이하(영문-4자이상, 한글-2자이상)");
 		nameConditionLbl.setBounds(650, 505, 600, 35);
 		nameConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		nameConditionLbl.setForeground(Color.GRAY);
