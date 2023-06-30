@@ -113,6 +113,10 @@ public class AuctionFrame extends JFrame {
 	private JFrame frame;
 	private JPanel contentPane;
 	private static JButton[] btns;
+	
+	public void searchAuction() {
+		
+	}
 
 	public AuctionFrame(DataBase data) {
 		for (int i = 0; i < lblImageArr.length; i++) {
@@ -202,10 +206,17 @@ public class AuctionFrame extends JFrame {
 		});
 		JButton searchBtn = new JButton("S");
 		searchBtn.setBounds(53, 150, 52, 40);
+		
+		
+		
+		
+		
 		searchBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				
 				if (searchTab.getText().length() > 0) {
 					ImageRetriever.listForSearch.clear();
 
@@ -266,6 +277,7 @@ public class AuctionFrame extends JFrame {
 								lblTimeArr[i].setForeground(Color.RED);
 								lblTimeArr[i].setFont(lblTimeArr[i].getFont().deriveFont(15f));
 							}
+//							scheduler.start();
 
 							btns[i].setVisible(true);
 						}
@@ -274,9 +286,11 @@ public class AuctionFrame extends JFrame {
 
 					} catch (SQLException e1) {
 						e1.printStackTrace();
-					} catch (SchedulerException e1) {
+					} 
+					catch (SchedulerException e1) {
 						e1.printStackTrace();
-					} finally {
+					} 
+					finally {
 						DBUtil.close(rs);
 						DBUtil.close(stmt);
 						DBUtil.close(conn);
@@ -551,6 +565,8 @@ public class AuctionFrame extends JFrame {
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
+		
+		
 
 	}
 
@@ -998,6 +1014,18 @@ public class AuctionFrame extends JFrame {
 
 					LocalDateTime now = LocalDateTime.now();
 					updatLabel(now);
+				}
+			});
+		}
+	}
+	public static class searchAuctionUpdateJob implements Job{
+		public void execute(JobExecutionContext context) throws JobExecutionException{
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 		}
