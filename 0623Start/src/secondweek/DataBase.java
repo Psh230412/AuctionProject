@@ -6,6 +6,9 @@ public class DataBase {
 	private int index = 0;
 	private int indexPar = 0;
 	private int indexMain = 0;
+	private int indexMainSearch = 0;
+	private boolean checkBtn = false;
+	private String searchText;
 
 	public DataBase() {
 		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
@@ -50,6 +53,30 @@ public class DataBase {
 
 	public void setIndexMain(int indexMain) {
 		this.indexMain = indexMain;
+	}
+	
+	public int getIndexMainSearch() {
+		return indexMainSearch;
+	}
+
+	public void setIndexMainSearch(int indexMainSearch) {
+		this.indexMainSearch = indexMainSearch;
+	}
+
+	public boolean isCheckBtn() {
+		return checkBtn;
+	}
+
+	public void setCheckBtn(boolean checkBtn) {
+		this.checkBtn = checkBtn;
+	}
+
+	public String getSearchText() {
+		return searchText;
+	}
+
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
 	}
 	
 	

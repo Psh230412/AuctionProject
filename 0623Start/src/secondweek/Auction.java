@@ -1,11 +1,12 @@
 package secondweek;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import javax.swing.ImageIcon;
 
 public class Auction {
+	private int index;
+	private int auctionNo;
 	private ImageIcon imageIcon;
 	private String productname;
 	private int finalprice;
@@ -17,6 +18,12 @@ public class Auction {
 		this.productname = productname;
 		this.finalprice = finalprice;
 		this.deadline = deadline;
+	}
+	
+	public Auction(int index, int auctionNo) {
+		super();
+		this.index = index;
+		this.auctionNo = auctionNo;
 	}
 
 	public ImageIcon getImageIcon() {
@@ -53,8 +60,23 @@ public class Auction {
 
 	@Override
 	public String toString() {
-		return "Auction [imageIcon=" + imageIcon + ", productname=" + productname + ", finalprice=" + finalprice
-				+ ", deadline=" + deadline + "]";
+		return "Auction [index=" + index + ", auctionNo=" + auctionNo + "]";
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int getAuctionNo() {
+		return auctionNo;
+	}
+
+	public void setAuctionNo(int auctionNo) {
+		this.auctionNo = auctionNo;
 	}
 	
 	
