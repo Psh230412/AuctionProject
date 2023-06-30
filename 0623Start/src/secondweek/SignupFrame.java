@@ -578,7 +578,9 @@ public class SignupFrame extends JFrame {
 				// 생년월일
 				LocalDate date = null;
 				if (selectedYear != null && selectedMonth != null && selectedDay != null) {
-					date = dayCheck(selectedYear, selectedMonth, selectedDay);
+					if (!selectedYear.equals("연도") && !selectedMonth.equals("월") && !selectedDay.equals("일")) { 
+						date = dayCheck(selectedYear, selectedMonth, selectedDay); 
+					}
 				} else {
 					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.");
 					return;
@@ -725,14 +727,12 @@ public class SignupFrame extends JFrame {
 		return num1 + num2 + num3;
 	}
 
-	private LocalDate dayCheck(String year, String month, String day) {
+	private LocalDate dayCheck(String year, String month, String day) { 
 		LocalDate date = null;
-		if (!year.equals("연도") && !month.equals("월") && !day.equals("일")) {
-			int yearint = Integer.parseInt(year);
-			int monthint = Integer.parseInt(month);
-			int dayint = Integer.parseInt(day);
-			date = LocalDate.of(yearint, monthint, dayint);
-		}
+		int yearint = Integer.parseInt(year);
+		int monthint = Integer.parseInt(month);
+		int dayint = Integer.parseInt(day);
+		date = LocalDate.of(yearint, monthint, dayint);
 		return date;
 	}
 
