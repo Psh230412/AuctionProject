@@ -166,32 +166,33 @@ public class LoginSignupRepository {
 
 	// 아이디 조건 - 영소문자 필수, 숫자포함가능 10자리이상 20자리이하
 	public boolean matchId(String id) {
-		Pattern p = Pattern.compile("[a-z+0-9]{10,20}");
+		Pattern p = Pattern.compile("^(?=.*[a-z])[a-z0-9]{10,20}$"); // o 0630성지수_수정
 		Matcher m = p.matcher(id);
 		return m.matches();
 	}
 
 	// 이름 조건 - 영문자로만 이루어지거나, 한글로만 이루어져야 함.
 	public boolean matchName(String name) {
-		Pattern p = Pattern.compile("[a-zA-z]{4,20}");
+		Pattern p = Pattern.compile("^[a-zA-Z]{4,20}$"); // o
 		Matcher m = p.matcher(name);
 
-		Pattern p2 = Pattern.compile("[\\uAC00-\\uD7AF]{2,10}");
+		Pattern p2 = Pattern.compile("^[\\uAC00-\\uD7AF]{4,20}$"); // o
 		Matcher m2 = p2.matcher(name);
 
 		return (m.matches() || m2.matches());
 	}
 
-	// 닉네임 조건 - 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하
+	// 닉네임 조건 - 영대소문자 or 한글 or 숫자 포함 2자리이상 20자리이하 // 수정
 	public boolean matchNickName(String newNickName) {
-		Pattern p = Pattern.compile("[\\w\\uAC00-\\uD7AF]{4,20}");
+		Pattern p = Pattern.compile("[\\w\\uAC00-\\uD7AF]{2,20}"); // o
+//		"^(?=.*[A-Z])(?=.*[a-z])$"
 		Matcher m = p.matcher(newNickName);
 		return m.matches();
 	}
 
-	// 비밀번호 조건 - 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하
+	// 비밀번호 조건 - 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하 
 	public boolean matchPassword(String newPassword) {
-		Pattern p = Pattern.compile("[a-z+A-z+0-9+]{10,20}");
+		Pattern p = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[a-zA-Z0-9]{10,20}$"); // o
 		Matcher m = p.matcher(newPassword);
 		return m.matches();
 	}
