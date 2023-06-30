@@ -354,21 +354,6 @@ public class ChangeInformationFrame extends JFrame {
 			womanBtn.setIcon(imgwomanlbl1);
 		}
 
-//		manBtn.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				// 남성 선택 시 1 반환
-//				 manBtn.setIcon(imgmanlbl1);
-//				selectedGender = 1;
-//			}
-//		});
-//
-//		womanBtn.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				// 여성 선택 시 0 반환
-//				 womanBtn.setIcon(imgwomanlbl1);
-//				selectedGender = 0;
-//			}
-//		});
 	
 			
     JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
