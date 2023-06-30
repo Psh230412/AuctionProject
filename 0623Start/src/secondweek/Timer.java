@@ -199,7 +199,7 @@ public class Timer implements ITimer {
 		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
-			DBUtil.close(rs);
+			DBUtil.close(conn);
 		}
 		return -1;
 
@@ -266,7 +266,7 @@ public class Timer implements ITimer {
 			DBUtil.close(rs);
 			DBUtil.close(stmtForPlusDuration);
 			DBUtil.close(stmt);
-			DBUtil.close(rs);
+			DBUtil.close(conn);
 		}
 
 	}
