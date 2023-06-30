@@ -72,7 +72,6 @@ public class DetailFrame extends JFrame {
 					lblImage.setIcon(iconSize(imageIcon));
 				}
 			}
-
 		}
 
 		lblName = new JLabel("제품명");
@@ -109,7 +108,7 @@ public class DetailFrame extends JFrame {
 					Product product = data.getProduct();
 					String bid = priceTF.getText();
 
-					if (PriceMin(product.getProductPriceNow()) >= Integer.parseInt(bid)) {
+					if (PriceMin(product.getProductPriceNow()) > Integer.parseInt(bid)) {
 						lblMessage.setForeground(Color.RED);
 						lblMessage.setText("입찰가격은 현재가격의 105% 이상이어야 합니다.");
 					} else if (!bidMin(bid)) {
@@ -228,7 +227,6 @@ public class DetailFrame extends JFrame {
 			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow())));
 
 		} catch (SQLException e) {
-
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(conn);

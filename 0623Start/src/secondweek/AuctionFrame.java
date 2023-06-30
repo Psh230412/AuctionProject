@@ -133,7 +133,6 @@ public class AuctionFrame extends JFrame {
 		}
 
 		this.data = data;
-		list = new ArrayList();
 		timer = new Timer();
 		frame = new JFrame();
 		frame.setSize(1200, 1000);
@@ -670,6 +669,7 @@ public class AuctionFrame extends JFrame {
 
 	public static void updatLabel(LocalDateTime now) {
 		Connection conn = null;
+		list = new ArrayList();
 
 		try {
 			conn = DBUtil.getConnection();
