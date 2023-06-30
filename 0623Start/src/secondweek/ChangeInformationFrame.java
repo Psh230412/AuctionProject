@@ -168,12 +168,7 @@ public class ChangeInformationFrame extends JFrame {
 				String totalArea = bigArea + " " + mediumArea + " " + detailArea; 
 				areaLabel.setText(totalArea);
 				
-//				int gender = rs.getInt("gender");
-//				if (gender == 1) {
-//					manBtn.setSelected(true); // 남성 선택
-//				} else if (gender == 0) {
-//					womanBtn.setSelected(true); // 여성 선택
-//				}
+		
 
 			}
 		} catch (SQLException e) {
@@ -189,7 +184,7 @@ public class ChangeInformationFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		  frame.setResizable(false);
 		contentPane = new JPanel() {
 
 			@Override
@@ -214,16 +209,15 @@ public class ChangeInformationFrame extends JFrame {
 
 		JButton nikconfirmBtn = new JButton();
 		nikconfirmBtn.setBounds(980, 112, 150, 55);
-		ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm_1.png");
+		ImageIcon imgnkconfirm = new ImageIcon("img/nickconfirm_1.png");
 		nikconfirmBtn.setContentAreaFilled(false);
 		nikconfirmBtn.setBorderPainted(false);
 		nikconfirmBtn.setIcon(imgnkconfirm);
 
 		JButton passwordIdentifyBtn = new JButton();
 		ImageIcon imgpass = new ImageIcon("img/pwconfirm_1.png");
-		passwordIdentifyBtn.setBounds(980, 603, 150, 55);
+		passwordIdentifyBtn.setBounds(980, 613, 150, 55);
 		passwordIdentifyBtn.setIcon(imgpass);
-		passwordIdentifyBtn.setVisible(true);
 		passwordIdentifyBtn.setContentAreaFilled(false);
 		passwordIdentifyBtn.setBorderPainted(false);
 		
@@ -238,14 +232,14 @@ public class ChangeInformationFrame extends JFrame {
 		nikconfirmBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseExited(MouseEvent e) {
-				ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm_1.png");
+				ImageIcon imgnkconfirm = new ImageIcon("img/nickconfirm_1.png");
 				nikconfirmBtn.setIcon(imgnkconfirm);
 
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				ImageIcon imgnkconfirm = new ImageIcon("img/nikconfirm.png");
+				ImageIcon imgnkconfirm = new ImageIcon("img/nickconfirm.png");
 				nikconfirmBtn.setIcon(imgnkconfirm);
 
 			}
@@ -269,7 +263,14 @@ public class ChangeInformationFrame extends JFrame {
 		nikconfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				String nickName = nickNameText.getText();
+				if (matchNickName(nickName) == false) {
+					nikconfirmBtn.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
+				} else if (searchNickName(nickName) != 0) {
+					nikconfirmBtn.setText("이미 존재하는 닉네임입니다.");
+				} else if (correctNickName(nickName) == true) {
+					nikconfirmBtn.setText("사용가능한 닉네임 입니다.");
+				}
 			}
 		});
 		passwordIdentifyBtn.addActionListener(new ActionListener() {
@@ -293,85 +294,86 @@ public class ChangeInformationFrame extends JFrame {
 				}
 			}
 		});
-		JButton returnBtn = new JButton("뒤로가기");
+		JButton returnBtn = new JButton();
 		returnBtn.setBounds(50, 25, 130, 50);
 		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
-		returnBtn.setContentAreaFilled(false);
-		returnBtn.setBorderPainted(false);
-		returnBtn.setIcon(imgreturnBtn);
-
-		JRadioButton manBtn = new JRadioButton("남성");
-		manBtn = new JRadioButton("남성");
-		manBtn.setBounds(596, 106, 49, 23);
-		contentPane.add(manBtn);
-
-		womanBtn = new JRadioButton("여성");
-		womanBtn.setBounds(657, 106, 49, 23);
-		contentPane.add(womanBtn);
-		ButtonGroup genderGroup = new ButtonGroup();
-		genderGroup.add(manBtn);
-		genderGroup.add(womanBtn);
-
-		manBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// 남성 선택 시 1 반환
-				selectedGender = 1;
-			}
-		});
-
-		womanBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// 여성 선택 시 0 반환
-				selectedGender = 0;
-			}
-		});
-			
-    JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
-		errorLabel.setBounds(10, 10, 200, 30);
-		contentPane.add(errorLabel);
-
-		JButton errorCheckBtn = new JButton();
-		errorCheckBtn.setBounds(10, 50, 50, 50);
-
-		errorCheckBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nickName = nickNameText.getText();
-				if (matchNickName(nickName) == false) {
-					errorLabel.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
-				} else if (searchNickName(nickName) != 0) {
-					errorLabel.setText("이미 존재하는 닉네임입니다.");
-				} else if (correctNickName(nickName) == true) {
-					errorLabel.setText("사용가능한 닉네임 입니다.");
-				}
-			}
-		});
-		contentPane.add(errorCheckBtn);
-
-		returnBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseExited(MouseEvent e) {
+		 returnBtn.setContentAreaFilled(false); 
+		 returnBtn.setBorderPainted(false);
+		 returnBtn.setIcon(imgreturnBtn);
+		  
+		 returnBtn.addMouseListener(new MouseAdapter() {
+			    @Override
+			    public void mouseExited(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
 				returnBtn.setIcon(imgreturnBtn);
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
+				
+			    }
+			    
+			    @Override
+			    public void mouseEntered(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
 				returnBtn.setIcon(imgreturnBtn);
-
-			}
-		});
-
+				
+			    }
+			});
+		
 		returnBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DataBase data = new DataBase();
 				new MypageFrame(data);
-				frame.setVisible(false);
+				 frame.setVisible(false);
 			}
 		});
+
+		JRadioButton manBtn = new JRadioButton();
+		manBtn.setContentAreaFilled(false); 
+		manBtn.setBorderPainted(false);
+		 ImageIcon imgmanlbl1 = new ImageIcon("img/man.png");
+		ImageIcon imgmanlbl = new ImageIcon("img/man_1.png");
+		 manBtn.setIcon(imgmanlbl);
+		 manBtn.setBounds(630, 243, 50, 50);
+		contentPane.add(manBtn);
+
+		womanBtn = new JRadioButton();
+		womanBtn.setContentAreaFilled(false); 
+		womanBtn.setBorderPainted(false);
+		ImageIcon imgwomanlbl = new ImageIcon("img/girl_1.png");
+		ImageIcon imgwomanlbl1 = new ImageIcon("img/girl.png");
+	    womanBtn.setIcon(imgwomanlbl);
+		womanBtn.setBounds(690, 243, 50, 50);
+		contentPane.add(womanBtn);
+		ButtonGroup genderGroup = new ButtonGroup();
+		genderGroup.add(manBtn);
+		genderGroup.add(womanBtn);
+	
+		int gender = getSelectedGender();
+		if (gender == 1) {
+			manBtn.setIcon(imgmanlbl1);
+		} else if (gender == 0) {
+			womanBtn.setIcon(imgwomanlbl1);
+		}
+
+//		manBtn.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				// 남성 선택 시 1 반환
+//				 manBtn.setIcon(imgmanlbl1);
+//				selectedGender = 1;
+//			}
+//		});
+//
+//		womanBtn.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				// 여성 선택 시 0 반환
+//				 womanBtn.setIcon(imgwomanlbl1);
+//				selectedGender = 0;
+//			}
+//		});
+	
+			
+    JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
+		errorLabel.setBounds(670, 150, 200, 30);
+		contentPane.add(errorLabel);
 		contentPane.add(returnBtn);
 		contentPane.add(nikconfirmBtn);
 		contentPane.add(passwordIdentifyBtn);
@@ -381,11 +383,11 @@ public class ChangeInformationFrame extends JFrame {
 		JComboBox<String> mediumAreaCombo = new JComboBox();
 		JComboBox<String> smallAreaCombo = new JComboBox();
 
-		bigAreaCombo.setBounds(680, 280, 120, 25);
+		bigAreaCombo.setBounds(700, 310, 120, 25);
 		contentPane.add(bigAreaCombo);
-		mediumAreaCombo.setBounds(838, 280, 120, 25);
+		mediumAreaCombo.setBounds(848, 310,120, 25);
 		contentPane.add(mediumAreaCombo);
-		smallAreaCombo.setBounds(996, 280, 120, 25);
+		smallAreaCombo.setBounds(996, 310, 120, 25);
 		contentPane.add(smallAreaCombo);
 		// 지역 대 분류
 		List<String> bigAreas = new ArrayList<>();
@@ -432,7 +434,7 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		// 휴대폰 번호 입력
 		phoneNumberCenter = new JTextField();
-		phoneNumberCenter.setBounds(800, 165, 100, 32);
+		phoneNumberCenter.setBounds(800, 200, 100, 32);
 		contentPane.add(phoneNumberCenter);
 		phoneNumberCenter.setColumns(10);
 
@@ -441,13 +443,13 @@ public class ChangeInformationFrame extends JFrame {
 
 		phoneNumberLast = new JTextField();
 		phoneNumberLast.setColumns(10);
-		phoneNumberLast.setBounds(980, 165, 100, 32);
+		phoneNumberLast.setBounds(980, 200, 100, 32);
 		contentPane.add(phoneNumberLast);
 
 		PlainDocument docLast = (PlainDocument) phoneNumberLast.getDocument();
 		docLast.setDocumentFilter(new NumberOnlyFilter(4));
 
-		JButton informationResetBtn = new JButton("초기화");
+		JButton informationResetBtn = new JButton();
 		ImageIcon imgReset = new ImageIcon("img/myreset_1.png");
 		informationResetBtn.setContentAreaFilled(false);
 		informationResetBtn.setBorderPainted(false);
@@ -474,7 +476,7 @@ public class ChangeInformationFrame extends JFrame {
 			    phoneNumberLast.setText("");
 			}
 		});
-		informationResetBtn.setBounds(890, 330, 150, 80);
+		informationResetBtn.setBounds(910, 350, 150, 80);
 		contentPane.add(informationResetBtn);
 
 		JButton changeBtn = new JButton();
@@ -557,22 +559,22 @@ public class ChangeInformationFrame extends JFrame {
 				}
 			}
 		});
-		changeBtn.setBounds(1000, 330, 150, 80);
+		changeBtn.setBounds(1020, 350, 150, 80);
 		contentPane.add(changeBtn);
-		// 비밀번호 칸 
+
 		nowPassword = new JTextField();
-		nowPassword.setBounds(690, 502, 290, 34);
+		nowPassword.setBounds(690, 510, 290, 34);
 		contentPane.add(nowPassword);
 		nowPassword.setColumns(10);
 
 		newPassword = new JTextField();
 		newPassword.setColumns(10);
-		newPassword.setBounds(690, 555, 290, 34);
+		newPassword.setBounds(690, 560, 290, 34);
 		contentPane.add(newPassword);
 
 		newPasswordMatch = new JTextField();
 		newPasswordMatch.setColumns(10);
-		newPasswordMatch.setBounds(690, 605, 290, 34);
+		newPasswordMatch.setBounds(690, 612, 290, 34);
 		contentPane.add(newPasswordMatch);
 
 		JButton passwordResetBtn = new JButton();
@@ -603,7 +605,7 @@ public class ChangeInformationFrame extends JFrame {
 				newPasswordMatch.setText("");
 			}
 		});
-		passwordResetBtn.setBounds(890, 650, 150, 80);
+		passwordResetBtn.setBounds(910, 660,150, 80);
 		contentPane.add(passwordResetBtn);
 		passwordCheckLabel = new JLabel();
 		passwordCheckLabel.setBounds(650, 650, 200, 50);
@@ -670,7 +672,7 @@ public class ChangeInformationFrame extends JFrame {
 			}
 		});
 
-		passwordChangeBtn.setBounds(1000, 650, 150, 80);
+		passwordChangeBtn.setBounds(1020, 660, 150, 80);
 		contentPane.add(passwordChangeBtn);
 		frame.getContentPane().add(contentPane);
 		frame.setVisible(true);

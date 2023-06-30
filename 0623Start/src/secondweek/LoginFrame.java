@@ -46,7 +46,7 @@ public class LoginFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-
+		frame.setResizable(false);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -88,7 +88,7 @@ public class LoginFrame extends JFrame {
 		});
 
 		JButton signupBtn = new JButton("회원가입");
-		signupBtn.setBounds(750, 420, 300, 85);
+		signupBtn.setBounds(750, 390, 300, 85);
 		ImageIcon imgsign = new ImageIcon("img/signup_1.png");
 		signupBtn.setContentAreaFilled(false);
 		signupBtn.setBorderPainted(false);
@@ -165,7 +165,27 @@ public class LoginFrame extends JFrame {
 		});
 
 		JButton passwordSearchBtn = new JButton("아이디/비밀번호 찾기");
-		passwordSearchBtn.setBounds(0, 0, 280, 35);
+		passwordSearchBtn.setBounds(750, 470, 300, 85);
+		ImageIcon imgfind = new ImageIcon("img/findinfo_1.png");
+		passwordSearchBtn.setContentAreaFilled(false);
+		passwordSearchBtn.setBorderPainted(false);
+		passwordSearchBtn.setIcon(imgfind);
+		passwordSearchBtn.setVisible(true);
+		passwordSearchBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgfind = new ImageIcon("img/findinfo_1.png");
+				passwordSearchBtn.setIcon(imgfind);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgfind = new ImageIcon("img/findinfo.png");
+				passwordSearchBtn.setIcon(imgfind);
+
+			}
+		});
 		passwordSearchBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

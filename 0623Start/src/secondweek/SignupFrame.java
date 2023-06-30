@@ -99,82 +99,144 @@ public class SignupFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-
+		frame.setResizable(false);
 		signupPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(signupPanel);
 		signupPanel.setLayout(null);
 
 		// -----------------------------------------------------------------------------
-		JLabel nameLbl = new JLabel("이름");
-		nameLbl.setBounds(100, 0, 60, 21);
-		nameTF = new JTextField(10);
-		nameTF.setBounds(200, 0, 120, 21);
+		// JLabel nameLbl = new JLabel("이름");
+				// nameLbl.setBounds(100, 0, 60, 21);
+				nameTF = new JTextField(10);
+				nameTF.setBounds(650, 70, 240, 25);
 
-		JLabel nicknameLbl = new JLabel("닉네임");
-		nicknameLbl.setBounds(100, 50, 60, 21);
-		nicknameTF = new JTextField(10);
-		nicknameTF.setBounds(200, 50, 120, 21);
+				// JLabel nicknameLbl = new JLabel("닉네임");
+				// nicknameLbl.setBounds(100, 50, 60, 21);
+				nicknameTF = new JTextField(10);
+				nicknameTF.setBounds(650, 168, 240, 25);
 
-		JButton nicknameIdentifyBtn = new JButton("닉네임 확인");
-		nicknameIdentifyBtn.setBounds(400, 50, 120, 21);
-		nicknameInfoLbl = new JLabel("닉네임을 확인해주세요.");
-		nicknameInfoLbl.setBounds(400, 100, 300, 21);
+				JButton nicknameIdentifyBtn = new JButton("닉네임 확인");
+				nicknameIdentifyBtn.setBounds(960, 163, 150, 55);
+				ImageIcon imgnicknameIdenBtn = new ImageIcon("img/nickconfirm_1.png");
+				nicknameIdentifyBtn.setContentAreaFilled(false);
+				nicknameIdentifyBtn.setBorderPainted(false);
+				nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
+				nicknameIdentifyBtn.setVisible(true);
+				nicknameIdentifyBtn.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseExited(MouseEvent e) {
+						ImageIcon imgnicknameIdenBtn = new ImageIcon(
+								"img/nickconfirm_1.png");
+						nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
 
-		nicknameIdentifyBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nickname = nicknameTF.getText();
-				nicknameCheck(nickname);
-			}
-		});
+					}
 
-		JLabel phoneLbl = new JLabel("전화번호");
-		phoneLbl.setBounds(100, 150, 60, 21);
-		telFrontTF = new JTextField(5);
-		telFrontTF.setBounds(200, 150, 60, 21);
-		telCenterTF = new JTextField(5);
-		telCenterTF.setBounds(280, 150, 60, 21);
-		telBackTF = new JTextField(5);
-		telBackTF.setBounds(360, 150, 60, 21);
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						ImageIcon imgnicknameIdenBtn = new ImageIcon(
+								"img/nickconfirm.png");
+						nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
 
-		PlainDocument docCenter1 = (PlainDocument) telFrontTF.getDocument();
-		docCenter1.setDocumentFilter(new NumberOnlyFilter(3));
-		PlainDocument docCenter2 = (PlainDocument) telCenterTF.getDocument();
-		docCenter2.setDocumentFilter(new NumberOnlyFilter(4));
-		PlainDocument docCenter3 = (PlainDocument) telBackTF.getDocument();
-		docCenter3.setDocumentFilter(new NumberOnlyFilter(4));
+					}
+				});
+				nicknameInfoLbl = new JLabel("닉네임을 확인해주세요.");
+				nicknameInfoLbl.setBounds(650, 194, 200, 21);
 
-		JLabel birthLbl = new JLabel("생년월일");
-		birthLbl.setBounds(100, 200, 80, 21);
-		signupPanel.add(birthLbl);
-		yearCombo.setBounds(200, 200, 80, 21);
-		signupPanel.add(yearCombo);
-		monthCombo.setBounds(280, 200, 80, 21);
-		signupPanel.add(monthCombo);
-		dayCombo.setBounds(360, 200, 80, 21);
-		signupPanel.add(dayCombo);
+				nicknameIdentifyBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String nickname = nicknameTF.getText();
+						nicknameCheck(nickname);
+					}
+				});
 
-		JLabel genderLbl = new JLabel("성별");
-		genderLbl.setBounds(100, 300, 80, 21);
-		JRadioButton manBtn = new JRadioButton("남성");
-		manBtn.setBounds(200, 300, 80, 21);
-		manBtn.setBackground(Color.WHITE);
-		JRadioButton womanBtn = new JRadioButton("여성");
-		womanBtn.setBounds(300, 300, 80, 21);
-		womanBtn.setBackground(Color.WHITE);
+				// JLabel phoneLbl = new JLabel("전화번호");
+				// phoneLbl.setBounds(600, 150, 60, 21);
+				telFrontTF = new JTextField(5);
+				telFrontTF.setBounds(650, 225, 100, 25);
+				telCenterTF = new JTextField(5);
+				telCenterTF.setBounds(795, 225, 120, 25);
+				telBackTF = new JTextField(5);
+				telBackTF.setBounds(970, 225, 100, 25);
 
-		ButtonGroup radioGroup = new ButtonGroup();
-		radioGroup.add(manBtn);
-		radioGroup.add(womanBtn);
+				PlainDocument docCenter1 = (PlainDocument) telFrontTF.getDocument();
+				docCenter1.setDocumentFilter(new NumberOnlyFilter(3));
+				PlainDocument docCenter2 = (PlainDocument) telCenterTF.getDocument();
+				docCenter2.setDocumentFilter(new NumberOnlyFilter(4));
+				PlainDocument docCenter3 = (PlainDocument) telBackTF.getDocument();
+				docCenter3.setDocumentFilter(new NumberOnlyFilter(4));
 
-		JLabel addressLbl = new JLabel("주소");
-		addressLbl.setBounds(100, 350, 100, 25);
-		bigAreaCombo = new JComboBox<>();
-		bigAreaCombo.setBounds(200, 350, 100, 25);
-		mediumAreaCombo = new JComboBox<>();
-		mediumAreaCombo.setBounds(300, 350, 100, 25);
-		smallAreaCombo = new JComboBox<>();
-		smallAreaCombo.setBounds(400, 350, 100, 25);
+				// JLabel birthLbl = new JLabel("생년월일");
+				// birthLbl.setBounds(100, 200, 80, 21);
+				// signupPanel.add(birthLbl);
+				yearCombo.setBounds(650, 370, 100, 25);
+				signupPanel.add(yearCombo);
+				monthCombo.setBounds(780, 370, 100, 25);
+				signupPanel.add(monthCombo);
+				dayCombo.setBounds(910, 370, 100, 25);
+				signupPanel.add(dayCombo);
+
+				// JLabel genderLbl = new JLabel("성별");
+				// genderLbl.setBounds(100, 300, 80, 21);
+				ImageIcon imgwomanlbl1 = new ImageIcon("img/girl.png");
+				ImageIcon imgmanlbl1 = new ImageIcon("img/man.png");
+				ImageIcon imgmanlbl = new ImageIcon("img/man_1.png");
+				ImageIcon imgwomanlbl = new ImageIcon("img/girl_1.png");
+				JRadioButton manBtn = new JRadioButton("남성");
+				manBtn.setContentAreaFilled(false);
+				manBtn.setBorderPainted(false);
+				manBtn.setBounds(600, 261, 50, 50);
+				manBtn.setIcon(imgmanlbl);
+				manBtn.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseExited(MouseEvent e) {
+
+						manBtn.setIcon(imgmanlbl);
+
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+
+						manBtn.setIcon(imgmanlbl1);
+
+					}
+				});
+
+				JRadioButton womanBtn = new JRadioButton("여성");
+				womanBtn.setContentAreaFilled(false);
+				womanBtn.setBorderPainted(false);
+
+				womanBtn.setIcon(imgwomanlbl);
+				womanBtn.setBounds(650, 261, 50, 50);
+				womanBtn.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseExited(MouseEvent e) {
+
+						womanBtn.setIcon(imgwomanlbl);
+
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+
+						womanBtn.setIcon(imgwomanlbl1);
+
+					}
+				});
+
+				ButtonGroup radioGroup = new ButtonGroup();
+				radioGroup.add(manBtn);
+				radioGroup.add(womanBtn);
+
+				// JLabel addressLbl = new JLabel("주소");
+				// addressLbl.setBounds(100, 350, 100, 25);
+				bigAreaCombo = new JComboBox<>();
+				bigAreaCombo.setBounds(650, 325, 100, 25);
+				mediumAreaCombo = new JComboBox<>();
+				mediumAreaCombo.setBounds(780, 325, 100, 25);
+				smallAreaCombo = new JComboBox<>();
+				smallAreaCombo.setBounds(910, 325, 100, 25);
 
 		// 지역 대 분류
 		List<String> bigAreas = new ArrayList<>();
@@ -222,26 +284,26 @@ public class SignupFrame extends JFrame {
 			}
 		});
 
-		signupPanel.add(nameLbl);
-		signupPanel.add(nameTF);
+		// signupPanel.add(nameLbl);
+				signupPanel.add(nameTF);
 
-		signupPanel.add(nicknameTF);
-		signupPanel.add(nicknameLbl);
-		signupPanel.add(nicknameInfoLbl);
-		signupPanel.add(nicknameIdentifyBtn);
+				signupPanel.add(nicknameTF);
+				// signupPanel.add(nicknameLbl);
+				signupPanel.add(nicknameInfoLbl);
+				signupPanel.add(nicknameIdentifyBtn);
 
-		signupPanel.add(phoneLbl);
-		signupPanel.add(telFrontTF);
-		signupPanel.add(telCenterTF);
-		signupPanel.add(telBackTF);
-		signupPanel.add(genderLbl);
-		signupPanel.add(manBtn);
-		signupPanel.add(womanBtn);
+				// signupPanel.add(phoneLbl);
+				signupPanel.add(telFrontTF);
+				signupPanel.add(telCenterTF);
+				signupPanel.add(telBackTF);
+				// signupPanel.add(genderLbl);
+				signupPanel.add(manBtn);
+				signupPanel.add(womanBtn);
 
-		signupPanel.add(addressLbl);
-		signupPanel.add(bigAreaCombo);
-		signupPanel.add(mediumAreaCombo);
-		signupPanel.add(smallAreaCombo);
+				// signupPanel.add(addressLbl);
+				signupPanel.add(bigAreaCombo);
+				signupPanel.add(mediumAreaCombo);
+				signupPanel.add(smallAreaCombo);
 
 		// --------------------------------------------------------------------------------
 
@@ -366,40 +428,44 @@ public class SignupFrame extends JFrame {
 		});
 
 		idIdentifyLbl = new JLabel("아이디를 확인해주세요.");
-		idIdentifyLbl.setBounds(650, 177, 280, 35);
-		JLabel idConditionLbl = new JLabel("아이디 : 영소문자 필수, 숫자포함가능(10자이상 20자이하)");
-		idConditionLbl.setBounds(630, 410, 450, 35);
+		idIdentifyLbl.setBounds(650, 135, 280, 35);
+		JLabel idConditionLbl = new JLabel(
+				"아이디 : 영소문자 필수, 숫자포함가능(10자이상 20자이하)");
+		idConditionLbl.setBounds(650, 520, 450, 35);
 		idConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		idConditionLbl.setForeground(Color.GRAY);
 
-		JLabel passwordConditionLbl = new JLabel("비밀번호 : 영대소문자 & 숫자 각 1개 필수포함(10자이상 20자이하)");
-		passwordConditionLbl.setBounds(630, 450, 450, 35);
+		JLabel passwordConditionLbl = new JLabel(
+				"비밀번호 : 영대소문자 & 숫자 각 1개 필수포함(10자이상 20자이하)");
+		passwordConditionLbl.setBounds(650, 550, 450, 35);
 		passwordConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		passwordConditionLbl.setForeground(Color.GRAY);
 
-		JLabel nameConditionLbl = new JLabel("이름 : 영문자 or 한글 20자이하(영문-4자이상, 한글-2자이상)");
-		nameConditionLbl.setBounds(630, 490, 450, 35);
+		JLabel nameConditionLbl = new JLabel(
+				"이름 : 영문자 or 한글 20자이하(영문-4자이상, 한글-2자이상)");
+		nameConditionLbl.setBounds(650, 505, 600, 35);
 		nameConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		nameConditionLbl.setForeground(Color.GRAY);
 
-		JLabel nicknameConditionLbl = new JLabel("닉네임 : 영대소문자, 한글, 숫자 포함 (4자이상 20자이하)");
-		nicknameConditionLbl.setBounds(630, 530, 450, 35);
+		JLabel nicknameConditionLbl = new JLabel(
+				"닉네임 : 영대소문자, 한글, 숫자 포함 (4자이상 20자이하)");
+		nicknameConditionLbl.setBounds(650, 535, 450, 35);
 		nicknameConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		nicknameConditionLbl.setForeground(Color.GRAY);
 
 		passwordIdentifyLbl = new JLabel("비밀번호를 확인해주세요.");
-		passwordIdentifyLbl.setBounds(650, 386, 280, 35);
+		passwordIdentifyLbl.setBounds(680, 484, 280, 35);
 		initialLabel();
 
 		idTF = new JTextField(10);
-		idTF.setBounds(650, 147, 240, 35);
+		idTF.setBounds(650, 113, 240, 25);
 		passwordPF = new JPasswordField(10);
-		passwordPF.setBounds(650, 247, 240, 35);
+		passwordPF.setBounds(660, 423, 240, 25);
 		passwordPF2 = new JPasswordField(10);
-		passwordPF2.setBounds(650, 356, 240, 35);
+		passwordPF2.setBounds(660, 468, 240, 25);
 
 		JButton idIdentifyBtn = new JButton();
-		idIdentifyBtn.setBounds(900, 145, 150, 55);
+		idIdentifyBtn.setBounds(950, 109, 150, 55);
 		ImageIcon imgidconfirm = new ImageIcon("img/idconfirm_1.png");
 		idIdentifyBtn.setContentAreaFilled(false);
 		idIdentifyBtn.setBorderPainted(false);
@@ -407,7 +473,7 @@ public class SignupFrame extends JFrame {
 
 		JButton passwordIdentifyBtn = new JButton();
 		ImageIcon imgpass = new ImageIcon("img/pwconfirm_1.png");
-		passwordIdentifyBtn.setBounds(900, 354, 150, 55);
+		passwordIdentifyBtn.setBounds(950, 461, 150, 55);
 		passwordIdentifyBtn.setIcon(imgpass);
 		passwordIdentifyBtn.setVisible(true);
 		passwordIdentifyBtn.setContentAreaFilled(false);
@@ -459,7 +525,7 @@ public class SignupFrame extends JFrame {
 		});
 
 		signupBtn = new JButton("회원가입");
-		signupBtn.setBounds(690, 470, 330, 82);
+		signupBtn.setBounds(690, 630, 330, 82);
 		ImageIcon imgsignupBtn = new ImageIcon("img/join_1.png");
 		signupBtn.setContentAreaFilled(false);
 		signupBtn.setBorderPainted(false);
@@ -548,8 +614,8 @@ public class SignupFrame extends JFrame {
 			}
 		});
 
-		JButton returnBtn = new JButton("뒤로가기");
-		returnBtn.setBounds(690, 580, 130, 50);
+		JButton returnBtn = new JButton();
+		returnBtn.setBounds(50, 25, 130, 50);
 		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
 		returnBtn.setContentAreaFilled(false);
 		returnBtn.setBorderPainted(false);
@@ -560,12 +626,14 @@ public class SignupFrame extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
 				returnBtn.setIcon(imgreturnBtn);
+
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
 				returnBtn.setIcon(imgreturnBtn);
+
 			}
 		});
 
@@ -676,7 +744,4 @@ public class SignupFrame extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		new SignupFrame();
-	}
 }
