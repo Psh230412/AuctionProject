@@ -45,13 +45,60 @@ public class Timer implements ITimer {
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
-				
-				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent, startTime, endTime));
+				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
+						startTime, endTime));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
 		}
-		finally {
+		return list;
+	}
+	
+	public List<Product> selectSearchProduct(String searchObject) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		List<Product> list = new ArrayList<>();
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(
+					"SELECT *\r\n" + 
+					"FROM auction AS C\r\n" + 
+					"RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image, B.setno \r\n" + 
+					"			FROM product AS A\r\n" + 
+					"			LEFT JOIN enrollmentinfo AS B \r\n" + 
+					"            ON A.productno = B.productno) AS D\r\n" + 
+					"ON C.setno = D.setno\r\n" + 
+					"WHERE C.deadline > current_timestamp()\r\n" + 
+					"AND productname LIKE ?\r\n" + 
+					"ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
+			stmt.setString(1, "%" + searchObject + "%");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int setNo = rs.getInt("setno");
+				int productNo = rs.getInt("productno");
+				int auctionNo = rs.getInt("auctionno");
+				String productName = rs.getString("productname");
+				int productPriceNow = rs.getInt("finalprice");
+				String productContent = rs.getString("detailinfo");
+				Blob image = rs.getBlob("image");
+				Timestamp timestamp = rs.getTimestamp("starttime");
+				LocalDateTime startTime = timestamp.toLocalDateTime();
+				Timestamp timestamp2 = rs.getTimestamp("deadline");
+				LocalDateTime endTime = timestamp2.toLocalDateTime();
+
+				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
+						startTime, endTime));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
@@ -59,8 +106,6 @@ public class Timer implements ITimer {
 		return list;
 	}
 
-	
-	
 	public void inputSuccessbidinfo() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -78,14 +123,11 @@ public class Timer implements ITimer {
 
 			stmt.executeUpdate();
 //			deadline 지난것은 successbidinfo로 보내고 auction에서 삭제 시킨다.
-			
-			stmtForDelete = conn.prepareStatement("DELETE FROM auction\r\n" + 
-					"WHERE deadline<current_timestamp();");
-			
+
+			stmtForDelete = conn.prepareStatement("DELETE FROM auction\r\n" + "WHERE deadline<current_timestamp();");
+
 			stmtForDelete.executeUpdate();
-			
-			
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -102,7 +144,6 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 
-			
 			stmt = conn.prepareStatement("UPDATE successbidinfo\r\n" + "set isbid = 0\r\n"
 					+ "where successbidinfo.auctioncopyno IN (SELECT A.auctionno from copy_auction A\r\n"
 					+ "WHERE A.deadline < current_time() AND A.auctionno NOT IN  (SELECT auctionno FROM participate));");
@@ -125,12 +166,10 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 
-			stmt = conn.prepareStatement("update auction\r\n" + 
-					"set finalprice = ?\r\n" + 
-					"WHERE setno = ?;");
+			stmt = conn.prepareStatement("update auction\r\n" + "set finalprice = ?\r\n" + "WHERE setno = ?;");
 			stmt.setInt(1, Integer.parseInt(bid));
 			stmt.setInt(2, setNo);
-			
+
 			stmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -183,14 +222,15 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 
-			stmt = conn.prepareStatement("SELECT auctionno FROM auction where setno = (SELECT setno FROM enrollmentinfo where productno = ? );");
+			stmt = conn.prepareStatement(
+					"SELECT auctionno FROM auction where setno = (SELECT setno FROM enrollmentinfo where productno = ? );");
 
 			stmt.setInt(1, productno);
 
 			rs = stmt.executeQuery();
-			
-			if(rs.next()) {
-				int auctionno= rs.getInt("auctionno");
+
+			if (rs.next()) {
+				int auctionno = rs.getInt("auctionno");
 				System.out.println(auctionno);
 				return auctionno;
 			}
@@ -229,7 +269,7 @@ public class Timer implements ITimer {
 		ResultSet rs = null;
 
 		LocalDateTime now = LocalDateTime.now();
-		
+
 		System.out.println(auctionno);
 
 		try {
@@ -253,13 +293,11 @@ public class Timer implements ITimer {
 							+ "SET deadline = DATE_ADD(deadline, INTERVAL 1 MINUTE)\r\n" + "where auctionno = ? ;");
 					stmtForPlusDuration.setInt(1, auctionno);
 					stmtForPlusDuration.executeUpdate();
-					
+
 				} else {
 					return;
 				}
-
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -279,9 +317,9 @@ public class Timer implements ITimer {
 		try {
 			conn = DBUtil.getConnection();
 
-			stmt = conn.prepareStatement("INSERT INTO participate (userno, auctionno, participatetime)\r\n" + 
-					"VALUES (?, ?, ?);");
-			
+			stmt = conn.prepareStatement(
+					"INSERT INTO participate (userno, auctionno, participatetime)\r\n" + "VALUES (?, ?, ?);");
+
 			stmt.setInt(1, userNo);
 			stmt.setInt(2, auctionNo);
 			LocalDateTime now = LocalDateTime.now();

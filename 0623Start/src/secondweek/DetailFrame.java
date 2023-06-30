@@ -63,20 +63,17 @@ public class DetailFrame extends JFrame {
 		lblImage = new JLabel("이미지");
 //		lblImage.setBounds(168, 230, 94, 15);
 		lblImage.setBounds(10, 10, 170, 170);
-		
-		for(int i=0;i<ImageRetriever.llistForDetail.size();i++) {
-			if(ImageRetriever.llistForDetail.get(i).getProductno()==data.getProduct().getProductNo()) {
-				
+
+		for (int i = 0; i < ImageRetriever.llistForDetail.size(); i++) {
+			if (ImageRetriever.llistForDetail.get(i).getProductno() == data.getProduct().getProductNo()) {
+
 				ImageIcon imageIcon = ImageRetriever.llistForDetail.get(i).getImageicon();
 				if (imageIcon != null) {
 					lblImage.setIcon(iconSize(imageIcon));
 				}
 			}
-			
 		}
-		
-		
-		
+
 		lblName = new JLabel("제품명");
 		lblName.setBounds(514, 150, 94, 15);
 		lblDetail = new JLabel("상세설명");
@@ -111,7 +108,7 @@ public class DetailFrame extends JFrame {
 					Product product = data.getProduct();
 					String bid = priceTF.getText();
 
-					if (PriceMin(product.getProductPriceNow()) >= Integer.parseInt(bid)) {
+					if (PriceMin(product.getProductPriceNow()) > Integer.parseInt(bid)) {
 						lblMessage.setForeground(Color.RED);
 						lblMessage.setText("입찰가격은 현재가격의 105% 이상이어야 합니다.");
 					} else if (!bidMin(bid)) {
@@ -230,7 +227,6 @@ public class DetailFrame extends JFrame {
 			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow())));
 
 		} catch (SQLException e) {
-
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(conn);
