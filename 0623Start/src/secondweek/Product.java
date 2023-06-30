@@ -1,4 +1,5 @@
 package secondweek;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 
 public class Product {
@@ -10,9 +11,10 @@ public class Product {
 	private String productContent;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
+	private Blob image;
 	
 	public Product(int setNo, int productNo, int auctionNo, String productName, int productPriceNow,
-			String productContent, LocalDateTime startTime, LocalDateTime endTime) {
+			String productContent, LocalDateTime startTime, LocalDateTime endTime,Blob image) {
 		super();
 		this.setNo = setNo;
 		this.productNo = productNo;
@@ -22,6 +24,7 @@ public class Product {
 		this.productContent = productContent;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.image = image;
 	}
 	
 	public int getAuctionNo() {
@@ -88,6 +91,15 @@ public class Product {
 		this.endTime = endTime;
 	}
 	
+	
+	public Blob getImage() {
+		return image;
+	}
+
+	public void setImage(Blob image) {
+		this.image = image;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [setNo=" + setNo + ", productNo=" + productNo + ", productName=" + productName

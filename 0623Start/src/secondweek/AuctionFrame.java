@@ -223,7 +223,7 @@ public class AuctionFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				checkBtn = true;
 				searchText = searchTab.getText();
 //				if (searchTab.getText().length() > 0) {
@@ -575,8 +575,6 @@ public class AuctionFrame extends JFrame {
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
-		
-		
 
 	}
 
@@ -696,14 +694,14 @@ public class AuctionFrame extends JFrame {
 		try {
 			conn = DBUtil.getConnection();
 			ImageRetriever.retrieveImage(conn);
-			
+
 			resetLabel();
-			
+
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
-			
+
 			int count = 0;
 			for (int i = data.getIndexMain(); i < timer.selectProduct().size(); i++) {
-				count ++;
+				count++;
 				if (count == 11) {
 					break;
 				}
@@ -716,7 +714,7 @@ public class AuctionFrame extends JFrame {
 					lblName1.setText(timer.selectProduct().get(i).getProductName());
 					lblName1.setPreferredSize(new Dimension(200, lblName1.getPreferredSize().height));
 					lblName1.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -726,7 +724,7 @@ public class AuctionFrame extends JFrame {
 					lblTime1.setText(result1);
 					lblTime1.setPreferredSize(new Dimension(200, lblTime1.getPreferredSize().height));
 					lblTime1.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -740,11 +738,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice2.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice2.setPreferredSize(new Dimension(200, lblPrice2.getPreferredSize().height));
 					lblPrice2.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName2.setText(timer.selectProduct().get(i).getProductName());
 					lblName2.setPreferredSize(new Dimension(200, lblName2.getPreferredSize().height));
 					lblName2.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -754,12 +752,12 @@ public class AuctionFrame extends JFrame {
 					lblTime2.setText(result2);
 					lblTime2.setPreferredSize(new Dimension(200, lblTime2.getPreferredSize().height));
 					lblTime2.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
 					}
-					
+
 					btns[i].setVisible(true);
 					break;
 				}
@@ -767,11 +765,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice3.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice3.setPreferredSize(new Dimension(200, lblPrice3.getPreferredSize().height));
 					lblPrice3.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName3.setText(timer.selectProduct().get(i).getProductName());
 					lblName3.setPreferredSize(new Dimension(200, lblName3.getPreferredSize().height));
 					lblName3.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -782,7 +780,7 @@ public class AuctionFrame extends JFrame {
 					lblTime3.setText(result3);
 					lblTime3.setPreferredSize(new Dimension(200, lblTime3.getPreferredSize().height));
 					lblTime3.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -796,11 +794,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice4.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice4.setPreferredSize(new Dimension(200, lblPrice4.getPreferredSize().height));
 					lblPrice4.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName4.setText(timer.selectProduct().get(i).getProductName());
 					lblName4.setPreferredSize(new Dimension(200, lblName4.getPreferredSize().height));
 					lblName4.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -811,7 +809,7 @@ public class AuctionFrame extends JFrame {
 					lblTime4.setText(result4);
 					lblTime4.setPreferredSize(new Dimension(200, lblTime4.getPreferredSize().height));
 					lblTime4.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -825,11 +823,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice5.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice5.setPreferredSize(new Dimension(200, lblPrice5.getPreferredSize().height));
 					lblPrice5.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName5.setText(timer.selectProduct().get(i).getProductName());
 					lblName5.setPreferredSize(new Dimension(200, lblName5.getPreferredSize().height));
 					lblName5.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -840,7 +838,7 @@ public class AuctionFrame extends JFrame {
 					lblTime5.setText(result5);
 					lblTime5.setPreferredSize(new Dimension(200, lblTime5.getPreferredSize().height));
 					lblTime5.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -854,11 +852,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice6.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice6.setPreferredSize(new Dimension(200, lblPrice6.getPreferredSize().height));
 					lblPrice6.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName6.setText(timer.selectProduct().get(i).getProductName());
 					lblName6.setPreferredSize(new Dimension(200, lblName6.getPreferredSize().height));
 					lblName6.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -869,7 +867,7 @@ public class AuctionFrame extends JFrame {
 					lblTime6.setText(result6);
 					lblTime6.setPreferredSize(new Dimension(200, lblTime6.getPreferredSize().height));
 					lblTime6.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -883,11 +881,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice7.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice7.setPreferredSize(new Dimension(200, lblPrice7.getPreferredSize().height));
 					lblPrice7.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName7.setText(timer.selectProduct().get(i).getProductName());
 					lblName7.setPreferredSize(new Dimension(200, lblName7.getPreferredSize().height));
 					lblName7.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -897,7 +895,7 @@ public class AuctionFrame extends JFrame {
 					lblTime7.setText(result7);
 					lblTime7.setPreferredSize(new Dimension(200, lblTime7.getPreferredSize().height));
 					lblTime7.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -911,11 +909,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice8.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice8.setPreferredSize(new Dimension(200, lblPrice8.getPreferredSize().height));
 					lblPrice8.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName8.setText(timer.selectProduct().get(i).getProductName());
 					lblName8.setPreferredSize(new Dimension(200, lblName8.getPreferredSize().height));
 					lblName8.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -925,7 +923,7 @@ public class AuctionFrame extends JFrame {
 					lblTime8.setText(result8);
 					lblTime8.setPreferredSize(new Dimension(200, lblTime8.getPreferredSize().height));
 					lblTime8.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -939,11 +937,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice9.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice9.setPreferredSize(new Dimension(200, lblPrice9.getPreferredSize().height));
 					lblPrice9.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName9.setText(timer.selectProduct().get(i).getProductName());
 					lblName9.setPreferredSize(new Dimension(200, lblName9.getPreferredSize().height));
 					lblName9.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -953,7 +951,7 @@ public class AuctionFrame extends JFrame {
 					lblTime9.setText(result9);
 					lblTime9.setPreferredSize(new Dimension(200, lblTime9.getPreferredSize().height));
 					lblTime9.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -967,11 +965,11 @@ public class AuctionFrame extends JFrame {
 					lblPrice10.setText(formatInt(timer.selectProduct().get(i).getProductPriceNow()));
 					lblPrice10.setPreferredSize(new Dimension(200, lblPrice10.getPreferredSize().height));
 					lblPrice10.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					lblName10.setText(timer.selectProduct().get(i).getProductName());
 					lblName10.setPreferredSize(new Dimension(200, lblName10.getPreferredSize().height));
 					lblName10.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
 					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
 					if (imageIcon != null) {
@@ -981,7 +979,7 @@ public class AuctionFrame extends JFrame {
 					lblTime10.setText(result10);
 					lblTime10.setPreferredSize(new Dimension(200, lblTime10.getPreferredSize().height));
 					lblTime10.setHorizontalAlignment(SwingConstants.CENTER);
-					
+
 					if (durationTen(timer.selectProduct().get(i).getEndTime(), now)) {
 						lblTime1.setForeground(Color.RED);
 						lblTime1.setFont(lblTime1.getFont().deriveFont(15f));
@@ -1004,6 +1002,9 @@ public class AuctionFrame extends JFrame {
 	public static void updateSearchLabel(LocalDateTime now, String text) {
 		Connection conn = null;
 		list = new ArrayList();
+
+		List<Product> ProductList = new ArrayList<Product>();
+		ProductList = timer.selectSearchProduct(text);
 		resetLabel();
 
 		try {
@@ -1029,10 +1030,18 @@ public class AuctionFrame extends JFrame {
 					lblName1.setPreferredSize(new Dimension(200, lblName1.getPreferredSize().height));
 					lblName1.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage1.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+
+//					ImageIcon imageIcon = list.get(i).getImage()
+					
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage1.setIcon(iconSize(imageIcon2));
 					}
+
 					String result1 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
 					lblTime1.setText(result1);
 					lblTime1.setPreferredSize(new Dimension(200, lblTime1.getPreferredSize().height));
@@ -1057,9 +1066,13 @@ public class AuctionFrame extends JFrame {
 					lblName2.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage2.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage2.setIcon(iconSize(imageIcon2));
 					}
 					String result2 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
 					lblTime2.setText(result2);
@@ -1085,9 +1098,13 @@ public class AuctionFrame extends JFrame {
 					lblName3.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage3.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage3.setIcon(iconSize(imageIcon2));
 					}
 
 					String result3 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
@@ -1114,9 +1131,13 @@ public class AuctionFrame extends JFrame {
 					lblName4.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage4.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage4.setIcon(iconSize(imageIcon2));
 					}
 
 					String result4 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
@@ -1143,9 +1164,13 @@ public class AuctionFrame extends JFrame {
 					lblName5.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage5.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage5.setIcon(iconSize(imageIcon2));
 					}
 
 					String result5 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
@@ -1172,9 +1197,13 @@ public class AuctionFrame extends JFrame {
 					lblName6.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage6.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage6.setIcon(iconSize(imageIcon2));
 					}
 
 					String result6 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
@@ -1201,9 +1230,13 @@ public class AuctionFrame extends JFrame {
 					lblName7.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage7.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage7.setIcon(iconSize(imageIcon2));
 					}
 					String result7 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
 					lblTime7.setText(result7);
@@ -1229,9 +1262,13 @@ public class AuctionFrame extends JFrame {
 					lblName8.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage8.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage8.setIcon(iconSize(imageIcon2));
 					}
 					String result8 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
 					lblTime8.setText(result8);
@@ -1257,9 +1294,13 @@ public class AuctionFrame extends JFrame {
 					lblName9.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage9.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage9.setIcon(iconSize(imageIcon2));
 					}
 					String result9 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
 					lblTime9.setText(result9);
@@ -1285,9 +1326,13 @@ public class AuctionFrame extends JFrame {
 					lblName10.setHorizontalAlignment(SwingConstants.CENTER);
 
 //					ImageIcon imageIcon = ImageRetriever.list.get(i);
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage10.setIcon(iconSize(imageIcon));
+//					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
+					byte[] imageBytes = ProductList.get(i).getImage().getBytes(1, (int) ProductList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2=new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage10.setIcon(iconSize(imageIcon2));
 					}
 					String result10 = duration(timer.selectSearchProduct(text).get(i).getEndTime(), now);
 					lblTime10.setText(result10);
@@ -1343,6 +1388,7 @@ public class AuctionFrame extends JFrame {
 				public void run() {
 
 					LocalDateTime now = LocalDateTime.now();
+
 					if (checkBtn) {
 						updateSearchLabel(now, searchText);
 					} else {

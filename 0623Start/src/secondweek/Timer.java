@@ -46,7 +46,7 @@ public class Timer implements ITimer {
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
 				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
-						startTime, endTime));
+						startTime, endTime,image));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class Timer implements ITimer {
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
 				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
-						startTime, endTime));
+						startTime, endTime,image));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
