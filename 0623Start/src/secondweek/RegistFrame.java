@@ -63,9 +63,9 @@ public class RegistFrame extends JFrame {
 
 	public RegistFrame(DataBase data) {
 		 frame = new JFrame();
-			frame.setSize(1200,800);
+			frame.setSize(1200,785);
 		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		        frame.setResizable(false);
 		        contentPane = new JPanel(){
 
 			@Override
@@ -74,7 +74,7 @@ public class RegistFrame extends JFrame {
 
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-				Image image = toolkit.getImage("img/registPage.png");
+				Image image = toolkit.getImage("img/registPage_1.png");
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
@@ -98,7 +98,7 @@ public class RegistFrame extends JFrame {
 		Font myFont1 = new Font("Serif", Font.BOLD, 20);
 		imageVolume.setFont(myFont1);
 
-		JButton imageBtn = new JButton("파일 경로");
+		JButton imageBtn = new JButton();
 		imageBtn.setBounds(220, 553, 250, 100);
 		ImageIcon imgBtn = new ImageIcon("img/findimg_1.png");
 		imageBtn.setContentAreaFilled(false); 
@@ -168,7 +168,7 @@ public class RegistFrame extends JFrame {
 		detailBox.setColumns(10);
 		detailBox.setLineWrap(true);
 
-		JButton registrationBtn = new JButton("등록하기");
+		JButton registrationBtn = new JButton();
 		registrationBtn.setBounds(690, 580, 350, 80);
 		ImageIcon imgregitBtn = new ImageIcon("img/regist_1.png");
 		registrationBtn.setContentAreaFilled(false); 
@@ -361,8 +361,8 @@ public class RegistFrame extends JFrame {
 				}
 			}
 		});
-		JButton mainBtn = new JButton("메인화면");
-		mainBtn.setBounds(75, 40, 150, 80);
+		JButton mainBtn = new JButton();
+		mainBtn.setBounds(75, 40, 110, 65);
 		ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
 		mainBtn.setContentAreaFilled(false); 
 		mainBtn.setBorderPainted(false);

@@ -1,49 +1,77 @@
 package secondweek;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.PlainDocument;
 
 public class PasswordSearchFrame extends JFrame {
 	private LoginSignupRepository repo;
+	private JPanel contentPane;
+	private JFrame frame;
 
 	public PasswordSearchFrame(DataBase data) {
 		repo = new LoginSignupRepository();
+		frame = new JFrame();
+		frame.setSize(1200, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		contentPane = new JPanel() {
 
-		JPanel pnl = new JPanel();
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+				Image image = toolkit.getImage("img/findinfoPage.png");
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
+
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
 
 		JLabel idInfoLbl = new JLabel("아이디 찾기는 관리자에게 문의해 주시기 바랍니다.");
-		idInfoLbl.setBounds(164, 106, 367, 15);
+		idInfoLbl.setBounds(200, 106, 367, 15);
 		JLabel managerInfoLbl = new JLabel("관리자 Tel : 02-000-0000");
-		managerInfoLbl.setBounds(164, 143, 144, 15);
+		managerInfoLbl.setBounds(200, 143, 144, 15);
 
-		JLabel passwordInfoLbl = new JLabel("비밀번호 찾기");
-		passwordInfoLbl.setBounds(164, 274, 85, 15);
-		JLabel idLbl = new JLabel("아이디");
-		idLbl.setBounds(201, 341, 48, 15);
-		JLabel nameLbl = new JLabel("이름");
-		nameLbl.setBounds(201, 416, 48, 15);
-		JLabel telLbl = new JLabel("전화번호");
-		telLbl.setBounds(201, 497, 60, 15);
+//		JLabel passwordInfoLbl = new JLabel("비밀번호 찾기");
+//		passwordInfoLbl.setBounds(650, 284, 85, 15);
+//		JLabel idLbl = new JLabel("아이디");
+//		idLbl.setBounds(650, 341, 48, 15);
+//		JLabel nameLbl = new JLabel("이름");
+//		nameLbl.setBounds(650, 416, 48, 15);
+//		JLabel telLbl = new JLabel("전화번호");
+//		telLbl.setBounds(650, 497, 60, 15);
 
 		JTextField idTF = new JTextField(10);
-		idTF.setBounds(273, 338, 116, 21);
+		idTF.setBounds(650, 342, 200, 30);
 		JTextField nameTF = new JTextField(10);
-		nameTF.setBounds(273, 413, 116, 21);
+		nameTF.setBounds(650, 230, 200, 30);
 
 		JTextField telFrontTF = new JTextField(5);
-		telFrontTF.setBounds(273, 494, 60, 21);
+		telFrontTF.setBounds(650, 465, 100, 30);
 		JTextField telCenterTF = new JTextField(5);
-		telCenterTF.setBounds(358, 494, 61, 21);
+		telCenterTF.setBounds(780, 465, 100, 30);
 		JTextField telBackTF = new JTextField(5);
-		telBackTF.setBounds(443, 494, 60, 21);
+		telBackTF.setBounds(915, 465, 100, 30);
 
 		PlainDocument docCenter1 = (PlainDocument) telFrontTF.getDocument();
 		docCenter1.setDocumentFilter(new NumberOnlyFilter(3));
@@ -55,7 +83,28 @@ public class PasswordSearchFrame extends JFrame {
 		docCenter3.setDocumentFilter(new NumberOnlyFilter(4));
 
 		JButton identifyBtn = new JButton("확인");
-		identifyBtn.setBounds(436, 572, 95, 23);
+		identifyBtn.setBounds(750, 572, 130, 63);
+		ImageIcon imgidentifyBtn = new ImageIcon("img/findconfirm_1.png");
+		identifyBtn.setContentAreaFilled(false);
+		identifyBtn.setBorderPainted(false);
+		identifyBtn.setIcon(imgidentifyBtn);
+
+		identifyBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgidentifyBtn = new ImageIcon("img/findconfirm_1.png");
+				identifyBtn.setIcon(imgidentifyBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgidentifyBtn = new ImageIcon("img/findconfirm.png");
+				identifyBtn.setIcon(imgidentifyBtn);
+
+			}
+		});
+		
 		identifyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -78,38 +127,56 @@ public class PasswordSearchFrame extends JFrame {
 			}
 		});
 
-		JButton returnLoginBtn = new JButton("뒤로가기");
-		returnLoginBtn.setBounds(84, 572, 95, 23);
-		returnLoginBtn.addActionListener(new ActionListener() {
+		JButton returnBtn = new JButton();
+		returnBtn.setBounds(50, 25, 130, 50);
+		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		returnBtn.setContentAreaFilled(false);
+		returnBtn.setBorderPainted(false);
+		returnBtn.setIcon(imgreturnBtn);
+
+		returnBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+				returnBtn.setIcon(imgreturnBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
+				returnBtn.setIcon(imgreturnBtn);
+
+			}
+		});
+
+		returnBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DataBase data = new DataBase();
 				new LoginFrame(data);
-				setVisible(false);
+				frame.setVisible(false);
 			}
 		});
-		pnl.setLayout(null);
+		contentPane.setLayout(null);
 
-		pnl.add(idInfoLbl);
-		pnl.add(managerInfoLbl);
-		pnl.add(passwordInfoLbl);
-		pnl.add(idLbl);
-		pnl.add(idTF);
-		pnl.add(nameLbl);
-		pnl.add(nameTF);
-		pnl.add(telLbl);
-		pnl.add(telFrontTF);
-		pnl.add(telCenterTF);
-		pnl.add(telBackTF);
-		pnl.add(identifyBtn);
-		pnl.add(returnLoginBtn);
+		contentPane.add(idInfoLbl);
+		contentPane.add(managerInfoLbl);
+//		contentPane.add(passwordInfoLbl);
+//		contentPane.add(idLbl);
+		contentPane.add(idTF);
+//		contentPane.add(nameLbl);
+		contentPane.add(nameTF);
+//		contentPane.add(telLbl);
+		contentPane.add(telFrontTF);
+		contentPane.add(telCenterTF);
+		contentPane.add(telBackTF);
+		contentPane.add(identifyBtn);
+		contentPane.add(returnBtn);
 
-		getContentPane().add(pnl);
 
-		setSize(800, 700);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setVisible(true);
-		setLocationRelativeTo(null);
-		setResizable(false);
+		frame.getContentPane().add(contentPane);
+
+		frame.setVisible(true);
 	}
 }

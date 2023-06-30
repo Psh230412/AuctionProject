@@ -236,7 +236,7 @@ public class MypageFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		 frame.setResizable(false);
 		contentPane = new JPanel() {
 
 			@Override
@@ -254,22 +254,15 @@ public class MypageFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel userNameLb = new JLabel("user_name");
-		userNameLb.setBounds(190, 160, 188, 67);
+		JLabel userNameLb = new JLabel();
+		userNameLb.setBounds(180, 115, 188, 67);
 		userNameLb.setText(data.getCurrentUser().getName());
+		userNameLb.setFont(new Font("돋움", Font.BOLD, 20));
+		userNameLb.setForeground(Color.BLACK);
 		contentPane.add(userNameLb);
 
-		JButton resetBtn = new JButton("개인정보변경");
-		resetBtn.setBounds(400, 123, 149, 67);
-		resetBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new ChangeInformationFrame(data);
-				setVisible(false);
-			}
-		});
-		contentPane.add(resetBtn);
-		resetBtn.setBounds(330, 123, 210, 120);
+		JButton resetBtn = new JButton();
+		resetBtn.setBounds(400, 123, 200, 90);
 		ImageIcon imgreset = new ImageIcon("img/changeinfo_1.png");
 		resetBtn.setContentAreaFilled(false);
 		resetBtn.setBorderPainted(false);
@@ -290,11 +283,18 @@ public class MypageFrame extends JFrame {
 			}
 
 		});
-
+		resetBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ChangeInformationFrame(data);
+				frame.setVisible(false);
+			}
+		});
 		contentPane.add(resetBtn);
+	
 
-		JButton resgistBtn = new JButton("물품등록하기");
-		resgistBtn.setBounds(600, 123, 210, 120);
+		JButton resgistBtn = new JButton();
+		resgistBtn.setBounds(650, 123, 200, 90);
 		ImageIcon imgresgist = new ImageIcon("img/myregist_1.png");
 		resgistBtn.setContentAreaFilled(false);
 		resgistBtn.setBorderPainted(false);
@@ -327,8 +327,8 @@ public class MypageFrame extends JFrame {
 
 		contentPane.add(resgistBtn);
 
-		JButton mainBtn = new JButton("메인화면");
-		mainBtn.setBounds(75, 60, 150, 80);
+		JButton mainBtn = new JButton();
+		mainBtn.setBounds(50, 30, 110, 65);
 		ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
 		mainBtn.setContentAreaFilled(false);
 		mainBtn.setBorderPainted(false);
@@ -338,13 +338,6 @@ public class MypageFrame extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
 				mainBtn.setIcon(imgmain);
-				
-//				try {
-//					scheduler.shutdown();
-//				} catch (SchedulerException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
 
 			}
 
@@ -379,28 +372,117 @@ public class MypageFrame extends JFrame {
 		pnl3.setBounds(780, 350, 300, 300);
 		pnl3.setOpaque(false);
 
-		previousEnroll = new JButton("이전");
-		previousEnroll.setBounds(200, 680, 80, 40);
+		previousEnroll = new JButton();
+		ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
+		previousEnroll.setContentAreaFilled(false);
+		previousEnroll.setBorderPainted(false);
+		previousEnroll.setIcon(imgpreviousEnroll);
+		
+		previousEnroll.addMouseListener(new MouseAdapter() {
+		
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
+			previousEnroll.setIcon(imgpreviousEnroll);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous.png");
+			previousEnroll.setIcon(imgpreviousEnroll);
+			
+		    }
+	 
+		});
+		previousEnroll.setBounds(190, 710, 110, 50);
 		frame.add(previousEnroll);
 		
 		lblNum1 = new JLabel(" - 1 - ");
-		lblNum1.setBounds(300, 680, 80, 40);
+		lblNum1.setBounds(300, 710, 80, 40);
 		frame.add(lblNum1);
 
-		nextEnroll = new JButton("다음");
-		nextEnroll.setBounds(400, 680, 80, 40);
+		nextEnroll = new JButton();
+		nextEnroll.setBounds(400, 710, 110, 50);
+		nextEnroll.setContentAreaFilled(false); 
+		nextEnroll.setBorderPainted(false);
+		ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
+		nextEnroll.setIcon(imgnextEnroll);
+	
+		nextEnroll.addMouseListener(new MouseAdapter() {
+		
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
+			nextEnroll.setIcon(imgnextEnroll);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgnextEnroll = new ImageIcon("img/next.png");
+			nextEnroll.setIcon(imgnextEnroll);
+			
+		    }
+	 
+		});
 		frame.add(nextEnroll);
 
-		previousParticipate = new JButton("이전");
-		previousParticipate.setBounds(730, 680, 80, 40);
+		previousParticipate = new JButton();
+		ImageIcon imgpreviousEnroll1 = new ImageIcon("img/previous_1.png");
+		previousParticipate.setContentAreaFilled(false);
+		previousParticipate.setBorderPainted(false);
+		previousParticipate.setIcon(imgpreviousEnroll1);
+		previousParticipate.setIcon(imgpreviousEnroll1);
+		previousParticipate.setBounds(720, 710, 110, 50);
+		previousParticipate.addMouseListener(new MouseAdapter() {
+		
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgpreviousEnroll1 = new ImageIcon("img/previous_1.png");
+			previousParticipate.setIcon(imgpreviousEnroll1);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgpreviousEnroll1 = new ImageIcon("img/previous.png");
+			previousParticipate.setIcon(imgpreviousEnroll1);
+			
+		    }
+	 
+		});
+
 		frame.add(previousParticipate);
 		
 		lblNum2 = new JLabel(" - 1 - ");
-		lblNum2.setBounds(830, 680, 80, 40);
+		lblNum2.setBounds(830, 710, 80, 40);
 		frame.add(lblNum2);
 
-		nextParticipate = new JButton("다음");
-		nextParticipate.setBounds(930, 680, 80, 40);
+		nextParticipate = new JButton();
+		nextParticipate.setBounds(930, 710, 110, 50);
+		nextParticipate.setContentAreaFilled(false); 
+		nextParticipate.setBorderPainted(false);
+		ImageIcon imgnextEnroll1 = new ImageIcon("img/next_1.png");
+		nextParticipate.setIcon(imgnextEnroll1);
+	
+		nextParticipate.addMouseListener(new MouseAdapter() {
+		
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgnextEnroll1 = new ImageIcon("img/next_1.png");
+			nextParticipate.setIcon(imgnextEnroll1);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgnextEnroll1 = new ImageIcon("img/next.png");
+			nextParticipate.setIcon(imgnextEnroll1);
+			
+		    }
+	 
+		});
 		frame.add(nextParticipate);
 
 //		previousBidinfo = new JButton("이전");
@@ -622,7 +704,7 @@ public class MypageFrame extends JFrame {
 		inputPrices();
 
 		for (int i = 0; i < names.length; i++) {
-			names[i].setForeground(Color.GREEN);
+			names[i].setForeground(Color.darkGray);
 		}
 
 		for (int i = 0; i < times.length; i++) {
@@ -702,7 +784,7 @@ public class MypageFrame extends JFrame {
 	private static void initialLabel() {
 		for (int i = 0; i < names.length; i++) {
 			names[i].setText("");
-			names[i].setHorizontalAlignment(SwingConstants.RIGHT);
+			names[i].setHorizontalAlignment(SwingConstants.LEFT);
 			names[i].setVerticalAlignment(SwingConstants.CENTER);
 			Font font = new Font("맑은 고딕", Font.BOLD, 18);
 			names[i].setFont(font);

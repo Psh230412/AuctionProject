@@ -9,6 +9,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -131,9 +133,9 @@ public class AuctionFrame extends JFrame {
 		this.data = data;
 		timer = new Timer();
 		frame = new JFrame();
-		frame.setSize(1200, 1000);
+		frame.setSize(1200, 900);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		frame.setResizable(false);
 		contentPane = new JPanel() {
 
 			@Override
@@ -151,12 +153,41 @@ public class AuctionFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel userLbl = new JLabel("여기에 로그인 중인 아이디 표시");
+		JLabel userLbl = new JLabel();
 		userLbl.setText(data.getCurrentUser().getName());
-		userLbl.setBounds(105, 50, 100, 20);
+		userLbl.setFont(new Font("돋움", Font.BOLD, 20));
+		userLbl.setForeground(Color.BLACK);
+		userLbl.setBounds(100, 110, 100, 25);
+		JLabel tailLbl1 = new JLabel();
+		tailLbl1.setText("님 환영합니다.");
+		tailLbl1.setFont(new Font("돋움", Font.PLAIN, 16));
+		tailLbl1.setForeground(Color.gray);
+		tailLbl1.setBounds(190, 112, 110, 25);
+		contentPane.add(tailLbl1);
 
 		JButton mypageBtn = new JButton("마이페이지");
-		mypageBtn.setBounds(600, 150, 100, 20);
+		mypageBtn.setBounds(433, 117, 118, 49);
+		ImageIcon imgmypageBtn = new ImageIcon("img/main_mypage_1.png");
+		mypageBtn.setContentAreaFilled(false);
+		mypageBtn.setBorderPainted(false);
+		mypageBtn.setIcon(imgmypageBtn);
+
+		mypageBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgmypageBtn = new ImageIcon("img/main_mypage_1.png");
+				mypageBtn.setIcon(imgmypageBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgmypageBtn = new ImageIcon("img/main_mypage.png");
+				mypageBtn.setIcon(imgmypageBtn);
+
+			}
+		});
+		
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -174,7 +205,27 @@ public class AuctionFrame extends JFrame {
 		});
 
 		JButton logoutBtn = new JButton("로그아웃");
-		logoutBtn.setBounds(750, 150, 100, 20);
+		logoutBtn.setBounds(580,  117, 118, 49);
+		ImageIcon imglogoutBtn = new ImageIcon("img/main_logout_1.png");
+		logoutBtn.setContentAreaFilled(false);
+		logoutBtn.setBorderPainted(false);
+		logoutBtn.setIcon(imglogoutBtn);
+
+		logoutBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imglogoutBtn = new ImageIcon("img/main_logout_1.png");
+				logoutBtn.setIcon(imglogoutBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imglogoutBtn = new ImageIcon("img/main_logout.png");
+				logoutBtn.setIcon(imglogoutBtn);
+
+			}
+		});
 		logoutBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -189,7 +240,27 @@ public class AuctionFrame extends JFrame {
 		});
 
 		JButton exitBtn = new JButton("종료");
-		exitBtn.setBounds(900, 150, 100, 20);
+		exitBtn.setBounds(720,  117, 118, 49);
+		ImageIcon imgexitBtn = new ImageIcon("img/main_exit_1.png");
+		exitBtn.setContentAreaFilled(false);
+		exitBtn.setBorderPainted(false);
+		exitBtn.setIcon(imgexitBtn);
+
+		exitBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgexitBtn = new ImageIcon("img/main_exit_1.png");
+				exitBtn.setIcon(imgexitBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgexitBtn = new ImageIcon("img/main_exit.png");
+				exitBtn.setIcon(imgexitBtn);
+
+			}
+		});
 		exitBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -201,7 +272,28 @@ public class AuctionFrame extends JFrame {
 			}
 		});
 		JButton searchBtn = new JButton("S");
-		searchBtn.setBounds(53, 150, 52, 40);
+		ImageIcon imgsearchBtn = new ImageIcon("img/searchbtn.png");
+		searchBtn.setContentAreaFilled(false);
+		searchBtn.setBorderPainted(false);
+		searchBtn.setIcon(imgsearchBtn);
+
+		searchBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgsearchBtn = new ImageIcon("img/searchbtn.png");
+				searchBtn.setIcon(imgsearchBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgsearchBtn = new ImageIcon("img/searchbtn_1.png");
+				searchBtn.setIcon(imgsearchBtn);
+
+			}
+		});
+		
+		searchBtn.setBounds(452, 43, 108, 61);
 		searchBtn.addActionListener(new ActionListener() {
 
 			@Override
@@ -287,7 +379,7 @@ public class AuctionFrame extends JFrame {
 		});
 
 		searchTab = new JTextField();
-		searchTab.setBounds(105, 150, 300, 40);
+		searchTab.setBounds(560, 52, 160, 25);
 
 		contentPane.add(userLbl);
 		contentPane.add(mypageBtn);
@@ -298,25 +390,35 @@ public class AuctionFrame extends JFrame {
 
 		JPanel pnl1 = new JPanel();
 		pnl1.setLayout(new FlowLayout());
-		pnl1.setBounds(50, 200, 200, 300);
+		pnl1.setOpaque(false);
+		pnl1.setBounds(35, 180, 200, 300);
 		JPanel pnl2 = new JPanel();
-		pnl2.setBounds(280, 200, 200, 300);
+		pnl2.setOpaque(false);
+		pnl2.setBounds(260, 180, 200, 300);
 		JPanel pnl3 = new JPanel();
-		pnl3.setBounds(500, 200, 200, 300);
+		pnl3.setOpaque(false);
+		pnl3.setBounds(492, 180, 200, 300);
 		JPanel pnl4 = new JPanel();
-		pnl4.setBounds(720, 200, 200, 300);
+		pnl4.setOpaque(false);
+		pnl4.setBounds(724, 180, 200, 300);
 		JPanel pnl5 = new JPanel();
-		pnl5.setBounds(940, 200, 200, 300);
+		pnl5.setOpaque(false);
+		pnl5.setBounds(960, 180, 200, 300);
 		JPanel pnl6 = new JPanel();
-		pnl6.setBounds(50, 520, 200, 300);
+		pnl6.setOpaque(false);
+		pnl6.setBounds(35, 485, 200, 300);
 		JPanel pnl7 = new JPanel();
-		pnl7.setBounds(280, 520, 200, 300);
+		pnl7.setOpaque(false);
+		pnl7.setBounds(260, 485, 200, 300);
 		JPanel pnl8 = new JPanel();
-		pnl8.setBounds(500, 520, 200, 300);
+		pnl8.setOpaque(false);
+		pnl8.setBounds(492, 485, 200, 300);
 		JPanel pnl9 = new JPanel();
-		pnl9.setBounds(720, 520, 200, 300);
+		pnl9.setOpaque(false);
+		pnl9.setBounds(724, 485, 200, 300);
 		JPanel pnl10 = new JPanel();
-		pnl10.setBounds(940, 520, 200, 300);
+		pnl10.setOpaque(false);
+		pnl10.setBounds(960, 485, 200, 300);
 
 		lblImage1 = lblImageArr[0];
 		pnl1.add(lblImage1);
@@ -438,27 +540,77 @@ public class AuctionFrame extends JFrame {
 		lblTime10 = lblTimeArr[9];
 		pnl10.add(lblTime10);
 
-		JButton viewProductBtn1 = new JButton("경매보기");
-		JButton viewProductBtn2 = new JButton("경매보기");
-		JButton viewProductBtn3 = new JButton("경매보기");
-		JButton viewProductBtn4 = new JButton("경매보기");
-		JButton viewProductBtn5 = new JButton("경매보기");
-		JButton viewProductBtn6 = new JButton("경매보기");
-		JButton viewProductBtn7 = new JButton("경매보기");
-		JButton viewProductBtn8 = new JButton("경매보기");
-		JButton viewProductBtn9 = new JButton("경매보기");
-		JButton viewProductBtn10 = new JButton("경매보기");
+		JButton viewProductBtn1 = new JButton();
+		contentPane.add(viewProductBtn1);
+	
+		JButton viewProductBtn2 = new JButton();
+		contentPane.add(viewProductBtn2);
+	
+		JButton viewProductBtn3 = new JButton();
+		contentPane.add(viewProductBtn3);
+	
+		JButton viewProductBtn4 = new JButton();
+		contentPane.add(viewProductBtn4);
+	
+		JButton viewProductBtn5 = new JButton();
+	
+		contentPane.add(viewProductBtn5);
+
+		JButton viewProductBtn6 = new JButton();
+	
+		contentPane.add(viewProductBtn6);
+
+		JButton viewProductBtn7 = new JButton();
+	
+		contentPane.add(viewProductBtn7);
+	
+		JButton viewProductBtn8 = new JButton();
+
+		contentPane.add(viewProductBtn8);
+
+		JButton viewProductBtn9 = new JButton();
+	
+		contentPane.add(viewProductBtn9);
+	
+		JButton viewProductBtn10 = new JButton();
+	
+		contentPane.add(viewProductBtn10);
 
 		btns = new JButton[] { viewProductBtn1, viewProductBtn2, viewProductBtn3, viewProductBtn4, viewProductBtn5,
 				viewProductBtn6, viewProductBtn7, viewProductBtn8, viewProductBtn9, viewProductBtn10 };
 
 		for (int i = 0; i < btns.length; i++) {
 			int index = i;
-			Font font = new Font("맑은 고딕", Font.BOLD, 14);
-			btns[i].setFont(font);
+//			Font font = new Font("맑은 고딕", Font.BOLD, 14);
+//			btns[i].setFont(font);
+	
+			btns[i].setContentAreaFilled(false); 
+			btns[i].setBorderPainted(false);
+			ImageIcon imgbid= new ImageIcon("img/godetail.png");
+			btns[i].setIcon(imgbid);
+			btns[i].addMouseListener(new MouseAdapter() {
+			
+			    @Override
+			    public void mouseExited(MouseEvent e) {
+				ImageIcon imgbid = new ImageIcon("img/godetail.png");
+				btns[index].setIcon(imgbid);
+				
+			    }
+			    
+			    @Override
+			    public void mouseEntered(MouseEvent e) {
+				ImageIcon imgbid = new ImageIcon("img/godetail_1.png");
+				btns[index].setIcon(imgbid);
+				
+			    }
+		 
+			});
+			
 			btns[i].addActionListener(new ActionListener() {
+				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					
 					List<Product> products = timer.selectProduct();
 					if (products.size() >= index) {
 						Product product = products.get(index);
@@ -471,15 +623,60 @@ public class AuctionFrame extends JFrame {
 		}
 
 		previousEnroll = new JButton("이전");
-		previousEnroll.setBounds(460, 860, 80, 40);
+		previousEnroll.setBounds(450, 810, 110, 50);
+		previousEnroll.setContentAreaFilled(false); 
+		previousEnroll.setBorderPainted(false);
+		ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
+		previousEnroll.setIcon(imgpreviousEnroll);
+	
+		previousEnroll.addMouseListener(new MouseAdapter() {
+		
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
+			previousEnroll.setIcon(imgpreviousEnroll);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous.png");
+			previousEnroll.setIcon(imgpreviousEnroll);
+			
+		    }
+	 
+		});
+
 		contentPane.add(previousEnroll);
 
 		lblNum1 = new JLabel(" - 1 - ");
-		lblNum1.setBounds(560, 860, 80, 40);
+		lblNum1.setBounds(560, 805, 80, 40);
 		contentPane.add(lblNum1);
 
 		nextEnroll = new JButton("다음");
-		nextEnroll.setBounds(660, 860, 80, 40);
+		nextEnroll.setBounds(660, 810, 110, 50);
+		nextEnroll.setContentAreaFilled(false); 
+		nextEnroll.setBorderPainted(false);
+		ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
+		nextEnroll.setIcon(imgnextEnroll);
+	
+		nextEnroll.addMouseListener(new MouseAdapter() {
+		
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+			ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
+			nextEnroll.setIcon(imgnextEnroll);
+			
+		    }
+		    
+		    @Override
+		    public void mouseEntered(MouseEvent e) {
+			ImageIcon imgnextEnroll = new ImageIcon("img/next.png");
+			nextEnroll.setIcon(imgnextEnroll);
+			
+		    }
+	 
+		});
 		contentPane.add(nextEnroll);
 
 		previousEnroll.addActionListener(new ActionListener() {
@@ -511,7 +708,40 @@ public class AuctionFrame extends JFrame {
 		pnl8.add(viewProductBtn8);
 		pnl9.add(viewProductBtn9);
 		pnl10.add(viewProductBtn10);
+		
+		JButton returnBtn = new JButton();
+		returnBtn.setBounds(750, 46, 130, 50);
+		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		returnBtn.setContentAreaFilled(false);
+		returnBtn.setBorderPainted(false);
+		returnBtn.setIcon(imgreturnBtn);
 
+		returnBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+				returnBtn.setIcon(imgreturnBtn);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
+				returnBtn.setIcon(imgreturnBtn);
+
+			}
+		});
+
+		returnBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DataBase data = new DataBase();
+				new AuctionFrame(data);
+				frame.setVisible(false);
+			}
+		});
+
+		contentPane.add(returnBtn);
 		contentPane.add(pnl1);
 		contentPane.add(pnl2);
 		contentPane.add(pnl3);
@@ -659,7 +889,7 @@ public class AuctionFrame extends JFrame {
 
 		lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
 		lblNum1.setHorizontalAlignment(SwingConstants.CENTER);
-		Font font2 = new Font("맑은 고딕", Font.BOLD, 25);
+		Font font2 = new Font("맑은 고딕", Font.BOLD, 22);
 		lblNum1.setFont(font2);
 	}
 
