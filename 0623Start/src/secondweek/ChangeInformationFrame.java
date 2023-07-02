@@ -320,7 +320,6 @@ public class ChangeInformationFrame extends JFrame {
 		returnBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DataBase data = new DataBase();
 				new MypageFrame(data);
 				 frame.setVisible(false);
 			}

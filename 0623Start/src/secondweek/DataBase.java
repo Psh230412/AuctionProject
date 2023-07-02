@@ -11,8 +11,8 @@ public class DataBase {
 	private String searchText;
 
 	public DataBase() {
-		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
-//		currentUser = null;
+//		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
+		currentUser = null;
 	}
 
 	public User getCurrentUser() {
