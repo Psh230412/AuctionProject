@@ -12,6 +12,8 @@ public class DataBase {
 
 	private String categoryText;
 	private String auctionRadioText;
+	private String priceFrontText;
+	private String priceBackText;
 
 	public DataBase() {
 //		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
@@ -97,5 +99,23 @@ public class DataBase {
 	public void setAuctionRadioText(String auctionRadioText) {
 		this.auctionRadioText = auctionRadioText;
 	}
+
+	public String getPriceFrontText() {
+		return priceFrontText;
+	}
+
+	public void setPriceFrontText(String priceFrontText) {
+		this.priceFrontText = priceFrontText;
+	}
+
+	public String getPriceBackText() {
+		return priceBackText;
+	}
+
+	public void setPriceBackText(String priceBackText) {
+		this.priceBackText = priceBackText;
+	}
+	
+	
 
 }

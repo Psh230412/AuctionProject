@@ -244,10 +244,14 @@ public class AuctionFrame extends JFrame {
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 				data.setCheckBtn(false);
-				data.setSearchText("");
+				data.setSearchText(null);
 				data.setCategoryText(null);
 				data.setAuctionRadioText(null);
+				data.setPriceFrontText(null);
+				data.setPriceBackText(null);
 				new MypageFrame(data);
 				frame.setVisible(false);
 			}
@@ -280,8 +284,6 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(null, "로그아웃하시겠습니까?", "로그아웃", JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
-					data.setCheckBtn(false);
-					data.setSearchText("");
 					JOptionPane.showMessageDialog(null, "로그아웃되었습니다.");
 					DataBase newdata = new DataBase();
 					new LoginFrame(newdata);
@@ -289,7 +291,6 @@ public class AuctionFrame extends JFrame {
 				}
 			}
 		});
-
 		JButton exitBtn = new JButton("종료");
 		exitBtn.setBounds(720, 117, 118, 49);
 		ImageIcon imgexitBtn = new ImageIcon("img/main_exit_1.png");
@@ -622,7 +623,9 @@ public class AuctionFrame extends JFrame {
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
-
+							data.setPriceFrontText(rangeFront.getText());
+							data.setPriceBackText(rangeBack.getText());
+							
 							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
@@ -639,6 +642,8 @@ public class AuctionFrame extends JFrame {
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
+							data.setPriceFrontText(rangeFront.getText());
+							data.setPriceBackText(rangeBack.getText());
 
 							new DetailFrame(data, product);
 							frame.setVisible(false);
@@ -895,6 +900,14 @@ public class AuctionFrame extends JFrame {
 				isPriceRange = true;
 			}
 		});
+		
+		if (data.getPriceFrontText() != null) {
+			isPriceRange = true;
+			rangeFront.setText(data.getPriceFrontText());
+			rangeBack.setText(data.getPriceBackText());
+		} else {
+			isPriceRange = false;
+		}
 
 		contentPane.add(returnBtn);
 		contentPane.add(pnl1);

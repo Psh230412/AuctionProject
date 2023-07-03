@@ -247,7 +247,7 @@ public class DetailFrame extends JFrame {
 							timer.updatePrice(setNo, bid);
 
 							new AuctionFrame(data);
-							setVisible(false);
+							frame.setVisible(false);
 						}
 					}
 				}

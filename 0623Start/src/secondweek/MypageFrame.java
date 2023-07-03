@@ -128,7 +128,6 @@ public class MypageFrame extends JFrame {
 	private static JButton previousParticipate;
 	private static JButton nextParticipate;
 	private static JLabel lblNum2;
-	
 
 //	private static JButton previousBidinfo;
 
@@ -236,7 +235,7 @@ public class MypageFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		 frame.setResizable(false);
+		frame.setResizable(false);
 		contentPane = new JPanel() {
 
 			@Override
@@ -287,11 +286,12 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ChangeInformationFrame(data);
+				data.setIndex(0);
+				data.setIndexPar(0);
 				frame.setVisible(false);
 			}
 		});
 		contentPane.add(resetBtn);
-	
 
 		JButton resgistBtn = new JButton();
 		resgistBtn.setBounds(650, 123, 200, 90);
@@ -321,6 +321,8 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new RegistFrame(data);
+				data.setIndex(0);
+				data.setIndexPar(0);
 				frame.setVisible(false);
 			}
 		});
@@ -355,6 +357,8 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
+				data.setIndex(0);
+				data.setIndexPar(0);
 				frame.setVisible(false);
 			}
 		});
@@ -377,54 +381,54 @@ public class MypageFrame extends JFrame {
 		previousEnroll.setContentAreaFilled(false);
 		previousEnroll.setBorderPainted(false);
 		previousEnroll.setIcon(imgpreviousEnroll);
-		
+
 		previousEnroll.addMouseListener(new MouseAdapter() {
-		
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
-			previousEnroll.setIcon(imgpreviousEnroll);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous.png");
-			previousEnroll.setIcon(imgpreviousEnroll);
-			
-		    }
-	 
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
+				previousEnroll.setIcon(imgpreviousEnroll);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgpreviousEnroll = new ImageIcon("img/previous.png");
+				previousEnroll.setIcon(imgpreviousEnroll);
+
+			}
+
 		});
 		previousEnroll.setBounds(190, 710, 110, 50);
 		frame.add(previousEnroll);
-		
+
 		lblNum1 = new JLabel(" - 1 - ");
 		lblNum1.setBounds(300, 710, 80, 40);
 		frame.add(lblNum1);
 
 		nextEnroll = new JButton();
 		nextEnroll.setBounds(400, 710, 110, 50);
-		nextEnroll.setContentAreaFilled(false); 
+		nextEnroll.setContentAreaFilled(false);
 		nextEnroll.setBorderPainted(false);
 		ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
 		nextEnroll.setIcon(imgnextEnroll);
-	
+
 		nextEnroll.addMouseListener(new MouseAdapter() {
-		
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
-			nextEnroll.setIcon(imgnextEnroll);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgnextEnroll = new ImageIcon("img/next.png");
-			nextEnroll.setIcon(imgnextEnroll);
-			
-		    }
-	 
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
+				nextEnroll.setIcon(imgnextEnroll);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgnextEnroll = new ImageIcon("img/next.png");
+				nextEnroll.setIcon(imgnextEnroll);
+
+			}
+
 		});
 		frame.add(nextEnroll);
 
@@ -436,62 +440,54 @@ public class MypageFrame extends JFrame {
 		previousParticipate.setIcon(imgpreviousEnroll1);
 		previousParticipate.setBounds(720, 710, 110, 50);
 		previousParticipate.addMouseListener(new MouseAdapter() {
-		
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgpreviousEnroll1 = new ImageIcon("img/previous_1.png");
-			previousParticipate.setIcon(imgpreviousEnroll1);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgpreviousEnroll1 = new ImageIcon("img/previous.png");
-			previousParticipate.setIcon(imgpreviousEnroll1);
-			
-		    }
-	 
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgpreviousEnroll1 = new ImageIcon("img/previous_1.png");
+				previousParticipate.setIcon(imgpreviousEnroll1);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgpreviousEnroll1 = new ImageIcon("img/previous.png");
+				previousParticipate.setIcon(imgpreviousEnroll1);
+
+			}
+
 		});
 
 		frame.add(previousParticipate);
-		
+
 		lblNum2 = new JLabel(" - 1 - ");
 		lblNum2.setBounds(830, 710, 80, 40);
 		frame.add(lblNum2);
 
 		nextParticipate = new JButton();
 		nextParticipate.setBounds(930, 710, 110, 50);
-		nextParticipate.setContentAreaFilled(false); 
+		nextParticipate.setContentAreaFilled(false);
 		nextParticipate.setBorderPainted(false);
 		ImageIcon imgnextEnroll1 = new ImageIcon("img/next_1.png");
 		nextParticipate.setIcon(imgnextEnroll1);
-	
+
 		nextParticipate.addMouseListener(new MouseAdapter() {
-		
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgnextEnroll1 = new ImageIcon("img/next_1.png");
-			nextParticipate.setIcon(imgnextEnroll1);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgnextEnroll1 = new ImageIcon("img/next.png");
-			nextParticipate.setIcon(imgnextEnroll1);
-			
-		    }
-	 
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgnextEnroll1 = new ImageIcon("img/next_1.png");
+				nextParticipate.setIcon(imgnextEnroll1);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgnextEnroll1 = new ImageIcon("img/next.png");
+				nextParticipate.setIcon(imgnextEnroll1);
+
+			}
+
 		});
 		frame.add(nextParticipate);
-
-//		previousBidinfo = new JButton("이전");
-//		previousBidinfo.setBounds(820, 650, 150, 63);
-//		frame.add(previousBidinfo);
-//
-//		nextBidinfo = new JButton("다음");
-//		nextBidinfo.setBounds(970, 650, 150, 63);
-//		frame.add(nextBidinfo);
 
 		JPanel pnl11 = new JPanel();
 		pnl11.setOpaque(false);
@@ -668,7 +664,7 @@ public class MypageFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ListRepository repo = new ListRepository();
 				List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
-				if ((Math.floor(enrollList.size() - 1) / 5) > (data.getIndex() / 5)) {
+				if (Math.floor((enrollList.size() - 1) / 5) > (data.getIndex() / 5)) {
 					data.setIndex(data.getIndex() + 5);
 				}
 			}
@@ -695,7 +691,6 @@ public class MypageFrame extends JFrame {
 				}
 			}
 		});
-		
 
 		inputImages();
 		inputNames();
@@ -737,20 +732,7 @@ public class MypageFrame extends JFrame {
 
 		contentPane.add(pnl1);
 		contentPane.add(pnl2);
-//		contentPane.add(pnl3);
 
-//
-//		JLabel lblNewLabel = new JLabel("등록물품");
-//		lblNewLabel.setBounds(138, 258, 125, 15);
-//		contentPane.add(lblNewLabel);
-//
-//		JLabel lblNewLabel_1 = new JLabel("입찰물품");
-//		lblNewLabel_1.setBounds(492, 258, 57, 15);
-//		contentPane.add(lblNewLabel_1);
-//
-//		JLabel lblNewLabel_2 = new JLabel("낙찰/유찰 물품");
-//		lblNewLabel_2.setBounds(842, 258, 125, 15);
-//		contentPane.add(lblNewLabel_2);
 		frame.getContentPane().add(contentPane);
 		frame.setVisible(true);
 
@@ -761,7 +743,6 @@ public class MypageFrame extends JFrame {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
 
 			JobDataMap jobDataMap = new JobDataMap();
-//         jobDataMap.put("label", lblImage1);
 
 			JobDetail job2 = JobBuilder.newJob(AutionUpdateJob.class).withIdentity("labelUpdateJobMain", "group2")
 					.usingJobData(jobDataMap).build();
@@ -818,7 +799,7 @@ public class MypageFrame extends JFrame {
 		lblNum1.setHorizontalAlignment(SwingConstants.CENTER);
 		Font font = new Font("맑은 고딕", Font.BOLD, 25);
 		lblNum1.setFont(font);
-		
+
 		lblNum2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNum2.setFont(font);
 	}
@@ -1021,106 +1002,6 @@ public class MypageFrame extends JFrame {
 					}
 				}
 			}
-//				}
-//			}
-
-//			List<Bidinfo> bidinfoList = repo.getBidinfoList(data.getCurrentUser().getNo());
-//			Bidinfo bid = null;
-//			if (bidinfoList != null) {
-//				for (int i = 0; i < bidinfoList.size(); i++) {
-//					bid = bidinfoList.get(i);
-//					if (bid == null) {
-//						continue;
-//					} else {
-//						switch (i) {
-//						case 0: {
-//							lblPrice31.setText(formatInt(bid.getProductPriceFinal()));
-//							lblPrice31.setPreferredSize(new Dimension(140, lblPrice31.getPreferredSize().height));
-//							lblPrice31.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblImage31.setIcon(iconSize(bid.getImage()));
-//							
-//							lblBid1.setText(bidOrNot(bid.isBid()));
-//							lblBid1.setPreferredSize(new Dimension(30, lblBid1.getPreferredSize().height));
-//							lblBid1.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblName31.setText(bid.getProductname());
-//							lblName31.setPreferredSize(new Dimension(100, lblName31.getPreferredSize().height));
-//							lblName31.setHorizontalAlignment(SwingConstants.RIGHT);
-//							break;
-//						}
-//						case 1: {
-//							lblPrice32.setText(formatInt(bid.getProductPriceFinal()));
-//							lblPrice32.setPreferredSize(new Dimension(140, lblPrice32.getPreferredSize().height));
-//							lblPrice32.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblImage32.setIcon(iconSize(bid.getImage()));
-//							
-//							lblBid2.setText(bidOrNot(bid.isBid()));
-//							lblBid2.setPreferredSize(new Dimension(30, lblBid2.getPreferredSize().height));
-//							lblBid2.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblName32.setText(bid.getProductname());
-//							lblName32.setPreferredSize(new Dimension(100, lblName32.getPreferredSize().height));
-//							lblName32.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							break;
-//						}
-//						case 2: {
-//							lblPrice33.setText(formatInt(bid.getProductPriceFinal()));
-//							lblPrice33.setPreferredSize(new Dimension(140, lblPrice33.getPreferredSize().height));
-//							lblPrice33.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblImage33.setIcon(iconSize(bid.getImage()));
-//							
-//							lblBid3.setText(bidOrNot(bid.isBid()));
-//							lblBid3.setPreferredSize(new Dimension(30, lblBid3.getPreferredSize().height));
-//							lblBid3.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblName33.setText(bid.getProductname());
-//							lblName33.setPreferredSize(new Dimension(100, lblName33.getPreferredSize().height));
-//							lblName33.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							break;
-//						}
-//						case 3: {
-//							lblPrice34.setText(formatInt(bid.getProductPriceFinal()));
-//							lblPrice34.setPreferredSize(new Dimension(140, lblPrice34.getPreferredSize().height));
-//							lblPrice34.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblImage34.setIcon(iconSize(bid.getImage()));
-//							
-//							lblBid4.setText(bidOrNot(bid.isBid()));
-//							lblBid4.setPreferredSize(new Dimension(30, lblBid4.getPreferredSize().height));
-//							lblBid4.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblName34.setText(bid.getProductname());
-//							lblName34.setPreferredSize(new Dimension(100, lblName34.getPreferredSize().height));
-//							lblName34.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							break;
-//						}
-//						case 4: {
-//							lblPrice35.setText(formatInt(bid.getProductPriceFinal()));
-//							lblPrice35.setPreferredSize(new Dimension(140, lblPrice35.getPreferredSize().height));
-//							lblPrice35.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblImage35.setIcon(iconSize(bid.getImage()));
-//							
-//							lblBid5.setText(bidOrNot(bid.isBid()));
-//							lblBid5.setPreferredSize(new Dimension(30, lblBid5.getPreferredSize().height));
-//							lblBid5.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							lblName35.setText(bid.getProductname());
-//							lblName35.setPreferredSize(new Dimension(100, lblName35.getPreferredSize().height));
-//							lblName35.setHorizontalAlignment(SwingConstants.RIGHT);
-//							
-//							break;
-//						}
-//						}
-//					}
-//				}
-//			}
 		} catch (
 
 		SQLException e) {
