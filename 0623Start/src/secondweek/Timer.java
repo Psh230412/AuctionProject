@@ -239,7 +239,6 @@ public class Timer implements ITimer {
 
 			if (rs.next()) {
 				int auctionno = rs.getInt("auctionno");
-				System.out.println(auctionno);
 				return auctionno;
 			}
 		} catch (SQLException e) {
@@ -261,7 +260,6 @@ public class Timer implements ITimer {
 //		long seconds = duration.getSeconds() % 60;
 
 		long seconds = duration.getSeconds();
-		System.out.println(seconds);
 
 		if (seconds <= 60) {
 			return true;
@@ -278,7 +276,6 @@ public class Timer implements ITimer {
 
 		LocalDateTime now = LocalDateTime.now();
 
-		System.out.println(auctionno);
 
 		try {
 			conn = DBUtil.getConnection();
@@ -291,10 +288,8 @@ public class Timer implements ITimer {
 
 			if (rs.next()) {
 				Timestamp deadline = rs.getTimestamp("deadline");
-				System.out.println(deadline);
 
 				LocalDateTime localDateTime = deadline.toLocalDateTime();
-				System.out.println(localDateTime);
 
 				if (isLeftOneMinute(localDateTime, now)) {
 					stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
