@@ -33,9 +33,9 @@ public class LoginFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 		contentPane = new JPanel() {
-
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -46,7 +46,7 @@ public class LoginFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-		frame.setResizable(false);
+	
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -65,7 +65,7 @@ public class LoginFrame extends JFrame {
 		passwordPF.setOpaque(false);
 
 		JButton loginBtn = new JButton("로그인");
-		loginBtn.setBounds(750, 310, 300, 85);
+		loginBtn.setBounds(760, 310, 300, 85);
 		ImageIcon imglogin = new ImageIcon("img/login_1.png");
 		loginBtn.setContentAreaFilled(false);
 		loginBtn.setBorderPainted(false);
@@ -88,7 +88,7 @@ public class LoginFrame extends JFrame {
 		});
 
 		JButton signupBtn = new JButton("회원가입");
-		signupBtn.setBounds(750, 390, 300, 85);
+		signupBtn.setBounds(760, 390, 300, 85);
 		ImageIcon imgsign = new ImageIcon("img/signup_1.png");
 		signupBtn.setContentAreaFilled(false);
 		signupBtn.setBorderPainted(false);
@@ -110,7 +110,7 @@ public class LoginFrame extends JFrame {
 
 		});
 		JButton exitBtn = new JButton("종료");
-		exitBtn.setBounds(750, 550, 300, 85);
+		exitBtn.setBounds(760, 550, 300, 85);
 		ImageIcon imgexit = new ImageIcon("img/exit_1.png");
 		exitBtn.setContentAreaFilled(false);
 		exitBtn.setBorderPainted(false);
@@ -140,7 +140,7 @@ public class LoginFrame extends JFrame {
 				if (loginCondition(id, password)) {
 					data.setCurrentUser(loginUser);
 					new AuctionFrame(data);
-					frame.setVisible(false);
+					frame.dispose();
 				}
 			}
 		});
@@ -149,7 +149,7 @@ public class LoginFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new SignupFrame();
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 
@@ -158,14 +158,14 @@ public class LoginFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(null, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
-					frame.setVisible(false);
+					frame.dispose();
 					System.exit(0);
 				}
 			}
 		});
 
 		JButton passwordSearchBtn = new JButton("아이디/비밀번호 찾기");
-		passwordSearchBtn.setBounds(750, 470, 300, 85);
+		passwordSearchBtn.setBounds(760, 470, 300, 85);
 		ImageIcon imgfind = new ImageIcon("img/findinfo_1.png");
 		passwordSearchBtn.setContentAreaFilled(false);
 		passwordSearchBtn.setBorderPainted(false);
@@ -190,7 +190,7 @@ public class LoginFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new PasswordSearchFrame(data);
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 

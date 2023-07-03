@@ -108,7 +108,8 @@ public class DetailFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		frame.setLocationRelativeTo(null);
+		 frame.setResizable(false);
 		contentPane = new JPanel() {
 
 			@Override
@@ -117,7 +118,7 @@ public class DetailFrame extends JFrame {
 
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-				Image image = toolkit.getImage("img/detailPage.png");
+				Image image = toolkit.getImage("img/detailPage_1.png");
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
@@ -126,7 +127,7 @@ public class DetailFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		lblImage = new JLabel("이미지");
+		lblImage = new JLabel();
 		lblImage.setBounds(168, 240, 400, 400);
 
 //		for (int i = 0; i < ImageRetriever.llistForDetail.size(); i++) {
@@ -152,36 +153,38 @@ public class DetailFrame extends JFrame {
 
 		lblName = new JLabel("제품명");
 		lblName.setFont(lblName.getFont().deriveFont(16f));
-		lblName.setBounds(850, 185, 150, 25);
+		lblName.setBounds(850, 148, 150, 25);
 		lblDetail = new JLabel("상세설명");
 		lblDetail.setForeground(Color.GRAY);
-		lblDetail.setBounds(740, 470, 226, 116);
+		lblDetail.setBounds(740, 420, 226, 116);
 		lblTime = new JLabel("00:00:00");
 		lblTime.setFont(new Font("돋움", Font.BOLD, 20));
 		lblTime.setForeground(Color.RED);
 		lblTime.setFont(lblTime.getFont().deriveFont(16f));
-		lblTime.setBounds(850, 255, 150, 20);
+		lblTime.setBounds(850, 200, 150, 20);
+		JLabel nowprice = new JLabel("현재 가격 : ");
+		nowprice.setBounds(750, 230, 100, 20);
 		lblPrice = new JLabel("가격");
-		lblPrice.setBounds(850, 308, 150, 15);
+		lblPrice.setBounds(850, 230, 150, 15);
 		lblPrice.setFont(lblPrice.getFont().deriveFont(14f));
 		lblPriceMin = new JLabel("최소입찰가 : 0원");
 		lblPriceMin.setFont(lblPrice.getFont().deriveFont(12f));
-		lblPriceMin.setBounds(850, 328, 150, 15);
+		lblPriceMin.setBounds(850, 408, 150, 15);
 		lblPriceMin.setForeground(Color.GRAY);
 
 		JLabel lblMessage = new JLabel("입찰가격은 최소입찰가를 상회해야 합니다.");
 		lblMessage.setForeground(Color.darkGray);
-		lblMessage.setBounds(760, 378, 268, 35);
+		lblMessage.setBounds(760, 425, 268, 35);
 
 		lblisOwn = new JLabel();
 		lblisOwn.setBounds(200, 646, 400, 35);
 		lblisContinue = new JLabel();
-		lblisContinue.setBounds(200, 700, 400, 35);
+		lblisContinue.setBounds(200, 680, 400, 35);
 
 		JTextField priceTF = new JTextField(10);
 		PlainDocument docPrice = (PlainDocument) priceTF.getDocument();
 		docPrice.setDocumentFilter(new NumberOnlyFilter(15));
-		priceTF.setBounds(850, 347, 150, 30);
+		priceTF.setBounds(843, 380, 160, 25);
 
 		JButton participateBtn = new JButton();
 		participateBtn.setBounds(730, 620, 350, 100);
@@ -247,7 +250,7 @@ public class DetailFrame extends JFrame {
 							timer.updatePrice(setNo, bid);
 
 							new AuctionFrame(data);
-							setVisible(false);
+							frame.dispose();
 						}
 					}
 				}
@@ -280,31 +283,31 @@ public class DetailFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 
 		// 이전가격 라벨 추가
 		JLabel prePriceInfoLbl = new JLabel("최근 입찰가 : ");
-		prePriceInfoLbl.setBounds(980, 225, 150, 25);
+		prePriceInfoLbl.setBounds(750, 250, 200, 200);
 		prePriceLbl1 = new JLabel("(가장오래된) 입찰가1");
-		prePriceLbl1.setBounds(1080, 225, 150, 25);
+		prePriceLbl1.setBounds(850, 195, 150, 20);
 		prePriceLbl1.setForeground(Color.GRAY);
 		prePriceLbl2 = new JLabel("입찰가2");
-		prePriceLbl2.setBounds(1080, 250, 150, 25);
+		prePriceLbl2.setBounds(850, 215, 150, 20);
 		prePriceLbl2.setForeground(Color.GRAY);
 		prePriceLbl3 = new JLabel("입찰가3");
-		prePriceLbl3.setBounds(1080, 275, 150, 25);
+		prePriceLbl3.setBounds(850, 235, 150, 20);
 		prePriceLbl3.setForeground(Color.GRAY);
 		prePriceLbl4 = new JLabel("(가장최근) 입찰가4");
-		prePriceLbl4.setBounds(1080, 300, 150, 25);
+		prePriceLbl4.setBounds(850, 255, 150, 20);
 		prePriceLbl4.setForeground(Color.GRAY);
 
 		contentPane.add(prePriceInfoLbl);
-		contentPane.add(prePriceLbl1);
-		contentPane.add(prePriceLbl2);
-		contentPane.add(prePriceLbl3);
-		contentPane.add(prePriceLbl4);
+		prePriceInfoLbl.add(prePriceLbl1);
+		prePriceInfoLbl.add(prePriceLbl2);
+		prePriceInfoLbl.add(prePriceLbl3);
+		prePriceInfoLbl.add(prePriceLbl4);
 
 		contentPane.add(lblImage);
 		contentPane.add(lblName);

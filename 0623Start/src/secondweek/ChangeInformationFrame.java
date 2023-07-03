@@ -3,6 +3,7 @@ package secondweek;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -162,6 +163,15 @@ public class ChangeInformationFrame extends JFrame {
 				phoneNumberCenter.setText(middle);
 				phoneNumberLast.setText(last);
 				
+				Integer gender = rs.getInt("gender");
+				ImageIcon imgmanlbl1 = new ImageIcon("img/man.png");
+				ImageIcon imgwomanlbl1 = new ImageIcon("img/girl.png");
+				if (gender == 1) {
+					manBtn.setIcon(imgmanlbl1);
+				} else if (gender == 0) {
+					womanBtn.setIcon(imgwomanlbl1);
+				}
+				
 				String bigArea = rs.getString("bigarea");
 				String mediumArea = rs.getString("mediumarea");
 				String detailArea = rs.getString("detailarea");
@@ -185,6 +195,7 @@ public class ChangeInformationFrame extends JFrame {
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		  frame.setResizable(false);
+		  frame.setLocationRelativeTo(null);
 		contentPane = new JPanel() {
 
 			@Override
@@ -226,7 +237,7 @@ public class ChangeInformationFrame extends JFrame {
 		contentPane.add(nameLabel);
 		
 		areaLabel = new JLabel();
-		areaLabel.setBounds(400, 60, 200, 34);
+		areaLabel.setBounds(700, 358, 200, 34);
 		contentPane.add(areaLabel);
 		
 		nikconfirmBtn.addMouseListener(new MouseAdapter() {
@@ -296,7 +307,7 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		JButton returnBtn = new JButton();
 		returnBtn.setBounds(50, 25, 130, 50);
-		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
 		 returnBtn.setContentAreaFilled(false); 
 		 returnBtn.setBorderPainted(false);
 		 returnBtn.setIcon(imgreturnBtn);
@@ -304,14 +315,14 @@ public class ChangeInformationFrame extends JFrame {
 		 returnBtn.addMouseListener(new MouseAdapter() {
 			    @Override
 			    public void mouseExited(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
 				returnBtn.setIcon(imgreturnBtn);
 				
 			    }
 			    
 			    @Override
 			    public void mouseEntered(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
+				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
 				returnBtn.setIcon(imgreturnBtn);
 				
 			    }
@@ -321,43 +332,43 @@ public class ChangeInformationFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new MypageFrame(data);
-				 frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 
-		JRadioButton manBtn = new JRadioButton();
-		manBtn.setContentAreaFilled(false); 
+		manBtn = new JRadioButton();
+		manBtn.setContentAreaFilled(false);
 		manBtn.setBorderPainted(false);
-		 ImageIcon imgmanlbl1 = new ImageIcon("img/man.png");
+
 		ImageIcon imgmanlbl = new ImageIcon("img/man_1.png");
-		 manBtn.setIcon(imgmanlbl);
-		 manBtn.setBounds(630, 243, 50, 50);
+		manBtn.setIcon(imgmanlbl);
+		manBtn.setBounds(630, 243, 50, 50);
 		contentPane.add(manBtn);
 
 		womanBtn = new JRadioButton();
-		womanBtn.setContentAreaFilled(false); 
+		womanBtn.setContentAreaFilled(false);
 		womanBtn.setBorderPainted(false);
 		ImageIcon imgwomanlbl = new ImageIcon("img/girl_1.png");
-		ImageIcon imgwomanlbl1 = new ImageIcon("img/girl.png");
-	    womanBtn.setIcon(imgwomanlbl);
+
+		womanBtn.setIcon(imgwomanlbl);
 		womanBtn.setBounds(690, 243, 50, 50);
 		contentPane.add(womanBtn);
 		ButtonGroup genderGroup = new ButtonGroup();
 		genderGroup.add(manBtn);
 		genderGroup.add(womanBtn);
-	
-		int gender = getSelectedGender();
-		if (gender == 1) {
-			manBtn.setIcon(imgmanlbl1);
-		} else if (gender == 0) {
-			womanBtn.setIcon(imgwomanlbl1);
-		}
 
 	
 			
-    JLabel errorLabel = new JLabel("닉네임을 확인해주십시오.");
+		JLabel errorLabel = new JLabel("닉네임을 확인 해주세요.");
 		errorLabel.setBounds(670, 150, 200, 30);
+		errorLabel.setFont(new Font("돋움", Font.PLAIN, 12));
+		errorLabel.setForeground(Color.RED);
 		contentPane.add(errorLabel);
+		JLabel pwerrorLabel = new JLabel("비밀번호를 확인 해주세요.");
+		 pwerrorLabel.setBounds(680, 650, 200, 30);
+		 pwerrorLabel.setFont(new Font("돋움", Font.PLAIN, 12));
+		 pwerrorLabel.setForeground(Color.RED);
+		 contentPane.add(pwerrorLabel);
 		contentPane.add(returnBtn);
 		contentPane.add(nikconfirmBtn);
 		contentPane.add(passwordIdentifyBtn);
