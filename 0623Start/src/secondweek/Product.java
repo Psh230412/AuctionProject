@@ -32,6 +32,7 @@ public class Product {
 		this.popularity = popularity;
 		this.category = category;
 	}
+	
 
 	public Product(int setNo, int productNo, int auctionNo, String productName, int productPriceNow,
 			String productContent, LocalDateTime startTime, LocalDateTime endTime, Blob image) {

@@ -15,6 +15,7 @@ import java.util.List;
 import dbutil.DBUtil;
 
 public class Timer implements ITimer {
+	
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -33,6 +34,7 @@ public class Timer implements ITimer {
 					+ "        WHERE participateprice > 0\r\n" + "    ) AS A\r\n" + "    GROUP BY auctionno\r\n"
 					+ ") AS E ON C.auctionno = E.auctionno\r\n" + "WHERE C.deadline > current_timestamp() "
 					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
+			
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -402,6 +404,7 @@ public class Timer implements ITimer {
 				} else {
 					return true;
 				}
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -410,6 +413,6 @@ public class Timer implements ITimer {
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
-		return false;
+		return true;
 	}
 }
