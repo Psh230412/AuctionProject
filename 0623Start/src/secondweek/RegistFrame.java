@@ -95,9 +95,10 @@ public class RegistFrame extends JFrame {
 	public RegistFrame(DataBase data) {
 
 		frame = new JFrame();
-		frame.setSize(1200, 785);
+		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 		contentPane = new JPanel() {
 
 			@Override
@@ -106,11 +107,11 @@ public class RegistFrame extends JFrame {
 
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-				Image image = toolkit.getImage("img/registPage_1.png");
+				Image image = toolkit.getImage("img/registPage.png");
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+	//	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -137,11 +138,11 @@ public class RegistFrame extends JFrame {
 		contentPane.add(imageRoot4);
 
 		mainImageLabel = new JLabel();
-		mainImageLabel.setBounds(150, 150, 400, 400);
+		mainImageLabel.setBounds(240, 100, 400, 400);
 		contentPane.add(mainImageLabel);
 		for (int i = 0; i < MAX_IMAGES; i++) {
 		    smallImageLabels[i] = new JLabel();
-		    smallImageLabels[i].setBounds(40, 140 + 110 * i, 100, 100);
+		    smallImageLabels[i].setBounds(95, 76 + 110 * i, 100, 100);
 		    smallImageLabels[i].setBorder(BorderFactory.createEmptyBorder());
 		    smallImageLabels[i].addMouseListener(new MouseAdapter() {
 		        @Override
@@ -211,21 +212,20 @@ public class RegistFrame extends JFrame {
 		    bigImageLabels[i] = new JLabel();
 
 		    fileSizeLabels[i] = new JLabel();
-		    fileSizeLabels[i].setBounds(10, 625 + 20 * i, 400, 100);
+		    fileSizeLabels[i].setBounds(220, 600 + 20 * i, 400, 100);
 		    contentPane.add(fileSizeLabels[i]);
 		}
 
 
 		JLabel imageVolume = new JLabel("각 파일의 크기는 2mb를 넘을수 없습니다");
-
-		imageVolume.setBounds(10, 625, 400, 50);
+		imageVolume.setBounds(220, 600, 400, 50);
 		contentPane.add(imageVolume);
 
 		Font myFont1 = new Font("Serif", Font.BOLD, 15);
 		imageVolume.setFont(myFont1);
 
 		JButton imageBtn = new JButton();
-		imageBtn.setBounds(220, 553, 250, 100);
+		imageBtn.setBounds(300, 525, 207, 80);
 		ImageIcon imgBtn = new ImageIcon("img/findimg_1.png");
 		imageBtn.setContentAreaFilled(false);
 		imageBtn.setBorderPainted(false);
@@ -315,12 +315,12 @@ public class RegistFrame extends JFrame {
 		    }
 		});
 		detailBox = new JTextArea(5, 20); // 상세정보 입력칸
-		detailBox.setBounds(660, 320, 388, 215);
+		detailBox.setBounds(730, 360, 350, 180);
 		contentPane.add(detailBox);
 		detailBox.setColumns(10);
 		detailBox.setLineWrap(true);
 
-		classificationBox.setBounds(0, 0, 100, 25);
+		classificationBox.setBounds(825, 80, 200, 35);
 		classificationBox.addItem("전자제품");
 		classificationBox.addItem("식품");
 		classificationBox.addItem("자동차");
@@ -335,7 +335,7 @@ public class RegistFrame extends JFrame {
 		contentPane.add(classificationBox);
 
 		JButton registrationBtn = new JButton();
-		registrationBtn.setBounds(690, 580, 350, 80);
+		registrationBtn.setBounds(725, 570, 350, 80);
 		ImageIcon imgregitBtn = new ImageIcon("img/regist_1.png");
 		registrationBtn.setContentAreaFilled(false);
 		registrationBtn.setBorderPainted(false);
@@ -362,7 +362,7 @@ public class RegistFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 
@@ -567,7 +567,7 @@ public class RegistFrame extends JFrame {
 			}
 		});
 		JButton mainBtn = new JButton();
-		mainBtn.setBounds(75, 40, 110, 65);
+		mainBtn.setBounds(970, 680, 130, 50);
 		ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
 		mainBtn.setContentAreaFilled(false);
 		mainBtn.setBorderPainted(false);
@@ -600,12 +600,12 @@ public class RegistFrame extends JFrame {
 
 		contentPane.add(mainBtn);
 		productNameInput = new JTextField();
-		productNameInput.setBounds(825, 115, 200, 30);
+		productNameInput.setBounds(825, 138, 200, 35);
 		contentPane.add(productNameInput);
 		productNameInput.setColumns(10);
 		productPriceInput = new JTextField();
 		productPriceInput.setColumns(10);
-		productPriceInput.setBounds(825, 170, 200, 30);
+		productPriceInput.setBounds(825, 200, 200, 35);
 		PlainDocument docPrice = (PlainDocument) productPriceInput.getDocument();
 		docPrice.setDocumentFilter(new NumberOnlyFilter(15));
 		
