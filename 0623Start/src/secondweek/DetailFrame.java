@@ -160,12 +160,15 @@ public class DetailFrame extends JFrame {
 
 		JLabel lblMessage = new JLabel("입찰가격은 최소입찰가를 상회해야 합니다.");
 		lblMessage.setForeground(Color.darkGray);
-		lblMessage.setBounds(760, 425, 268, 35);
+		lblMessage.setBounds(760, 415, 268, 35);
+		lblMessage.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 
 		lblisOwn = new JLabel();
 		lblisOwn.setBounds(200, 646, 400, 35);
+		lblisOwn.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		lblisContinue = new JLabel();
 		lblisContinue.setBounds(200, 680, 400, 35);
+		lblisContinue.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 
 		JTextField priceTF = new JTextField(10);
 		PlainDocument docPrice = (PlainDocument) priceTF.getDocument();
@@ -276,6 +279,7 @@ public class DetailFrame extends JFrame {
 		// 이전가격 라벨 추가
 		JLabel prePriceInfoLbl = new JLabel("최근 입찰가 : ");
 		prePriceInfoLbl.setBounds(750, 250, 200, 200);
+		prePriceInfoLbl.setFont(new Font("돋움", Font.BOLD, 13));
 		prePriceLbl1 = new JLabel("(가장오래된) 입찰가1");
 		prePriceLbl1.setBounds(850, 195, 150, 20);
 		prePriceLbl1.setForeground(Color.GRAY);

@@ -596,8 +596,8 @@ public class AuctionFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if (data.isCheckBtn()) {
 						List<Product> products = timer.selectSearchProduct(data.getSearchText());
-						if (products.size() >= index) {
-							Product product = testList.get(index);
+						if (products.size() >= index + data.getIndexMainSearch()) {
+							Product product = testList.get(index + data.getIndexMainSearch());
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
@@ -617,9 +617,8 @@ public class AuctionFrame extends JFrame {
 
 						// List<Product> testList;
 //						testList.get(index)
-
-						if (testList.size() >= index) {
-							Product product = testList.get(index);
+						if (testList.size() >= index + data.getIndexMain()) {
+							Product product = testList.get(index + data.getIndexMain());
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
@@ -779,6 +778,8 @@ public class AuctionFrame extends JFrame {
 				"기타" };
 		categoryCombo = new JComboBox<>(categories);
 		categoryCombo.setBounds(60, 270, 150, 25);
+//		Font font = new Font("맑은 고딕", Font.BOLD, 10);
+		categoryCombo.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 
 		categoryCombo.addItemListener(new ItemListener() {
 			@Override
@@ -803,6 +804,11 @@ public class AuctionFrame extends JFrame {
 		priceHighSort = new JRadioButton("가격 높은 순 정렬");
 		priceLowSort = new JRadioButton("가격 낮은 순 정렬");
 		popularSort = new JRadioButton("인기 순 정렬");
+		
+		deadlineSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		priceHighSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		priceLowSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		popularSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(deadlineSort);
