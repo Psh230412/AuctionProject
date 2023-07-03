@@ -129,18 +129,6 @@ public class DetailFrame extends JFrame {
 
 		lblImage = new JLabel();
 		lblImage.setBounds(168, 240, 400, 400);
-
-//		for (int i = 0; i < ImageRetriever.llistForDetail.size(); i++) {
-//			if (ImageRetriever.llistForDetail.get(i).getProductno() == data.getProduct().getProductNo()) {
-//
-//				ImageIcon imageIcon = ImageRetriever.llistForDetail.get(i).getImageicon();
-//				if (imageIcon != null) {
-//					lblImage.setIcon(iconSize(imageIcon));
-//
-//				}
-//			}
-//		}
-
 		// 리스트를 불러오지 않고 DataBase에 저장된 Product에 있는 Blob 이미지를 사용하도록 수정
 		byte[] imageBites = null;
 		try {

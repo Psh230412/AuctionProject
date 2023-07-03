@@ -12,17 +12,19 @@ public class EnrollParticipate {
 	private Integer setno;
 	private Integer userno;
 	private Integer productno;
+	private Integer auctionno;
 	private String productname;
 	private ImageIcon image;
 	private LocalDateTime endTime;
 	private int productPriceNow;
 
-	public EnrollParticipate(Integer setno, Integer userno, Integer productno, String productname, ImageIcon image,
-			LocalDateTime endTime, int productPriceNow) {
+	public EnrollParticipate(Integer setno, Integer userno, Integer productno, Integer auctionno, String productname,
+			ImageIcon image, LocalDateTime endTime, int productPriceNow) {
 		super();
 		this.setno = setno;
 		this.userno = userno;
 		this.productno = productno;
+		this.auctionno = auctionno;
 		this.productname = productname;
 		this.image = image;
 		this.endTime = endTime;
@@ -51,6 +53,15 @@ public class EnrollParticipate {
 
 	public void setProductno(Integer productno) {
 		this.productno = productno;
+	}
+	
+
+	public Integer getAuctionno() {
+		return auctionno;
+	}
+
+	public void setAuctionno(Integer auctionno) {
+		this.auctionno = auctionno;
 	}
 
 	public String getProductname() {
