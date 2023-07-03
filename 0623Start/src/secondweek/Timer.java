@@ -15,39 +15,6 @@ import java.util.List;
 import dbutil.DBUtil;
 
 public class Timer implements ITimer {
-	
-	
-	public boolean isContinue(int auctionno,int userno) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		
-		try {
-			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT userno,auctionno FROM participate where auctionno = ? ORDER BY participatetime DESC LIMIT 1;");
-			
-			stmt.setInt(1, auctionno);
-			
-			rs=stmt.executeQuery();
-			if(rs.next()) {
-				int lastUserno = rs.getInt("userno");
-				if(lastUserno == userno) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return false;
-	}
-	
-	
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -57,12 +24,14 @@ public class Timer implements ITimer {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT *\r\n" + "FROM auction AS C\r\n"
-					+ "RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image\r\n"
-					+ "	, B.setno\r\n" + "		FROM product AS A\r\n"
-					+ "		LEFT JOIN enrollmentinfo AS B ON A.productno = B.productno) AS D\r\n"
-					+ "ON C.setno = D.setno\r\n" + "WHERE C.deadline > current_timestamp()\r\n"
-					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
+			stmt = conn.prepareStatement("SELECT *\r\n" + "FROM auction AS C\r\n" + "RIGHT JOIN (\r\n"
+					+ "    SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image, A.category, B.setno\r\n"
+					+ "    FROM product AS A\r\n" + "    LEFT JOIN enrollmentinfo AS B ON A.productno = B.productno\r\n"
+					+ ") AS D ON C.setno = D.setno\r\n" + "LEFT JOIN (\r\n" + "\r\n"
+					+ "    SELECT auctionno, COUNT(*) AS popularity\r\n" + "    FROM (\r\n"
+					+ "        SELECT DISTINCT auctionno, userno\r\n" + "        FROM participate\r\n"
+					+ "        WHERE participateprice > 0\r\n" + "    ) AS A\r\n" + "    GROUP BY auctionno\r\n"
+					+ ") AS E ON C.auctionno = E.auctionno\r\n" + "WHERE C.deadline > current_timestamp()");
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -77,9 +46,11 @@ public class Timer implements ITimer {
 				LocalDateTime startTime = timestamp.toLocalDateTime();
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
+				int popularity = rs.getInt("popularity");
+				String category = rs.getString("category");
 
 				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
-						startTime, endTime,image));
+						startTime, endTime, image, popularity, category));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -90,7 +61,7 @@ public class Timer implements ITimer {
 		}
 		return list;
 	}
-	
+
 	public List<Product> selectSearchProduct(String searchObject) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -100,17 +71,12 @@ public class Timer implements ITimer {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement(
-					"SELECT *\r\n" + 
-					"FROM auction AS C\r\n" + 
-					"RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image, B.setno \r\n" + 
-					"			FROM product AS A\r\n" + 
-					"			LEFT JOIN enrollmentinfo AS B \r\n" + 
-					"            ON A.productno = B.productno) AS D\r\n" + 
-					"ON C.setno = D.setno\r\n" + 
-					"WHERE C.deadline > current_timestamp()\r\n" + 
-					"AND productname LIKE ?\r\n" + 
-					"ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
+			stmt = conn.prepareStatement("SELECT *\r\n" + "FROM auction AS C\r\n"
+					+ "RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image, B.setno \r\n"
+					+ "			FROM product AS A\r\n" + "			LEFT JOIN enrollmentinfo AS B \r\n"
+					+ "            ON A.productno = B.productno) AS D\r\n" + "ON C.setno = D.setno\r\n"
+					+ "WHERE C.deadline > current_timestamp()\r\n" + "AND productname LIKE ?\r\n"
+					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
 			stmt.setString(1, "%" + searchObject + "%");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -127,7 +93,7 @@ public class Timer implements ITimer {
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
 
 				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
-						startTime, endTime,image));
+						startTime, endTime, image));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -343,60 +309,91 @@ public class Timer implements ITimer {
 	}
 
 	// 입찰가격 입력
-		@Override
-		public void insertParticipate(int userNo, int auctionNo, int price) {
-			Connection conn = null;
-			PreparedStatement stmt = null;
+	@Override
+	public void insertParticipate(int userNo, int auctionNo, int price) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
 
-			try {
-				conn = DBUtil.getConnection();
+		try {
+			conn = DBUtil.getConnection();
 
-				stmt = conn.prepareStatement(
-						"INSERT INTO participate (userno, auctionno, participatetime, participateprice)\r\n"
-								+ "VALUES (?, ?, ?, ?);");
+			stmt = conn.prepareStatement(
+					"INSERT INTO participate (userno, auctionno, participatetime, participateprice)\r\n"
+							+ "VALUES (?, ?, ?, ?);");
 
-				stmt.setInt(1, userNo);
-				stmt.setInt(2, auctionNo);
-				LocalDateTime now = LocalDateTime.now();
-				stmt.setTimestamp(3, Timestamp.valueOf(now));
-				stmt.setInt(4, price);
+			stmt.setInt(1, userNo);
+			stmt.setInt(2, auctionNo);
+			LocalDateTime now = LocalDateTime.now();
+			stmt.setTimestamp(3, Timestamp.valueOf(now));
+			stmt.setInt(4, price);
 
-				stmt.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				DBUtil.close(stmt);
-				DBUtil.close(conn);
-			}
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
 		}
+	}
 
-		// 최근입찰가격용
-		public List<Integer> participateList(int auctionno, Connection conn) {
+	// 최근입찰가격용
+	public List<Integer> participateList(int auctionno, Connection conn) {
 //			Connection conn = null;
-			PreparedStatement stmt = null;
-			ResultSet rs = null;
-			List<Integer> list = new ArrayList<>();
-			try {
-				conn = DBUtil.getConnection();
-				String sql = "SELECT A.participateprice FROM participate A \r\n"
-						+ "INNER JOIN auction B ON A.auctionno = B.auctionno \r\n" + "WHERE B.auctionno = ?\r\n"
-						+ "ORDER BY A.participatetime DESC\r\n" + "LIMIT 4";
-				stmt = conn.prepareStatement(sql);
-				stmt.setInt(1, auctionno);
-				rs = stmt.executeQuery();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<Integer> list = new ArrayList<>();
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT A.participateprice FROM participate A \r\n"
+					+ "INNER JOIN auction B ON A.auctionno = B.auctionno \r\n" + "WHERE B.auctionno = ?\r\n"
+					+ "ORDER BY A.participatetime DESC\r\n" + "LIMIT 4";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, auctionno);
+			rs = stmt.executeQuery();
 
-				while (rs.next()) {
-					int participatePrice = rs.getInt("participateprice");
-					list.add(participatePrice);
-				}
-				return list;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				DBUtil.close(rs);
-				DBUtil.close(stmt);
-				DBUtil.close(conn);
+			while (rs.next()) {
+				int participatePrice = rs.getInt("participateprice");
+				list.add(participatePrice);
 			}
-			return null;
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
 		}
+		return null;
+	}
+
+	public boolean isContinue(int auctionno, int userno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(
+					"SELECT userno,auctionno FROM participate where auctionno = ? ORDER BY participatetime DESC LIMIT 1;");
+
+			stmt.setInt(1, auctionno);
+
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				int lastUserno = rs.getInt("userno");
+				if (lastUserno == userno) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return false;
+	}
 }

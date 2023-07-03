@@ -1,6 +1,7 @@
 package secondweek;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -372,26 +373,54 @@ public class RegistFrame extends JFrame {
 						String sanitizedText = detailinfo.replace("\n", "").replace("\r", "");
 						Integer initialPrice = Integer.valueOf(productPriceInput.getText());
 
-						String path = imageRoot.getText();
-						String path2 = imageRoot2.getText();
-						String path3 = imageRoot3.getText();
-						String path4 = imageRoot4.getText();
-						File imageFile = new File(path); // 사용자가 입력한 파일 경로
-						File imageFile2 = new File(path2); // 사용자가 입력한 파일 경로
-						File imageFile3 = new File(path3); // 사용자가 입력한 파일 경로
-						File imageFile4 = new File(path4); // 사용자가 입력한 파일 경로
-						// 파일 용량 제한 (2mb)
-						File[] imageFiles = new File[] { imageFile, imageFile2, imageFile3, imageFile4 };
-						for (File file : imageFiles) {
-							if (file.exists() && file.length() > 2 * 1024 * 1024) {
-								JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
-								return;
-							}
-						}
-						byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
-						byte[] imageBytes2 = Files.readAllBytes(imageFile2.toPath());
-						byte[] imageBytes3 = Files.readAllBytes(imageFile3.toPath());
-						byte[] imageBytes4 = Files.readAllBytes(imageFile4.toPath());
+						 String path = imageRoot.getText();
+				         String path2 = imageRoot2.getText();
+				         String path3 = imageRoot3.getText();
+				         String path4 = imageRoot4.getText();
+				            
+				            File imageFile = null;
+				            File imageFile2 = null;
+				            File imageFile3 = null;
+				            File imageFile4 = null;
+
+				            byte[] imageBytes = null;
+				            byte[] imageBytes2 = null;
+				            byte[] imageBytes3 = null;
+				            byte[] imageBytes4 = null;
+
+				            if (!path.isEmpty()) {
+				                imageFile = new File(path); // 사용자가 입력한 파일 경로
+				                if (imageFile.exists() && imageFile.length() > 2 * 1024 * 1024) {
+									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
+									return;
+								}
+				                imageBytes = Files.readAllBytes(imageFile.toPath());
+				            }
+				            if (!path2.isEmpty()) {
+				                imageFile2 = new File(path2); // 사용자가 입력한 파일 경로
+				                if (imageFile2.exists() && imageFile2.length() > 2 * 1024 * 1024) {
+									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
+									return;
+								}
+				                imageBytes2 = Files.readAllBytes(imageFile2.toPath());
+				            }
+				            if (!path3.isEmpty()) {
+				                imageFile3 = new File(path3); // 사용자가 입력한 파일 경로
+				                if (imageFile3.exists() && imageFile3.length() > 2 * 1024 * 1024) {
+									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
+									return;
+								}
+				                imageBytes3 = Files.readAllBytes(imageFile3.toPath());
+				            }
+				            if (!path4.isEmpty()) {
+				                imageFile4 = new File(path4); // 사용자가 입력한 파일 경로
+				                if (imageFile4.exists() && imageFile4.length() > 2 * 1024 * 1024) {
+									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
+									return;
+								}
+				                imageBytes4 = Files.readAllBytes(imageFile4.toPath());
+				            }
+					
 						// 정보 sql에 등록
 						inputProduct = conn.prepareStatement(
 								"insert into product(productname, initialprice, detailinfo, image,subimage1,subimage2,subimage3,category) values (?,?,?,?,?,?,?,?)");
