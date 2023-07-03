@@ -141,7 +141,7 @@ public class AuctionFrame extends JFrame {
 	private static boolean isPriceRange;
 	private static JTextField rangeFront;
 	private static JTextField rangeBack;
-	
+
 	class NumberOnlyFilter extends DocumentFilter {
 		private int maxLength; // 최대 입력 길이
 
@@ -623,9 +623,14 @@ public class AuctionFrame extends JFrame {
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
-							data.setPriceFrontText(rangeFront.getText());
-							data.setPriceBackText(rangeBack.getText());
-							
+
+							if (isPriceRange) {
+								data.setPriceFrontText(rangeFront.getText());
+								data.setPriceBackText(rangeBack.getText());
+							}
+
+							System.out.println(data.getPriceFrontText());
+
 							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
@@ -642,9 +647,13 @@ public class AuctionFrame extends JFrame {
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
-							data.setPriceFrontText(rangeFront.getText());
-							data.setPriceBackText(rangeBack.getText());
 
+							if (isPriceRange) {
+								data.setPriceFrontText(rangeFront.getText());
+								data.setPriceBackText(rangeBack.getText());
+							}
+
+							System.out.println(data.getPriceFrontText());
 							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
@@ -876,17 +885,16 @@ public class AuctionFrame extends JFrame {
 		popularSort.setBounds(140, 110, 200, 25);
 
 		// 가격범위 검색
-		
-		
+
 		rangeFront = new JTextField();
 		rangeFront.setBounds(800, 100, 160, 25);
-		
+
 		PlainDocument docFront = (PlainDocument) rangeFront.getDocument();
 		docFront.setDocumentFilter(new NumberOnlyFilter(15));
 
 		rangeBack = new JTextField();
 		rangeBack.setBounds(1000, 100, 160, 25);
-		
+
 		PlainDocument docBack = (PlainDocument) rangeBack.getDocument();
 		docBack.setDocumentFilter(new NumberOnlyFilter(15));
 
@@ -900,7 +908,7 @@ public class AuctionFrame extends JFrame {
 				isPriceRange = true;
 			}
 		});
-		
+
 		if (data.getPriceFrontText() != null) {
 			isPriceRange = true;
 			rangeFront.setText(data.getPriceFrontText());
