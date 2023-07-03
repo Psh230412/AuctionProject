@@ -8,7 +8,10 @@ public class DataBase {
 	private int indexMain = 0;
 	private int indexMainSearch = 0;
 	private boolean checkBtn = false;
-	private String searchText;
+	private String searchText = null;
+
+	private String categoryText;
+	private String auctionRadioText;
 
 	public DataBase() {
 //		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
@@ -38,7 +41,7 @@ public class DataBase {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
+
 	public int getIndexPar() {
 		return indexPar;
 	}
@@ -54,7 +57,7 @@ public class DataBase {
 	public void setIndexMain(int indexMain) {
 		this.indexMain = indexMain;
 	}
-	
+
 	public int getIndexMainSearch() {
 		return indexMainSearch;
 	}
@@ -78,6 +81,21 @@ public class DataBase {
 	public void setSearchText(String searchText) {
 		this.searchText = searchText;
 	}
-	
-	
+
+	public String getCategoryText() {
+		return categoryText;
+	}
+
+	public void setCategoryText(String categoryText) {
+		this.categoryText = categoryText;
+	}
+
+	public String getAuctionRadioText() {
+		return auctionRadioText;
+	}
+
+	public void setAuctionRadioText(String auctionRadioText) {
+		this.auctionRadioText = auctionRadioText;
+	}
+
 }
