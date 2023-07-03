@@ -403,6 +403,6 @@ public class Timer implements ITimer {
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
-		return false;
+		return true;
 	}
 }
