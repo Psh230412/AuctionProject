@@ -8,6 +8,7 @@ public class Product {
 	private int productNo;
 	private int auctionNo;
 	private String productName;
+	private int initialPrice;
 	private int productPriceNow;
 	private String productContent;
 	private LocalDateTime startTime;
@@ -16,14 +17,15 @@ public class Product {
 	private int popularity;
 	private String category; // 07-02 카테고리 추가수정
 
-	public Product(int setNo, int productNo, int auctionNo, String productName, int productPriceNow,
-			String productContent, LocalDateTime startTime, LocalDateTime endTime, Blob image, 
-			int popularity, String category) {
+	public Product(int setNo, int productNo, int auctionNo, String productName, int initialPrice, int productPriceNow,
+			String productContent, LocalDateTime startTime, LocalDateTime endTime, Blob image, int popularity,
+			String category) {
 		super();
 		this.setNo = setNo;
 		this.productNo = productNo;
 		this.auctionNo = auctionNo;
 		this.productName = productName;
+		this.initialPrice = initialPrice;
 		this.productPriceNow = productPriceNow;
 		this.productContent = productContent;
 		this.startTime = startTime;
@@ -77,6 +79,14 @@ public class Product {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+	
+	public int getInitialPrice() {
+		return initialPrice;
+	}
+
+	public void setInitialPrice(int initialPrice) {
+		this.initialPrice = initialPrice;
 	}
 
 	public int getProductPriceNow() {
