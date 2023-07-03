@@ -46,6 +46,7 @@ public class DetailFrame extends JFrame {
 	private static Timer timer;
 	private JPanel contentPane;
 	private JFrame frame;
+	private JLabel lblisContinue;
 
 	private static JLabel lblImage;
 	private static JLabel lblName;
@@ -128,7 +129,9 @@ public class DetailFrame extends JFrame {
 		lblMessage.setForeground(Color.darkGray);
 		lblMessage.setBounds(760, 378, 268, 35);
 		lblisOwn = new JLabel();
-		lblisOwn.setBounds(200, 562 + 35 + 49, 400, 35);
+		lblisOwn.setBounds(200, 646, 400, 35);
+		lblisContinue = new JLabel();
+		lblisContinue.setBounds(200, 700, 400, 35);
 
 		JTextField priceTF = new JTextField(10);
 		priceTF.setBounds(850, 347, 150, 30);
@@ -157,12 +160,16 @@ public class DetailFrame extends JFrame {
 			}
 
 		});
+		
+		if (!timer.isContinue(auctionNo, data.getCurrentUser().getNo())) {
+			lblisContinue.setText("연속 입찰은 불가능 합니다.");
+		}
 
 		if (!timer.isOwn(data.getCurrentUser().getNo(), data.getProduct().getProductNo())) {
 			lblisOwn.setText(data.getProduct().getProductName() + "은(는) 본인이 등록한 상품입니다.");
 			participateBtn.setBackground(Color.black);
-
-		} else {
+		
+		} else if(timer.isContinue(auctionNo, data.getCurrentUser().getNo())) {
 			participateBtn.addActionListener(new ActionListener() {
 
 				@Override
@@ -170,6 +177,7 @@ public class DetailFrame extends JFrame {
 
 					Product product = data.getProduct();
 					String bid = priceTF.getText();
+					
 
 					if (PriceMin(product.getProductPriceNow()) > Integer.parseInt(bid)) {
 						lblMessage.setForeground(Color.RED);
@@ -180,7 +188,7 @@ public class DetailFrame extends JFrame {
 					} else {
 						int choice = JOptionPane.showConfirmDialog(null, "입찰을 하면 취소할 수 없습니다.\n정말 입찰하시겠습니까?", "입찰",
 								JOptionPane.YES_NO_OPTION);
-						if (choice == JOptionPane.YES_OPTION) {
+						if (choice == JOptionPane.YES_OPTION ) {
 							// 입찰 쿼리문
 							timer.insertParticipate(data.getCurrentUser().getNo(), auctionNo, Integer.parseInt(bid));
 
@@ -261,6 +269,7 @@ public class DetailFrame extends JFrame {
 		contentPane.add(participateBtn);
 		contentPane.add(priceTF);
 		contentPane.add(backButton);
+		contentPane.add(lblisContinue);
 
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();

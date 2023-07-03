@@ -439,6 +439,7 @@ public class RegistFrame extends JFrame {
 						inputProductDate = conn.prepareStatement(
 								"insert into auction(starttime, deadline, finalprice) values (?, ?, ?)",
 								Statement.RETURN_GENERATED_KEYS);
+					
 						LocalDateTime now = LocalDateTime.now(); // 현재 시간
 						Timestamp timestampNow = Timestamp.valueOf(now); // LocalDateTime을 Timestamp로 변환
 						inputProductDate.setTimestamp(1, timestampNow);
@@ -466,6 +467,7 @@ public class RegistFrame extends JFrame {
 						inputProductDate.setTimestamp(2, timestampDeadline);
 						inputProductDate.setObject(3, initialPrice, Types.INTEGER);
 						inputProductDate.executeUpdate();
+
 
 						// date가 저장된 옥션의 키값
 						ResultSet rs = inputProductDate.getGeneratedKeys();
@@ -498,6 +500,12 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo.executeUpdate();
 						}
 
+//						auction 테이블에 setno까지 추가 되어서 모든 컬럼이 최종적으로 추가 되었으니까
+//						여기서 auction테이블의 auctinono의 최대값과 이미지 blob을 가져와서 cachemap에 추가
+						
+						Cache.put(auctionId,imageBytes,imageBytes2,imageBytes3,imageBytes4);
+						
+						
 
 						stmt = conn.prepareStatement("INSERT INTO copy_auction\r\n"
 								+ "						SELECT *\r\n" + "						FROM auction\r\n"

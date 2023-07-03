@@ -15,6 +15,39 @@ import java.util.List;
 import dbutil.DBUtil;
 
 public class Timer implements ITimer {
+	
+	
+	public boolean isContinue(int auctionno,int userno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement("SELECT userno,auctionno FROM participate where auctionno = ? ORDER BY participatetime DESC LIMIT 1;");
+			
+			stmt.setInt(1, auctionno);
+			
+			rs=stmt.executeQuery();
+			if(rs.next()) {
+				int lastUserno = rs.getInt("userno");
+				if(lastUserno == userno) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return false;
+	}
+	
+	
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;

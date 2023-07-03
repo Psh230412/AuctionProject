@@ -868,6 +868,7 @@ public class AuctionFrame extends JFrame {
 
 			int count = 0;
 			List<Product> productList = timer.selectProduct();
+			
 			for (int i = data.getIndexMain(); i < productList.size(); i++) {
 				count++;
 				if (count == 11) {

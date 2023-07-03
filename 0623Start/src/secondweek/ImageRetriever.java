@@ -46,6 +46,8 @@ public class ImageRetriever {
 		llist.add(new ImageAndNum(new ImageIcon(image), productno));
 	}
 
+//	추가 할때는 auction 테이블의 주요키와 같은 정수를 키로 가지는 해쉬맵에다가 저장
+//	삭제 될떄는 
 	public static void retrieveImage(Connection conn) throws SQLException {
 //		list.clear();
 		llist.clear();
