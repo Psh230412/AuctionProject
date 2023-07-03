@@ -340,13 +340,19 @@ public class DetailFrame extends JFrame {
 		return (result % 100 == 0);
 	}
 
-	public static int PriceMin(int price, int initialPrice) {
-		if (price == initialPrice) {
-			return price;
+	public static int PriceMin(int price, int auctionNo) {
+		ListRepository repo = new ListRepository();
+		List<Integer> list = repo.getIsBid();
+		if (list.size() != 0) {
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i) == auctionNo) {
+					double result = price * 1.05;
+					int roundedResult = (int) Math.ceil(result / 100) * 100;
+					return roundedResult;
+				}
+			}
 		}
-		double result = price * 1.05;
-		int roundedResult = (int) Math.ceil(result / 100) * 100;
-		return roundedResult;
+		return price;
 	}
 
 	public static String TimeFormatString(LocalDateTime startTime) {
@@ -372,7 +378,7 @@ public class DetailFrame extends JFrame {
 			String result1 = duration(product.getEndTime(), now);
 			lblTime.setText(result1);
 			lblPrice.setText(formatInt(product.getProductPriceNow()));
-			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow(), product.getInitialPrice())));
+			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow(), product.getAuctionNo())));
 
 			prePriceLbl1.setText("");
 			prePriceLbl2.setText("");
