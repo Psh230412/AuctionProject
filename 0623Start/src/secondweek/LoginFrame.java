@@ -27,6 +27,9 @@ public class LoginFrame extends JFrame {
 	private JFrame frame;
 
 	public LoginFrame(DataBase data) {
+		
+		Cache.addAllCacheMap();
+		
 		repo = new LoginSignupRepository();
 		loginUser = null;
 

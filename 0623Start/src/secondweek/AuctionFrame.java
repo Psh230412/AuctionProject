@@ -1189,6 +1189,7 @@ public class AuctionFrame extends JFrame {
 					lblName1.setText(productList.get(i).getProductName());
 					lblName1.setPreferredSize(new Dimension(200, lblName1.getPreferredSize().height));
 					lblName1.setHorizontalAlignment(SwingConstants.CENTER);
+					
 					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
 							(int) productList.get(i).getImage().length());
 					ImageIcon imageIcon = new ImageIcon(imageBytes);

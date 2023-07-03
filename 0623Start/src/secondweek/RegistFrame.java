@@ -1,19 +1,16 @@
 package secondweek;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -87,19 +84,19 @@ public class RegistFrame extends JFrame {
 			fileSizeLabels[i].setBounds(10, 665 + 15 * i, 400, 20); // 위치와 크기를 설정합니다.
 			contentPane.add(fileSizeLabels[i]);
 		}
-		
+
 		JTextField imageRoot = new JTextField();
 		imageRoot.setVisible(false);
 		contentPane.add(imageRoot);
-		
+
 		JTextField imageRoot2 = new JTextField();
 		imageRoot2.setVisible(false);
 		contentPane.add(imageRoot2);
-		
+
 		JTextField imageRoot3 = new JTextField();
 		imageRoot3.setVisible(false);
 		contentPane.add(imageRoot3);
-		
+
 		JTextField imageRoot4 = new JTextField();
 		imageRoot4.setVisible(false);
 		contentPane.add(imageRoot4);
@@ -108,81 +105,81 @@ public class RegistFrame extends JFrame {
 		mainImageLabel.setBounds(150, 150, 400, 400);
 		contentPane.add(mainImageLabel);
 		for (int i = 0; i < MAX_IMAGES; i++) {
-		    smallImageLabels[i] = new JLabel();
-		    smallImageLabels[i].setBounds(40, 140 + 110 * i, 100, 100);
-		    smallImageLabels[i].setBorder(BorderFactory.createEmptyBorder());
-		    smallImageLabels[i].addMouseListener(new MouseAdapter() {
-		        @Override
-		        public void mouseClicked(MouseEvent e) {
-		            JLabel clickedLabel = (JLabel) e.getSource();
-		            int index = Arrays.asList(smallImageLabels).indexOf(clickedLabel);
-		            if (smallImageLabels[index].getIcon() != null) {
-		                mainImageLabel.setIcon(bigImageLabels[index].getIcon());
+			smallImageLabels[i] = new JLabel();
+			smallImageLabels[i].setBounds(40, 140 + 110 * i, 100, 100);
+			smallImageLabels[i].setBorder(BorderFactory.createEmptyBorder());
+			smallImageLabels[i].addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JLabel clickedLabel = (JLabel) e.getSource();
+					int index = Arrays.asList(smallImageLabels).indexOf(clickedLabel);
+					if (smallImageLabels[index].getIcon() != null) {
+						mainImageLabel.setIcon(bigImageLabels[index].getIcon());
 
-		                for (JLabel label : smallImageLabels) {
-		                    label.setBorder(BorderFactory.createEmptyBorder());
-		                }
+						for (JLabel label : smallImageLabels) {
+							label.setBorder(BorderFactory.createEmptyBorder());
+						}
 
-		                clickedLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+						clickedLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
 
-		                if (fileSizeLabels[index].getForeground() == Color.RED) {
-		                    JFileChooser fileChooser = new JFileChooser();
-		                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Image files",
-		                            ImageIO.getReaderFileSuffixes());
-		                    fileChooser.setFileFilter(filter);
-		                    int returnValue = fileChooser.showOpenDialog(null);
-		                    if (returnValue == JFileChooser.APPROVE_OPTION) {
-		                        File selectedFile = fileChooser.getSelectedFile();
+						if (fileSizeLabels[index].getForeground() == Color.RED) {
+							JFileChooser fileChooser = new JFileChooser();
+							FileNameExtensionFilter filter = new FileNameExtensionFilter("Image files",
+									ImageIO.getReaderFileSuffixes());
+							fileChooser.setFileFilter(filter);
+							int returnValue = fileChooser.showOpenDialog(null);
+							if (returnValue == JFileChooser.APPROVE_OPTION) {
+								File selectedFile = fileChooser.getSelectedFile();
 
-		                        double bytes = selectedFile.length();
-		                        double megabytes = (bytes / 1024) / 1024;
-		                        fileSizeLabels[index].setText(String.format("File: %s Size: %.2f MB", selectedFile.getName(), megabytes));
-		                        fileSizeLabels[index].setForeground(megabytes > 2 ? Color.RED : Color.BLACK);
-		                        
-		                        
-		                        try {
-		                            BufferedImage originalImage = ImageIO.read(selectedFile);
-		                            int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+								double bytes = selectedFile.length();
+								double megabytes = (bytes / 1024) / 1024;
+								fileSizeLabels[index].setText(
+										String.format("File: %s Size: %.2f MB", selectedFile.getName(), megabytes));
+								fileSizeLabels[index].setForeground(megabytes > 2 ? Color.RED : Color.BLACK);
 
-		                            BufferedImage bigResizedImage = resizeImage(originalImage, type, 400, 400);
-		                            bigImageLabels[index].setIcon(new ImageIcon(bigResizedImage));
+								try {
+									BufferedImage originalImage = ImageIO.read(selectedFile);
+									int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+											: originalImage.getType();
 
-		                            BufferedImage smallResizedImage = resizeImage(originalImage, type, 100, 100);
-		                            smallImageLabels[index].setIcon(new ImageIcon(smallResizedImage));
-		                            
-		                            mainImageLabel.setIcon(new ImageIcon(bigResizedImage));
+									BufferedImage bigResizedImage = resizeImage(originalImage, type, 400, 400);
+									bigImageLabels[index].setIcon(new ImageIcon(bigResizedImage));
 
-		                            switch (index) {
-		                            case 0:
-		                                imageRoot.setText(selectedFile.getAbsolutePath());
-		                                break;
-		                            case 1:
-		                                imageRoot2.setText(selectedFile.getAbsolutePath());
-		                                break;
-		                            case 2:
-		                                imageRoot3.setText(selectedFile.getAbsolutePath());
-		                                break;
-		                            case 3:
-		                                imageRoot4.setText(selectedFile.getAbsolutePath());
-		                                break;
-		                            }
-		                        } catch (IOException e1) {
-		                            e1.printStackTrace();
-		                        }
-		                    }
-		                }
-		            }
-		        }
-		    });
-		    contentPane.add(smallImageLabels[i]);
+									BufferedImage smallResizedImage = resizeImage(originalImage, type, 100, 100);
+									smallImageLabels[index].setIcon(new ImageIcon(smallResizedImage));
 
-		    bigImageLabels[i] = new JLabel();
+									mainImageLabel.setIcon(new ImageIcon(bigResizedImage));
 
-		    fileSizeLabels[i] = new JLabel();
-		    fileSizeLabels[i].setBounds(10, 625 + 20 * i, 400, 100);
-		    contentPane.add(fileSizeLabels[i]);
+									switch (index) {
+									case 0:
+										imageRoot.setText(selectedFile.getAbsolutePath());
+										break;
+									case 1:
+										imageRoot2.setText(selectedFile.getAbsolutePath());
+										break;
+									case 2:
+										imageRoot3.setText(selectedFile.getAbsolutePath());
+										break;
+									case 3:
+										imageRoot4.setText(selectedFile.getAbsolutePath());
+										break;
+									}
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+							}
+						}
+					}
+				}
+			});
+			contentPane.add(smallImageLabels[i]);
+
+			bigImageLabels[i] = new JLabel();
+
+			fileSizeLabels[i] = new JLabel();
+			fileSizeLabels[i].setBounds(10, 625 + 20 * i, 400, 100);
+			contentPane.add(fileSizeLabels[i]);
 		}
-
 
 		JLabel imageVolume = new JLabel("각 파일의 크기는 2mb를 넘을수 없습니다");
 
@@ -216,71 +213,72 @@ public class RegistFrame extends JFrame {
 		});
 		contentPane.add(imageBtn);
 		imageBtn.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        JFileChooser fileChooser = new JFileChooser();
-		        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image files",
-		                ImageIO.getReaderFileSuffixes());
-		        fileChooser.setFileFilter(filter);
-		        fileChooser.setMultiSelectionEnabled(true);
-		        int returnValue = fileChooser.showOpenDialog(null);
-		        if (returnValue == JFileChooser.APPROVE_OPTION) {
-		        	  // 다시 선택했을때 리셋
-		            for (int i = 0; i < MAX_IMAGES; i++) {
-		                fileSizeLabels[i].setText("");
-		                bigImageLabels[i].setIcon(null);
-		                smallImageLabels[i].setIcon(null);
-		            }
-		            imageRoot.setText("");
-		            imageRoot2.setText("");
-		            imageRoot3.setText("");
-		            imageRoot4.setText("");
-		        	
-		        	
-		            File[] selectedFiles = fileChooser.getSelectedFiles();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Image files",
+						ImageIO.getReaderFileSuffixes());
+				fileChooser.setFileFilter(filter);
+				fileChooser.setMultiSelectionEnabled(true);
+				int returnValue = fileChooser.showOpenDialog(null);
+				if (returnValue == JFileChooser.APPROVE_OPTION) {
+					// 다시 선택했을때 리셋
+					for (int i = 0; i < MAX_IMAGES; i++) {
+						fileSizeLabels[i].setText("");
+						bigImageLabels[i].setIcon(null);
+						smallImageLabels[i].setIcon(null);
+					}
+					imageRoot.setText("");
+					imageRoot2.setText("");
+					imageRoot3.setText("");
+					imageRoot4.setText("");
 
-		            for (int i = 0; i < selectedFiles.length && i < MAX_IMAGES; i++) {
-		                try {
-		                    File selectedFile = selectedFiles[i];
+					File[] selectedFiles = fileChooser.getSelectedFiles();
 
-		                    double bytes = selectedFile.length();
-		                    double megabytes = (bytes / 1024) / 1024;
-		                    fileSizeLabels[i].setText(String.format("File: %s Size: %.2f MB", selectedFile.getName(), megabytes));
-		                    fileSizeLabels[i].setForeground(megabytes > 2 ? Color.RED : Color.BLACK);
+					for (int i = 0; i < selectedFiles.length && i < MAX_IMAGES; i++) {
+						try {
+							File selectedFile = selectedFiles[i];
 
-		                    BufferedImage originalImage = ImageIO.read(selectedFile);
-		                    int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+							double bytes = selectedFile.length();
+							double megabytes = (bytes / 1024) / 1024;
+							fileSizeLabels[i].setText(
+									String.format("File: %s Size: %.2f MB", selectedFile.getName(), megabytes));
+							fileSizeLabels[i].setForeground(megabytes > 2 ? Color.RED : Color.BLACK);
 
-		                    BufferedImage bigResizedImage = resizeImage(originalImage, type, 400, 400);
-		                    bigImageLabels[i].setIcon(new ImageIcon(bigResizedImage));
-		                    
-		                    if (i == 0) {
-		                        mainImageLabel.setIcon(bigImageLabels[i].getIcon());
-		                    }
+							BufferedImage originalImage = ImageIO.read(selectedFile);
+							int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+									: originalImage.getType();
 
-		                    BufferedImage smallResizedImage = resizeImage(originalImage, type, 100, 100);
-		                    smallImageLabels[i].setIcon(new ImageIcon(smallResizedImage));
+							BufferedImage bigResizedImage = resizeImage(originalImage, type, 400, 400);
+							bigImageLabels[i].setIcon(new ImageIcon(bigResizedImage));
 
-		                    switch (i) {
-		                    case 0:
-		                        imageRoot.setText(selectedFile.getAbsolutePath());
-		                        break;
-		                    case 1:
-		                        imageRoot2.setText(selectedFile.getAbsolutePath());
-		                        break;
-		                    case 2:
-		                        imageRoot3.setText(selectedFile.getAbsolutePath());
-		                        break;
-		                    case 3:
-		                        imageRoot4.setText(selectedFile.getAbsolutePath());
-		                        break;
-		                    }
-		                } catch (IOException ex) {
-		                    ex.printStackTrace();
-		                }
-		            }
-		        }
-		    }
+							if (i == 0) {
+								mainImageLabel.setIcon(bigImageLabels[i].getIcon());
+							}
+
+							BufferedImage smallResizedImage = resizeImage(originalImage, type, 100, 100);
+							smallImageLabels[i].setIcon(new ImageIcon(smallResizedImage));
+
+							switch (i) {
+							case 0:
+								imageRoot.setText(selectedFile.getAbsolutePath());
+								break;
+							case 1:
+								imageRoot2.setText(selectedFile.getAbsolutePath());
+								break;
+							case 2:
+								imageRoot3.setText(selectedFile.getAbsolutePath());
+								break;
+							case 3:
+								imageRoot4.setText(selectedFile.getAbsolutePath());
+								break;
+							}
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+					}
+				}
+			}
 		});
 		detailBox = new JTextArea(5, 20); // 상세정보 입력칸
 		detailBox.setBounds(660, 320, 388, 215);
@@ -365,8 +363,8 @@ public class RegistFrame extends JFrame {
 						// 물건정보 입력 (이름,상세정보,시작가격,이미지파일(경로)
 						String category = (String) classificationBox.getSelectedItem();
 						if (category == null || category.isEmpty()) {
-						    JOptionPane.showMessageDialog(null, "카테고리를 선택해주세요.");
-						    return;
+							JOptionPane.showMessageDialog(null, "카테고리를 선택해주세요.");
+							return;
 						}
 						String productname = productNameInput.getText();
 						String detailinfo = detailBox.getText();
@@ -374,54 +372,26 @@ public class RegistFrame extends JFrame {
 						String sanitizedText = detailinfo.replace("\n", "").replace("\r", "");
 						Integer initialPrice = Integer.valueOf(productPriceInput.getText());
 
-						 String path = imageRoot.getText();
-				         String path2 = imageRoot2.getText();
-				         String path3 = imageRoot3.getText();
-				         String path4 = imageRoot4.getText();
-				            
-				            File imageFile = null;
-				            File imageFile2 = null;
-				            File imageFile3 = null;
-				            File imageFile4 = null;
-
-				            byte[] imageBytes = null;
-				            byte[] imageBytes2 = null;
-				            byte[] imageBytes3 = null;
-				            byte[] imageBytes4 = null;
-
-				            if (!path.isEmpty()) {
-				                imageFile = new File(path); // 사용자가 입력한 파일 경로
-				                if (imageFile.exists() && imageFile.length() > 2 * 1024 * 1024) {
-									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
-									return;
-								}
-				                imageBytes = Files.readAllBytes(imageFile.toPath());
-				            }
-				            if (!path2.isEmpty()) {
-				                imageFile2 = new File(path2); // 사용자가 입력한 파일 경로
-				                if (imageFile2.exists() && imageFile2.length() > 2 * 1024 * 1024) {
-									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
-									return;
-								}
-				                imageBytes2 = Files.readAllBytes(imageFile2.toPath());
-				            }
-				            if (!path3.isEmpty()) {
-				                imageFile3 = new File(path3); // 사용자가 입력한 파일 경로
-				                if (imageFile3.exists() && imageFile3.length() > 2 * 1024 * 1024) {
-									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
-									return;
-								}
-				                imageBytes3 = Files.readAllBytes(imageFile3.toPath());
-				            }
-				            if (!path4.isEmpty()) {
-				                imageFile4 = new File(path4); // 사용자가 입력한 파일 경로
-				                if (imageFile4.exists() && imageFile4.length() > 2 * 1024 * 1024) {
-									JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
-									return;
-								}
-				                imageBytes4 = Files.readAllBytes(imageFile4.toPath());
-				            }
-					
+						String path = imageRoot.getText();
+						String path2 = imageRoot2.getText();
+						String path3 = imageRoot3.getText();
+						String path4 = imageRoot4.getText();
+						File imageFile = new File(path); // 사용자가 입력한 파일 경로
+						File imageFile2 = new File(path2); // 사용자가 입력한 파일 경로
+						File imageFile3 = new File(path3); // 사용자가 입력한 파일 경로
+						File imageFile4 = new File(path4); // 사용자가 입력한 파일 경로
+						// 파일 용량 제한 (2mb)
+						File[] imageFiles = new File[] { imageFile, imageFile2, imageFile3, imageFile4 };
+						for (File file : imageFiles) {
+							if (file.exists() && file.length() > 2 * 1024 * 1024) {
+								JOptionPane.showMessageDialog(null, "파일이 너무 큽니다. 2MB 이하의 파일을 선택해주세요.");
+								return;
+							}
+						}
+						byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+						byte[] imageBytes2 = Files.readAllBytes(imageFile2.toPath());
+						byte[] imageBytes3 = Files.readAllBytes(imageFile3.toPath());
+						byte[] imageBytes4 = Files.readAllBytes(imageFile4.toPath());
 						// 정보 sql에 등록
 						inputProduct = conn.prepareStatement(
 								"insert into product(productname, initialprice, detailinfo, image,subimage1,subimage2,subimage3,category) values (?,?,?,?,?,?,?,?)");
@@ -439,7 +409,6 @@ public class RegistFrame extends JFrame {
 						inputProductDate = conn.prepareStatement(
 								"insert into auction(starttime, deadline, finalprice) values (?, ?, ?)",
 								Statement.RETURN_GENERATED_KEYS);
-					
 						LocalDateTime now = LocalDateTime.now(); // 현재 시간
 						Timestamp timestampNow = Timestamp.valueOf(now); // LocalDateTime을 Timestamp로 변환
 						inputProductDate.setTimestamp(1, timestampNow);
@@ -467,7 +436,6 @@ public class RegistFrame extends JFrame {
 						inputProductDate.setTimestamp(2, timestampDeadline);
 						inputProductDate.setObject(3, initialPrice, Types.INTEGER);
 						inputProductDate.executeUpdate();
-
 
 						// date가 저장된 옥션의 키값
 						ResultSet rs = inputProductDate.getGeneratedKeys();
@@ -500,17 +468,14 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo.executeUpdate();
 						}
 
-//						auction 테이블에 setno까지 추가 되어서 모든 컬럼이 최종적으로 추가 되었으니까
-//						여기서 auction테이블의 auctinono의 최대값과 이미지 blob을 가져와서 cachemap에 추가
-						
-						Cache.put(auctionId,imageBytes,imageBytes2,imageBytes3,imageBytes4);
-						
+//						물건 등록하면 cacheMap에다가 추가
+						Cache.put(auctionId, imageBytes, imageBytes2, imageBytes3, imageBytes4);
 						
 
-						stmt = conn.prepareStatement("INSERT INTO copy_auction\r\n"
-								+ "						SELECT *\r\n" + "						FROM auction\r\n"
-								+ "						WHERE auctionno > (SELECT MAX(auctionno) \r\n"
-								+ "						               FROM copy_auction);");
+						stmt = conn.prepareStatement("INSERT INTO copy_auction\r\n" + "                  SELECT *\r\n"
+								+ "                  FROM auction\r\n"
+								+ "                  WHERE auctionno > (SELECT MAX(auctionno) \r\n"
+								+ "                                 FROM copy_auction);");
 
 						stmt.executeUpdate();
 
