@@ -31,7 +31,8 @@ public class Timer implements ITimer {
 					+ "    SELECT auctionno, COUNT(*) AS popularity\r\n" + "    FROM (\r\n"
 					+ "        SELECT DISTINCT auctionno, userno\r\n" + "        FROM participate\r\n"
 					+ "        WHERE participateprice > 0\r\n" + "    ) AS A\r\n" + "    GROUP BY auctionno\r\n"
-					+ ") AS E ON C.auctionno = E.auctionno\r\n" + "WHERE C.deadline > current_timestamp()");
+					+ ") AS E ON C.auctionno = E.auctionno\r\n" + "WHERE C.deadline > current_timestamp() "
+					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {

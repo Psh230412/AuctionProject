@@ -216,6 +216,8 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				data.setCheckBtn(false);
 				data.setSearchText("");
+				data.setCategoryText(null);
+				data.setAuctionRadioText(null);
 				new MypageFrame(data);
 				frame.setVisible(false);
 			}
@@ -344,6 +346,16 @@ public class AuctionFrame extends JFrame {
 
 		searchTab = new JTextField();
 		searchTab.setBounds(560, 52, 160, 25);
+
+		searchTab.requestFocus();
+		searchTab.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				data.setCheckBtn(true);
+				data.setSearchText(searchTab.getText());
+			}
+		});
 
 		contentPane.add(userLbl);
 		contentPane.add(mypageBtn);
@@ -578,6 +590,9 @@ public class AuctionFrame extends JFrame {
 						if (products.size() >= index) {
 							Product product = testList.get(index);
 							data.setProduct(product);
+
+							data.setCategoryText(categoryString);
+
 							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
@@ -592,6 +607,9 @@ public class AuctionFrame extends JFrame {
 						if (testList.size() >= index) {
 							Product product = testList.get(index);
 							data.setProduct(product);
+
+							data.setCategoryText(categoryString);
+
 							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
@@ -745,9 +763,15 @@ public class AuctionFrame extends JFrame {
 				}
 			}
 		});
-		categoryCombo.setSelectedIndex(0);
 		testList = new ArrayList<>();
-		categoryString = null;
+
+		if (data.getCategoryText() != null) {
+			categoryCombo.setSelectedItem(categoryString);
+			categoryString = data.getCategoryText();
+		} else {
+			categoryCombo.setSelectedIndex(0);
+			categoryString = null;
+		}
 
 		// 정렬 라디오버튼
 		deadlineSort = new JRadioButton("마감시간 순 정렬");
@@ -761,7 +785,50 @@ public class AuctionFrame extends JFrame {
 		buttonGroup.add(priceLowSort);
 		buttonGroup.add(popularSort);
 
-		deadlineSort.setSelected(true);
+		if (data.getAuctionRadioText() != null) {
+			if (data.getAuctionRadioText().equals(deadlineSort.getText())) {
+				deadlineSort.setSelected(true);
+			}
+			if (data.getAuctionRadioText().equals(priceHighSort.getText())) {
+				priceHighSort.setSelected(true);
+			}
+			if (data.getAuctionRadioText().equals(priceLowSort.getText())) {
+				priceLowSort.setSelected(true);
+			}
+			if (data.getAuctionRadioText().equals(popularSort.getText())) {
+				popularSort.setSelected(true);
+			}
+		} else {
+			deadlineSort.setSelected(true);
+		}
+
+		deadlineSort.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				data.setAuctionRadioText(deadlineSort.getText());
+			}
+		});
+
+		priceHighSort.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				data.setAuctionRadioText(priceHighSort.getText());
+			}
+		});
+
+		priceLowSort.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				data.setAuctionRadioText(priceLowSort.getText());
+			}
+		});
+
+		popularSort.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				data.setAuctionRadioText(popularSort.getText());
+			}
+		});
 
 		Font font = new Font("맑은 고딕", Font.BOLD, 14);
 		deadlineSort.setFont(font);
