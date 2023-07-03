@@ -91,6 +91,7 @@ public class ListRepository{
 
 			    list.add(new EnrollParticipate(setnoParse, usernoParse, productnoParse, productname, imageIcon, endTime,
 			            finalprice));
+			    
 			}
 			
 			
@@ -210,48 +211,4 @@ public class ListRepository{
 		return list;
 	}
 
-	// 낙찰/유찰 리스트
-//	public List<Bidinfo> getBidinfoList(int userno) {
-//		Connection conn = null;
-//		PreparedStatement stmt = null;
-//		ResultSet rs = null;
-//		List<Bidinfo> list = new ArrayList<>();
-//		try {
-//			conn = DBUtil.getConnection();
-//			String sql = "SELECT B.successbidno, A.userno, C.productno, C.productname, C.image, D.finalprice, B.isbid FROM user A\r\n" + 
-//					"INNER JOIN successbidinfo B ON A.userno = B.userno\r\n" + 
-//					"INNER JOIN product C ON B.productno = C.productno\r\n" + 
-//					"INNER JOIN copy_auction D ON B.auctioncopyno = D.auctionno\r\n" + 
-//					"WHERE A.userno = ?";
-//			stmt = conn.prepareStatement(sql);
-//			stmt.setInt(1, userno);
-//			rs = stmt.executeQuery();
-//
-//			while (rs.next()) {
-//				Integer bidnoParse = rs.getObject("successbidno", Integer.class);
-//				Integer usernoParse = rs.getObject("userno", Integer.class);
-//				Integer productnoParse = rs.getObject("productno", Integer.class);
-//				String productname = rs.getString("productname");
-//				Blob imageBlob = rs.getBlob("image");
-//				
-//				byte[] imageBytes = imageBlob.getBytes(1, (int)imageBlob.length());
-//				ImageIcon imageIcon = setImage(imageBytes);
-//				
-//				int finalprice = rs.getInt("finalprice");
-//				
-//				int bidint = rs.getInt("isbid");
-//				boolean bidParse = (bidint == 1);
-//				
-//				list.add(new Bidinfo(bidnoParse, usernoParse, productnoParse, productname, imageIcon, finalprice, bidParse));
-//			}
-//			return list;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			DBUtil.close(rs);
-//			DBUtil.close(stmt);
-//			DBUtil.close(conn);
-//		}
-//		return null;
-//	}
 }

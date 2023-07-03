@@ -109,6 +109,8 @@ public class Timer implements ITimer {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		PreparedStatement stmtForDelete = null;
+		PreparedStatement stmtForRemove = null;
+		ResultSet rs = null;
 
 		try {
 			conn = DBUtil.getConnection();
@@ -121,8 +123,18 @@ public class Timer implements ITimer {
 					+ "    AND C.productno = B.productno\r\n" + ")");
 
 			stmt.executeUpdate();
-//			deadline 지난것은 successbidinfo로 보내고 auction에서 삭제 시킨다.
 
+//			auction 테이블에서 삭제 시키기 전에 cache에서 먼저 삭제시킴
+			stmtForRemove = conn.prepareStatement("SELECT auctionno FROM auction\r\n" + 
+					"WHERE deadline < CURRENT_TIMESTAMP();");
+			
+			rs = stmtForRemove.executeQuery();
+			while(rs.next()) {
+				int auctionno = rs.getInt("auctionno");
+				Cache.remove(auctionno);
+			}
+			
+//			deadline 지난것은 successbidinfo로 보내고 auction에서 삭제 시킨다.
 			stmtForDelete = conn.prepareStatement("DELETE FROM auction\r\n" + "WHERE deadline<current_timestamp();");
 
 			stmtForDelete.executeUpdate();
@@ -130,9 +142,12 @@ public class Timer implements ITimer {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmtForRemove);
 			DBUtil.close(stmtForDelete);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
+			
 		}
 	}
 

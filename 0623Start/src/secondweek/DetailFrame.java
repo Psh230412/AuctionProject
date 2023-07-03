@@ -117,6 +117,8 @@ public class DetailFrame extends JFrame {
 		}
 		ImageIcon imageIcon = new ImageIcon(imageBites);
 		lblImage.setIcon(iconSize(imageIcon));
+		
+//		
 
 		lblName = new JLabel("제품명");
 		lblName.setFont(lblName.getFont().deriveFont(16f));
@@ -354,6 +356,7 @@ public class DetailFrame extends JFrame {
 			prePriceLbl4.setText("");
 
 			List<Integer> priceList = timer.participateList(product.getAuctionNo(), conn);
+			
 			if (priceList != null) {
 				for (int i = 0; i < priceList.size(); i++) {
 					if (priceList.get(i) != null) {

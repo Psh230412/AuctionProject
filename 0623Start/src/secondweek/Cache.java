@@ -82,9 +82,9 @@ public class Cache {
 		return 0;
 	}
 
-	public static void put(int auctionId, byte[] imageBytes, byte[] imageBytes2, byte[] imageBytes3,
+	public static void put(int auctionno, byte[] imageBytes, byte[] imageBytes2, byte[] imageBytes3,
 			byte[] imageBytes4) {
-		if (!containsKey(auctionId)) {
+		if (!containsKey(auctionno)) {
 
 			List<byte[]> imageList = new ArrayList<byte[]>();
 			imageList.add(imageBytes);
@@ -92,14 +92,14 @@ public class Cache {
 			imageList.add(imageBytes3);
 			imageList.add(imageBytes4);
 
-			cacheMap.put(auctionId, imageList);
+			cacheMap.put(auctionno, imageList);
 		}
 	}
 
 //	auction 테이블에 최근 추가된 auctionno이 cachemap에 있는지 검증
-	public static boolean containsKey(int auctionId) {
+	public static boolean containsKey(int auctionno) {
 
-		return cacheMap.containsKey(auctionId);
+		return cacheMap.containsKey(auctionno);
 
 	}
 
@@ -107,8 +107,9 @@ public class Cache {
 		return cacheMap.get(key);
 	}
 
-	public void remove(Integer key) {
-		cacheMap.remove(key);
+	public static void remove(Integer auctionno) {
+		
+		cacheMap.remove(auctionno);
 	}
 
 	public void clear() {
