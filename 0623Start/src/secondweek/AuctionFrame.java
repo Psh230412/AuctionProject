@@ -39,6 +39,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
@@ -140,6 +144,32 @@ public class AuctionFrame extends JFrame {
 	private static JTextField rangeFront;
 	private static JTextField rangeBack;
 
+	class NumberOnlyFilter extends DocumentFilter {
+		private int maxLength; // 최대 입력 길이
+
+		public NumberOnlyFilter(int maxLength) {
+			this.maxLength = maxLength;
+		}
+
+		@Override
+		public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 삽입을 허용합니다.
+			if (string.matches("\\d+") && (fb.getDocument().getLength() + string.length()) <= maxLength) {
+				super.insertString(fb, offset, string, attr);
+			}
+		}
+
+		@Override
+		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
+			if (text.matches("\\d+") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
+				super.replace(fb, offset, length, text, attrs);
+			}
+		}
+	}
+
 	public AuctionFrame(DataBase data) {
 
 		for (int i = 0; i < lblImageArr.length; i++) {
@@ -158,9 +188,10 @@ public class AuctionFrame extends JFrame {
 		this.data = data;
 		timer = new Timer();
 		frame = new JFrame();
-		frame.setSize(1200, 900);
+		frame.setSize(1400, 900);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 		contentPane = new JPanel() {
 
 			@Override
@@ -169,7 +200,7 @@ public class AuctionFrame extends JFrame {
 
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-				Image image = toolkit.getImage("img/mainPage.png");
+				Image image = toolkit.getImage("img/mainPage_1.png");
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
@@ -182,13 +213,7 @@ public class AuctionFrame extends JFrame {
 		userLbl.setText(data.getCurrentUser().getName());
 		userLbl.setFont(new Font("돋움", Font.BOLD, 20));
 		userLbl.setForeground(Color.BLACK);
-		userLbl.setBounds(100, 110, 100, 25);
-		JLabel tailLbl1 = new JLabel();
-		tailLbl1.setText("님 환영합니다.");
-		tailLbl1.setFont(new Font("돋움", Font.PLAIN, 16));
-		tailLbl1.setForeground(Color.gray);
-		tailLbl1.setBounds(190, 112, 110, 25);
-		contentPane.add(tailLbl1);
+		userLbl.setBounds(250, 130, 100, 25);
 
 		JButton mypageBtn = new JButton("마이페이지");
 		mypageBtn.setBounds(433, 117, 118, 49);
@@ -216,12 +241,16 @@ public class AuctionFrame extends JFrame {
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 				data.setCheckBtn(false);
-				data.setSearchText("");
+				data.setSearchText(null);
 				data.setCategoryText(null);
 				data.setAuctionRadioText(null);
+				data.setPriceFrontText(null);
+				data.setPriceBackText(null);
 				new MypageFrame(data);
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 
@@ -252,16 +281,13 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(null, "로그아웃하시겠습니까?", "로그아웃", JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
-					data.setCheckBtn(false);
-					data.setSearchText("");
 					JOptionPane.showMessageDialog(null, "로그아웃되었습니다.");
 					DataBase newdata = new DataBase();
 					new LoginFrame(newdata);
-					frame.setVisible(false);
+					frame.dispose();
 				}
 			}
 		});
-
 		JButton exitBtn = new JButton("종료");
 		exitBtn.setBounds(720, 117, 118, 49);
 		ImageIcon imgexitBtn = new ImageIcon("img/main_exit_1.png");
@@ -289,25 +315,9 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(null, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
-					frame.setVisible(false);
+					frame.dispose();
 					System.exit(0);
 				}
-			}
-		});
-		JButton searchAll = new JButton("전체보기");
-		searchAll.setBounds(53, 100, 52, 40);
-		searchAll.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				data.setCheckBtn(false);
-				data.setSearchText("");
-				data.setIndexMainSearch(0);
-				searchTab.setText("");
-				deadlineSort.setSelected(true);
-				categoryCombo.setSelectedIndex(0);
-				isPriceRange = false;
-				rangeFront.setText("");
-				rangeBack.setText("");
 			}
 		});
 
@@ -333,7 +343,7 @@ public class AuctionFrame extends JFrame {
 			}
 		});
 
-		searchBtn.setBounds(452, 43, 108, 61);
+		searchBtn.setBounds(462, 43, 108, 61);
 		searchBtn.addActionListener(new ActionListener() {
 
 			@Override
@@ -353,7 +363,7 @@ public class AuctionFrame extends JFrame {
 		});
 
 		searchTab = new JTextField();
-		searchTab.setBounds(560, 52, 160, 25);
+		searchTab.setBounds(570, 52, 160, 25);
 
 		searchTab.requestFocus();
 		searchTab.addActionListener(new ActionListener() {
@@ -371,39 +381,38 @@ public class AuctionFrame extends JFrame {
 		contentPane.add(exitBtn);
 		contentPane.add(searchTab);
 		contentPane.add(searchBtn);
-		contentPane.add(searchAll);
 
 		JPanel pnl1 = new JPanel();
 		pnl1.setLayout(new FlowLayout());
 		pnl1.setOpaque(false);
-		pnl1.setBounds(35, 180, 200, 300);
+		pnl1.setBounds(280, 180, 200, 300);
 		JPanel pnl2 = new JPanel();
 		pnl2.setOpaque(false);
-		pnl2.setBounds(260, 180, 200, 300);
+		pnl2.setBounds(493, 180, 200, 300);
 		JPanel pnl3 = new JPanel();
 		pnl3.setOpaque(false);
-		pnl3.setBounds(492, 180, 200, 300);
+		pnl3.setBounds(712, 180, 200, 300);
 		JPanel pnl4 = new JPanel();
 		pnl4.setOpaque(false);
-		pnl4.setBounds(724, 180, 200, 300);
+		pnl4.setBounds(924, 180, 200, 300);
 		JPanel pnl5 = new JPanel();
 		pnl5.setOpaque(false);
-		pnl5.setBounds(960, 180, 200, 300);
+		pnl5.setBounds(1145, 180, 200, 300);
 		JPanel pnl6 = new JPanel();
 		pnl6.setOpaque(false);
-		pnl6.setBounds(35, 485, 200, 300);
+		pnl6.setBounds(280, 485, 200, 300);
 		JPanel pnl7 = new JPanel();
 		pnl7.setOpaque(false);
-		pnl7.setBounds(260, 485, 200, 300);
+		pnl7.setBounds(493, 485, 200, 300);
 		JPanel pnl8 = new JPanel();
 		pnl8.setOpaque(false);
-		pnl8.setBounds(492, 485, 200, 300);
+		pnl8.setBounds(712, 485, 200, 300);
 		JPanel pnl9 = new JPanel();
 		pnl9.setOpaque(false);
-		pnl9.setBounds(724, 485, 200, 300);
+		pnl9.setBounds(924, 485, 200, 300);
 		JPanel pnl10 = new JPanel();
 		pnl10.setOpaque(false);
-		pnl10.setBounds(960, 485, 200, 300);
+		pnl10.setBounds(1145, 485, 200, 300);
 
 		lblImage1 = lblImageArr[0];
 		pnl1.add(lblImage1);
@@ -601,6 +610,11 @@ public class AuctionFrame extends JFrame {
 
 							data.setCategoryText(categoryString);
 
+							if (isPriceRange) {
+								data.setPriceFrontText(rangeFront.getText());
+								data.setPriceBackText(rangeBack.getText());
+							}
+
 							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
@@ -618,6 +632,11 @@ public class AuctionFrame extends JFrame {
 
 							data.setCategoryText(categoryString);
 
+							if (isPriceRange) {
+								data.setPriceFrontText(rangeFront.getText());
+								data.setPriceBackText(rangeBack.getText());
+							}
+
 							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
@@ -627,7 +646,7 @@ public class AuctionFrame extends JFrame {
 		}
 
 		previousEnroll = new JButton("이전");
-		previousEnroll.setBounds(450, 810, 110, 50);
+		previousEnroll.setBounds(550, 810, 110, 50);
 		previousEnroll.setContentAreaFilled(false);
 		previousEnroll.setBorderPainted(false);
 		ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
@@ -654,11 +673,11 @@ public class AuctionFrame extends JFrame {
 		contentPane.add(previousEnroll);
 
 		lblNum1 = new JLabel(" - 1 - ");
-		lblNum1.setBounds(560, 805, 80, 40);
+		lblNum1.setBounds(670, 805, 80, 40);
 		contentPane.add(lblNum1);
 
 		nextEnroll = new JButton("다음");
-		nextEnroll.setBounds(660, 810, 110, 50);
+		nextEnroll.setBounds(760, 810, 110, 50);
 		nextEnroll.setContentAreaFilled(false);
 		nextEnroll.setBorderPainted(false);
 		ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
@@ -751,10 +770,17 @@ public class AuctionFrame extends JFrame {
 		returnBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				DataBase data = new DataBase(); // 수정
+
 				
-				new AuctionFrame(data);
-				frame.setVisible(false);
+				data.setCheckBtn(false);
+				data.setSearchText("");
+				data.setIndexMainSearch(0);
+				searchTab.setText("");
+				deadlineSort.setSelected(true);
+				categoryCombo.setSelectedIndex(0);
+				isPriceRange = false;
+				rangeFront.setText("");
+				rangeBack.setText("");
 			}
 		});
 
@@ -762,7 +788,7 @@ public class AuctionFrame extends JFrame {
 		String[] categories = { "분류별 검색", "전자제품", "식품", "자동차", "부동산", "귀금속", "잡화", "의류&악세서리", "운동기구", "가구&인테리어", "도서",
 				"기타" };
 		categoryCombo = new JComboBox<>(categories);
-		categoryCombo.setBounds(0, 0, 150, 25);
+		categoryCombo.setBounds(60, 270, 150, 25);
 
 		categoryCombo.addItemListener(new ItemListener() {
 			@Override
@@ -841,24 +867,54 @@ public class AuctionFrame extends JFrame {
 
 		Font font = new Font("맑은 고딕", Font.BOLD, 14);
 		deadlineSort.setFont(font);
-		deadlineSort.setBounds(140, 20, 200, 25);
+		deadlineSort.setBounds(65, 335, 200, 25);
+		deadlineSort.setOpaque(false);
 		priceHighSort.setFont(font);
-		priceHighSort.setBounds(140, 50, 200, 25);
+		priceHighSort.setBounds(65, 385, 200, 25);
+		priceHighSort.setOpaque(false);
 		priceLowSort.setFont(font);
-		priceLowSort.setBounds(140, 80, 200, 25);
+		priceLowSort.setBounds(65, 432, 200, 25);
+		priceLowSort.setOpaque(false);
 		popularSort.setFont(font);
-		popularSort.setBounds(140, 110, 200, 25);
+		popularSort.setBounds(65, 482, 200, 25);
+		popularSort.setOpaque(false);
 
 		// 가격범위 검색
+
 		rangeFront = new JTextField();
-		rangeFront.setBounds(800, 100, 160, 25);
+		rangeFront.setBounds(65, 620, 160, 25);
+
+		PlainDocument docFront = (PlainDocument) rangeFront.getDocument();
+		docFront.setDocumentFilter(new NumberOnlyFilter(15));
 
 		rangeBack = new JTextField();
-		rangeBack.setBounds(1000, 100, 160, 25);
+		rangeBack.setBounds(65, 688, 160, 25);
+
+		PlainDocument docBack = (PlainDocument) rangeBack.getDocument();
+		docBack.setDocumentFilter(new NumberOnlyFilter(15));
 
 		JButton priceRange = new JButton("검색");
-		priceRange.setBounds(900, 130, 80, 25);
+		priceRange.setBounds(60, 750, 195, 58);
+		ImageIcon imgsearchType = new ImageIcon("img/searchBtn1_1.png");
+		priceRange.setContentAreaFilled(false);
+		priceRange.setBorderPainted(false);
+		priceRange.setIcon(imgsearchType);
 
+		priceRange.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgsearchType = new ImageIcon("img/searchBtn1_1.png");
+				priceRange.setIcon(imgsearchType);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgsearchType = new ImageIcon("img/searchBtn1.png");
+				priceRange.setIcon(imgsearchType);
+
+			}
+		});
 		priceRange.addActionListener(new ActionListener() {
 
 			@Override
@@ -866,6 +922,14 @@ public class AuctionFrame extends JFrame {
 				isPriceRange = true;
 			}
 		});
+
+		if (data.getPriceFrontText() != null) {
+			isPriceRange = true;
+			rangeFront.setText(data.getPriceFrontText());
+			rangeBack.setText(data.getPriceBackText());
+		} else {
+			isPriceRange = false;
+		}
 
 		contentPane.add(returnBtn);
 		contentPane.add(pnl1);
@@ -932,16 +996,16 @@ public class AuctionFrame extends JFrame {
 	}
 
 	public static void resetLabel() {
-		lblImage1.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage2.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage3.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage4.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage5.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage6.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage7.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage8.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage9.setIcon(new ImageIcon("img/임시이미지.png"));
-		lblImage10.setIcon(new ImageIcon("img/임시이미지.png"));
+		lblImage1.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage2.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage3.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage4.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage5.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage6.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage7.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage8.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage9.setIcon(new ImageIcon("img/임시이미지.jpg"));
+		lblImage10.setIcon(new ImageIcon("img/임시이미지.jpg"));
 
 		Font font = new Font("맑은 고딕", Font.BOLD, 12);
 
@@ -1036,6 +1100,7 @@ public class AuctionFrame extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
+		
 
 			resetLabel();
 

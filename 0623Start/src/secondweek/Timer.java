@@ -42,6 +42,7 @@ public class Timer implements ITimer {
 				int productNo = rs.getInt("productno");
 				int auctionNo = rs.getInt("auctionno");
 				String productName = rs.getString("productname");
+				int initialPrice = rs.getInt("initialprice");
 				int productPriceNow = rs.getInt("finalprice");
 				String productContent = rs.getString("detailinfo");
 				Blob image = rs.getBlob("image");
@@ -52,8 +53,8 @@ public class Timer implements ITimer {
 				int popularity = rs.getInt("popularity");
 				String category = rs.getString("category");
 
-				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
-						startTime, endTime, image, popularity, category));
+				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow,
+						productContent, startTime, endTime, image, popularity, category));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -74,12 +75,16 @@ public class Timer implements ITimer {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("SELECT *\r\n" + "FROM auction AS C\r\n"
-					+ "RIGHT JOIN (SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image, B.setno \r\n"
-					+ "			FROM product AS A\r\n" + "			LEFT JOIN enrollmentinfo AS B \r\n"
-					+ "            ON A.productno = B.productno) AS D\r\n" + "ON C.setno = D.setno\r\n"
-					+ "WHERE C.deadline > current_timestamp()\r\n" + "AND productname LIKE ?\r\n"
-					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
+			stmt = conn.prepareStatement("SELECT *\r\n" + "FROM auction AS C\r\n" + "RIGHT JOIN (\r\n"
+					+ "    SELECT A.productno, A.productname, A.initialprice, A.detailinfo, A.image, A.category, B.setno\r\n"
+					+ "    FROM product AS A\r\n" + "    LEFT JOIN enrollmentinfo AS B ON A.productno = B.productno\r\n"
+					+ ") AS D ON C.setno = D.setno\r\n" + "LEFT JOIN (\r\n"
+					+ "    SELECT auctionno, COUNT(*) AS popularity\r\n" + "    FROM (\r\n"
+					+ "        SELECT DISTINCT auctionno, userno\r\n" + "        FROM participate\r\n"
+					+ "        WHERE participateprice > 0\r\n" + "    ) AS A\r\n" + "    GROUP BY auctionno\r\n"
+					+ ") AS E ON C.auctionno = E.auctionno\r\n" + "WHERE C.deadline > current_timestamp()\r\n"
+					+ "AND productname like ?\r\n"
+					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline);");
 			stmt.setString(1, "%" + searchObject + "%");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -87,6 +92,7 @@ public class Timer implements ITimer {
 				int productNo = rs.getInt("productno");
 				int auctionNo = rs.getInt("auctionno");
 				String productName = rs.getString("productname");
+				int initialPrice = rs.getInt("initialprice");
 				int productPriceNow = rs.getInt("finalprice");
 				String productContent = rs.getString("detailinfo");
 				Blob image = rs.getBlob("image");
@@ -94,9 +100,11 @@ public class Timer implements ITimer {
 				LocalDateTime startTime = timestamp.toLocalDateTime();
 				Timestamp timestamp2 = rs.getTimestamp("deadline");
 				LocalDateTime endTime = timestamp2.toLocalDateTime();
+				int popularity = rs.getInt("popularity");
+				String category = rs.getString("category");
 
-				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent,
-						startTime, endTime, image));
+				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow,
+						productContent, startTime, endTime, image, popularity, category));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

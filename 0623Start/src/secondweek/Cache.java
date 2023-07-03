@@ -107,8 +107,7 @@ public class Cache {
 
 				if (!ProductCacheMap.containsKey(productNo)) {
 
-					ProductCacheMap.put(productNo, new Product(setNo, productNo, auctionNo, productName,
-							productPriceNow, productContent, startTime, endTime, image, popularity, category));
+					ProductCacheMap.put(productNo, new Product(setNo, productNo, auctionNo, productName, productPriceNow, productContent, startTime, endTime, image, popularity, category));
 				}
 			}
 
@@ -158,8 +157,7 @@ public class Cache {
 
 				if (!ProductCacheMap.containsKey(productNo)) {
 
-					ProductCacheMap.put(productNo, new Product(setNo, productNo, auctionNo, productName,
-							productPriceNow, productContent, startTime, endTime, image, popularity, category));
+					ProductCacheMap.put(productNo, new Product(setNo, productNo, auctionNo, productName,productPriceNow, productContent, startTime, endTime, image, popularity, category));
 				}
 
 			}
