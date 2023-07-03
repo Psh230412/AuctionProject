@@ -29,7 +29,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
-import javax.swing.text.DocumentFilter.FilterBypass;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
@@ -45,7 +44,6 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import dbutil.DBUtil;
-import secondweek.AuctionFrame.NumberOnlyFilter;
 
 public class DetailFrame extends JFrame {
 	private Scheduler scheduler;
@@ -73,7 +71,7 @@ public class DetailFrame extends JFrame {
 	private JLabel lblisContinue;
 
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
-	
+
 	class NumberOnlyFilter extends DocumentFilter {
 		private int maxLength; // 최대 입력 길이
 
@@ -109,7 +107,7 @@ public class DetailFrame extends JFrame {
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
-		 frame.setResizable(false);
+		frame.setResizable(false);
 		contentPane = new JPanel() {
 
 			@Override
@@ -217,7 +215,7 @@ public class DetailFrame extends JFrame {
 					Product product = data.getProduct();
 					String bid = priceTF.getText();
 
-					if (PriceMin(product.getProductPriceNow()) > Integer.parseInt(bid)) {
+					if (PriceMin(product.getProductPriceNow(), product.getInitialPrice()) > Integer.parseInt(bid)) {
 						lblMessage.setForeground(Color.RED);
 						lblMessage.setText("입찰가격은 현재가격의 105% 이상이어야 합니다.");
 					} else if (!bidMin(bid)) {
@@ -308,7 +306,7 @@ public class DetailFrame extends JFrame {
 		contentPane.add(participateBtn);
 		contentPane.add(priceTF);
 		contentPane.add(backButton);
-		
+
 		contentPane.add(lblisContinue);
 
 		try {
@@ -342,7 +340,10 @@ public class DetailFrame extends JFrame {
 		return (result % 100 == 0);
 	}
 
-	public static int PriceMin(int price) {
+	public static int PriceMin(int price, int initialPrice) {
+		if (price == initialPrice) {
+			return price;
+		}
 		double result = price * 1.05;
 		int roundedResult = (int) Math.ceil(result / 100) * 100;
 		return roundedResult;
@@ -371,7 +372,7 @@ public class DetailFrame extends JFrame {
 			String result1 = duration(product.getEndTime(), now);
 			lblTime.setText(result1);
 			lblPrice.setText(formatInt(product.getProductPriceNow()));
-			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow())));
+			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow(), product.getInitialPrice())));
 
 			prePriceLbl1.setText("");
 			prePriceLbl2.setText("");
