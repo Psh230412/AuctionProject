@@ -846,7 +846,7 @@ public class MypageFrame extends JFrame {
 
 							lblImage11.setIcon(iconSize(enroll.getImage()));
 
-							String result11 = durationFailed(enroll.getEndTime(), now);
+							String result11 = durationFailed(enroll.getEndTime(), now, enroll.getAuctionno(), repo);
 							lblTime11.setText(result11);
 							lblTime11.setPreferredSize(new Dimension(120, lblTime11.getPreferredSize().height));
 
@@ -860,7 +860,7 @@ public class MypageFrame extends JFrame {
 
 							lblImage12.setIcon(iconSize(enroll.getImage()));
 
-							String result12 = durationFailed(enroll.getEndTime(), now);
+							String result12 = durationFailed(enroll.getEndTime(), now, enroll.getAuctionno(), repo);
 							lblTime12.setText(result12);
 							lblTime12.setPreferredSize(new Dimension(120, lblTime12.getPreferredSize().height));
 
@@ -874,7 +874,7 @@ public class MypageFrame extends JFrame {
 
 							lblImage13.setIcon(iconSize(enroll.getImage()));
 
-							String result13 = durationFailed(enroll.getEndTime(), now);
+							String result13 = durationFailed(enroll.getEndTime(), now, enroll.getAuctionno(), repo);
 							lblTime13.setText(result13);
 							lblTime13.setPreferredSize(new Dimension(120, lblTime13.getPreferredSize().height));
 
@@ -888,7 +888,7 @@ public class MypageFrame extends JFrame {
 
 							lblImage14.setIcon(iconSize(enroll.getImage()));
 
-							String result14 = durationFailed(enroll.getEndTime(), now);
+							String result14 = durationFailed(enroll.getEndTime(), now, enroll.getAuctionno(), repo);
 							lblTime14.setText(result14);
 							lblTime14.setPreferredSize(new Dimension(120, lblTime14.getPreferredSize().height));
 
@@ -902,7 +902,7 @@ public class MypageFrame extends JFrame {
 
 							lblImage15.setIcon(iconSize(enroll.getImage()));
 
-							String result15 = durationFailed(enroll.getEndTime(), now);
+							String result15 = durationFailed(enroll.getEndTime(), now, enroll.getAuctionno(), repo);
 							lblTime15.setText(result15);
 							lblTime15.setPreferredSize(new Dimension(120, lblTime15.getPreferredSize().height));
 
@@ -1023,14 +1023,24 @@ public class MypageFrame extends JFrame {
 		}
 	}
 
-	public static String durationFailed(LocalDateTime targetDateTime, LocalDateTime now) {
+	public static String durationFailed(LocalDateTime targetDateTime, LocalDateTime now, int auctionno,
+			ListRepository repo) {
 		Duration duration = Duration.between(now, targetDateTime);
+		List<Integer> list = repo.getIsBid();
+
 		long days = duration.toDays();
 		long hours = duration.toHours() % 24;
 		long minutes = duration.toMinutes() % 60;
 		long seconds = duration.getSeconds() % 60;
 
 		if (duration.isNegative()) {
+			if (list.size() != 0) {
+				for (int i = 0; i < list.size(); i++) {
+					if (list.get(i) == auctionno) {
+						return "낙찰";
+					}
+				}
+			}
 			return "유찰";
 		} else {
 			return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
