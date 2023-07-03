@@ -235,6 +235,7 @@ public class MypageFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		contentPane = new JPanel() {
 
@@ -244,7 +245,7 @@ public class MypageFrame extends JFrame {
 
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-				Image image = toolkit.getImage("img/myPage.png");
+				Image image = toolkit.getImage("img/myPage_1.png");
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
@@ -286,9 +287,9 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ChangeInformationFrame(data);
+				frame.dispose();
 				data.setIndex(0);
 				data.setIndexPar(0);
-				frame.setVisible(false);
 			}
 		});
 		contentPane.add(resetBtn);
@@ -321,9 +322,9 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new RegistFrame(data);
+				frame.dispose();
 				data.setIndex(0);
 				data.setIndexPar(0);
-				frame.setVisible(false);
 			}
 		});
 
@@ -357,9 +358,9 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AuctionFrame(data);
+				frame.dispose();
 				data.setIndex(0);
 				data.setIndexPar(0);
-				frame.setVisible(false);
 			}
 		});
 

@@ -87,6 +87,8 @@ public class SignupFrame extends JFrame {
 		JFrame frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 
 		signupPanel = new JPanel() {
 			@Override
@@ -99,19 +101,15 @@ public class SignupFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-		frame.setResizable(false);
+	
 		signupPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(signupPanel);
 		signupPanel.setLayout(null);
 
 		// -----------------------------------------------------------------------------
-		// JLabel nameLbl = new JLabel("이름");
-				// nameLbl.setBounds(100, 0, 60, 21);
 				nameTF = new JTextField(10);
 				nameTF.setBounds(650, 70, 240, 25);
 
-				// JLabel nicknameLbl = new JLabel("닉네임");
-				// nicknameLbl.setBounds(100, 50, 60, 21);
 				nicknameTF = new JTextField(10);
 				nicknameTF.setBounds(650, 168, 240, 25);
 
@@ -150,8 +148,6 @@ public class SignupFrame extends JFrame {
 					}
 				});
 
-				// JLabel phoneLbl = new JLabel("전화번호");
-				// phoneLbl.setBounds(600, 150, 60, 21);
 				telFrontTF = new JTextField(5);
 				telFrontTF.setBounds(650, 225, 100, 25);
 				telCenterTF = new JTextField(5);
@@ -166,9 +162,6 @@ public class SignupFrame extends JFrame {
 				PlainDocument docCenter3 = (PlainDocument) telBackTF.getDocument();
 				docCenter3.setDocumentFilter(new NumberOnlyFilter(4));
 
-				// JLabel birthLbl = new JLabel("생년월일");
-				// birthLbl.setBounds(100, 200, 80, 21);
-				// signupPanel.add(birthLbl);
 				yearCombo.setBounds(650, 370, 100, 25);
 				signupPanel.add(yearCombo);
 				monthCombo.setBounds(780, 370, 100, 25);
@@ -176,61 +169,25 @@ public class SignupFrame extends JFrame {
 				dayCombo.setBounds(910, 370, 100, 25);
 				signupPanel.add(dayCombo);
 
-				// JLabel genderLbl = new JLabel("성별");
-				// genderLbl.setBounds(100, 300, 80, 21);
-				ImageIcon imgwomanlbl1 = new ImageIcon("img/girl.png");
-				ImageIcon imgmanlbl1 = new ImageIcon("img/man.png");
-				ImageIcon imgmanlbl = new ImageIcon("img/man_1.png");
-				ImageIcon imgwomanlbl = new ImageIcon("img/girl_1.png");
+		
+				ImageIcon imgmanlbl = new ImageIcon("img/man2.png");
+				ImageIcon imgwomanlbl = new ImageIcon("img/girl2.png");
 				JRadioButton manBtn = new JRadioButton("남성");
-				manBtn.setContentAreaFilled(false);
-				manBtn.setBorderPainted(false);
-				manBtn.setBounds(600, 261, 50, 50);
+				manBtn.setContentAreaFilled(true);
+				manBtn.setBorderPainted(true);
+				manBtn.setBounds(602, 268, 50, 40);
 				manBtn.setIcon(imgmanlbl);
-				manBtn.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseExited(MouseEvent e) {
-
-						manBtn.setIcon(imgmanlbl);
-
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent e) {
-
-						manBtn.setIcon(imgmanlbl1);
-
-					}
-				});
 
 				JRadioButton womanBtn = new JRadioButton("여성");
-				womanBtn.setContentAreaFilled(false);
-				womanBtn.setBorderPainted(false);
-
+				womanBtn.setContentAreaFilled(true);
+				womanBtn.setBorderPainted(true);
 				womanBtn.setIcon(imgwomanlbl);
-				womanBtn.setBounds(650, 261, 50, 50);
-				womanBtn.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseExited(MouseEvent e) {
-
-						womanBtn.setIcon(imgwomanlbl);
-
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent e) {
-
-						womanBtn.setIcon(imgwomanlbl1);
-
-					}
-				});
+				womanBtn.setBounds(660, 268, 50, 40);
 
 				ButtonGroup radioGroup = new ButtonGroup();
 				radioGroup.add(manBtn);
 				radioGroup.add(womanBtn);
-
-				// JLabel addressLbl = new JLabel("주소");
-				// addressLbl.setBounds(100, 350, 100, 25);
+				
 				bigAreaCombo = new JComboBox<>();
 				bigAreaCombo.setBounds(650, 325, 100, 25);
 				mediumAreaCombo = new JComboBox<>();
@@ -284,23 +241,16 @@ public class SignupFrame extends JFrame {
 			}
 		});
 
-		// signupPanel.add(nameLbl);
+	
 				signupPanel.add(nameTF);
-
 				signupPanel.add(nicknameTF);
-				// signupPanel.add(nicknameLbl);
 				signupPanel.add(nicknameInfoLbl);
 				signupPanel.add(nicknameIdentifyBtn);
-
-				// signupPanel.add(phoneLbl);
 				signupPanel.add(telFrontTF);
 				signupPanel.add(telCenterTF);
 				signupPanel.add(telBackTF);
-				// signupPanel.add(genderLbl);
 				signupPanel.add(manBtn);
 				signupPanel.add(womanBtn);
-
-				// signupPanel.add(addressLbl);
 				signupPanel.add(bigAreaCombo);
 				signupPanel.add(mediumAreaCombo);
 				signupPanel.add(smallAreaCombo);
@@ -607,7 +557,7 @@ public class SignupFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "회원가입되었습니다.");
 						DataBase data = new DataBase();
 						new LoginFrame(data);
-						frame.setVisible(false);
+						frame.dispose();
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.아이디비번");
@@ -644,7 +594,7 @@ public class SignupFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				DataBase data = new DataBase();
 				new LoginFrame(data);
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 
