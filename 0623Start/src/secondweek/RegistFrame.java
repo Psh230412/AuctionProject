@@ -43,8 +43,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.DocumentFilter.FilterBypass;
 
 import dbutil.DBUtil;
+import secondweek.AuctionFrame.NumberOnlyFilter;
 
 public class RegistFrame extends JFrame {
 	private JPanel contentPane;
@@ -59,6 +65,32 @@ public class RegistFrame extends JFrame {
 	private JLabel[] fileSizeLabels = new JLabel[MAX_IMAGES];
 
 	private JLabel mainImageLabel;
+	
+	class NumberOnlyFilter extends DocumentFilter {
+		private int maxLength; // 최대 입력 길이
+
+		public NumberOnlyFilter(int maxLength) {
+			this.maxLength = maxLength;
+		}
+
+		@Override
+		public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 삽입을 허용합니다.
+			if (string.matches("\\d+") && (fb.getDocument().getLength() + string.length()) <= maxLength) {
+				super.insertString(fb, offset, string, attr);
+			}
+		}
+
+		@Override
+		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
+			if (text.matches("\\d+") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
+				super.replace(fb, offset, length, text, attrs);
+			}
+		}
+	}
 
 	public RegistFrame(DataBase data) {
 
@@ -574,6 +606,9 @@ public class RegistFrame extends JFrame {
 		productPriceInput = new JTextField();
 		productPriceInput.setColumns(10);
 		productPriceInput.setBounds(825, 170, 200, 30);
+		PlainDocument docPrice = (PlainDocument) productPriceInput.getDocument();
+		docPrice.setDocumentFilter(new NumberOnlyFilter(15));
+		
 		contentPane.add(productPriceInput);
 
 		setLocationRelativeTo(null);

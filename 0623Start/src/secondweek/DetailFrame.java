@@ -25,6 +25,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.DocumentFilter.FilterBypass;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
@@ -40,6 +45,7 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import dbutil.DBUtil;
+import secondweek.AuctionFrame.NumberOnlyFilter;
 
 public class DetailFrame extends JFrame {
 	private Scheduler scheduler;
@@ -67,6 +73,32 @@ public class DetailFrame extends JFrame {
 	private JLabel lblisContinue;
 
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
+	
+	class NumberOnlyFilter extends DocumentFilter {
+		private int maxLength; // 최대 입력 길이
+
+		public NumberOnlyFilter(int maxLength) {
+			this.maxLength = maxLength;
+		}
+
+		@Override
+		public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 삽입을 허용합니다.
+			if (string.matches("\\d+") && (fb.getDocument().getLength() + string.length()) <= maxLength) {
+				super.insertString(fb, offset, string, attr);
+			}
+		}
+
+		@Override
+		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
+			if (text.matches("\\d+") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
+				super.replace(fb, offset, length, text, attrs);
+			}
+		}
+	}
 
 	public DetailFrame(DataBase data, Product product) {
 
@@ -147,6 +179,8 @@ public class DetailFrame extends JFrame {
 		lblisContinue.setBounds(200, 700, 400, 35);
 
 		JTextField priceTF = new JTextField(10);
+		PlainDocument docPrice = (PlainDocument) priceTF.getDocument();
+		docPrice.setDocumentFilter(new NumberOnlyFilter(15));
 		priceTF.setBounds(850, 347, 150, 30);
 
 		JButton participateBtn = new JButton();

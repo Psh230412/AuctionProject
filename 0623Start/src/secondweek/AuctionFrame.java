@@ -37,6 +37,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
@@ -137,6 +141,32 @@ public class AuctionFrame extends JFrame {
 	private static boolean isPriceRange;
 	private static JTextField rangeFront;
 	private static JTextField rangeBack;
+	
+	class NumberOnlyFilter extends DocumentFilter {
+		private int maxLength; // 최대 입력 길이
+
+		public NumberOnlyFilter(int maxLength) {
+			this.maxLength = maxLength;
+		}
+
+		@Override
+		public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 삽입을 허용합니다.
+			if (string.matches("\\d+") && (fb.getDocument().getLength() + string.length()) <= maxLength) {
+				super.insertString(fb, offset, string, attr);
+			}
+		}
+
+		@Override
+		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+				throws BadLocationException {
+			// 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
+			if (text.matches("\\d+") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
+				super.replace(fb, offset, length, text, attrs);
+			}
+		}
+	}
 
 	public AuctionFrame(DataBase data) {
 
@@ -841,11 +871,19 @@ public class AuctionFrame extends JFrame {
 		popularSort.setBounds(140, 110, 200, 25);
 
 		// 가격범위 검색
+		
+		
 		rangeFront = new JTextField();
 		rangeFront.setBounds(800, 100, 160, 25);
+		
+		PlainDocument docFront = (PlainDocument) rangeFront.getDocument();
+		docFront.setDocumentFilter(new NumberOnlyFilter(15));
 
 		rangeBack = new JTextField();
 		rangeBack.setBounds(1000, 100, 160, 25);
+		
+		PlainDocument docBack = (PlainDocument) rangeBack.getDocument();
+		docBack.setDocumentFilter(new NumberOnlyFilter(15));
 
 		JButton priceRange = new JButton("검색");
 		priceRange.setBounds(900, 130, 80, 25);
