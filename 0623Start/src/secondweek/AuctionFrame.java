@@ -9,27 +9,30 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Blob;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -121,7 +124,22 @@ public class AuctionFrame extends JFrame {
 
 	private static List<Auction> list;
 
+	private static JComboBox categoryCombo;
+	private static String categoryString;
+
+	private static List<Product> testList;
+
+	private static JRadioButton deadlineSort;
+	private static JRadioButton priceHighSort;
+	private static JRadioButton priceLowSort;
+	private static JRadioButton popularSort;
+
+	private static boolean isPriceRange;
+	private static JTextField rangeFront;
+	private static JTextField rangeBack;
+
 	public AuctionFrame(DataBase data) {
+
 		for (int i = 0; i < lblImageArr.length; i++) {
 			lblImageArr[i] = new JLabel();
 		}
@@ -192,7 +210,7 @@ public class AuctionFrame extends JFrame {
 
 			}
 		});
-		
+
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -204,7 +222,7 @@ public class AuctionFrame extends JFrame {
 		});
 
 		JButton logoutBtn = new JButton("로그아웃");
-		logoutBtn.setBounds(580,  117, 118, 49);
+		logoutBtn.setBounds(580, 117, 118, 49);
 		ImageIcon imglogoutBtn = new ImageIcon("img/main_logout_1.png");
 		logoutBtn.setContentAreaFilled(false);
 		logoutBtn.setBorderPainted(false);
@@ -241,7 +259,7 @@ public class AuctionFrame extends JFrame {
 		});
 
 		JButton exitBtn = new JButton("종료");
-		exitBtn.setBounds(720,  117, 118, 49);
+		exitBtn.setBounds(720, 117, 118, 49);
 		ImageIcon imgexitBtn = new ImageIcon("img/main_exit_1.png");
 		exitBtn.setContentAreaFilled(false);
 		exitBtn.setBorderPainted(false);
@@ -281,6 +299,11 @@ public class AuctionFrame extends JFrame {
 				data.setSearchText("");
 				data.setIndexMainSearch(0);
 				searchTab.setText("");
+				deadlineSort.setSelected(true);
+				categoryCombo.setSelectedIndex(0);
+				isPriceRange = false;
+				rangeFront.setText("");
+				rangeBack.setText("");
 			}
 		});
 
@@ -305,7 +328,7 @@ public class AuctionFrame extends JFrame {
 
 			}
 		});
-		
+
 		searchBtn.setBounds(452, 43, 108, 61);
 		searchBtn.addActionListener(new ActionListener() {
 
@@ -484,38 +507,38 @@ public class AuctionFrame extends JFrame {
 
 		JButton viewProductBtn1 = new JButton();
 		contentPane.add(viewProductBtn1);
-	
+
 		JButton viewProductBtn2 = new JButton();
 		contentPane.add(viewProductBtn2);
-	
+
 		JButton viewProductBtn3 = new JButton();
 		contentPane.add(viewProductBtn3);
-	
+
 		JButton viewProductBtn4 = new JButton();
 		contentPane.add(viewProductBtn4);
-	
+
 		JButton viewProductBtn5 = new JButton();
-	
+
 		contentPane.add(viewProductBtn5);
 
 		JButton viewProductBtn6 = new JButton();
-	
+
 		contentPane.add(viewProductBtn6);
 
 		JButton viewProductBtn7 = new JButton();
-	
+
 		contentPane.add(viewProductBtn7);
-	
+
 		JButton viewProductBtn8 = new JButton();
 
 		contentPane.add(viewProductBtn8);
 
 		JButton viewProductBtn9 = new JButton();
-	
+
 		contentPane.add(viewProductBtn9);
-	
+
 		JButton viewProductBtn10 = new JButton();
-	
+
 		contentPane.add(viewProductBtn10);
 
 		btns = new JButton[] { viewProductBtn1, viewProductBtn2, viewProductBtn3, viewProductBtn4, viewProductBtn5,
@@ -523,48 +546,53 @@ public class AuctionFrame extends JFrame {
 
 		for (int i = 0; i < btns.length; i++) {
 			int index = i;
-	
-			btns[i].setContentAreaFilled(false); 
+
+			btns[i].setContentAreaFilled(false);
 			btns[i].setBorderPainted(false);
-			ImageIcon imgbid= new ImageIcon("img/godetail.png");
+			ImageIcon imgbid = new ImageIcon("img/godetail.png");
 			btns[i].setIcon(imgbid);
 			btns[i].addMouseListener(new MouseAdapter() {
-			
-			    @Override
-			    public void mouseExited(MouseEvent e) {
-				ImageIcon imgbid = new ImageIcon("img/godetail.png");
-				btns[index].setIcon(imgbid);
-				
-			    }
-			    
-			    @Override
-			    public void mouseEntered(MouseEvent e) {
-				ImageIcon imgbid = new ImageIcon("img/godetail_1.png");
-				btns[index].setIcon(imgbid);
-				
-			    }
-		 
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					ImageIcon imgbid = new ImageIcon("img/godetail.png");
+					btns[index].setIcon(imgbid);
+
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					ImageIcon imgbid = new ImageIcon("img/godetail_1.png");
+					btns[index].setIcon(imgbid);
+
+				}
+
 			});
-			
+
 			btns[i].addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (data.isCheckBtn()) {
 						List<Product> products = timer.selectSearchProduct(data.getSearchText());
 						if (products.size() >= index) {
-							Product product = products.get(list.get(index).getIndex());
+							Product product = testList.get(index);
 							data.setProduct(product);
-							new DetailFrame(data, list.get(index).getAuctionNo());
+							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
 
 					} else {
-						List<Product> products = timer.selectProduct();
-						if (products.size() >= index) {
-							Product product = products.get(list.get(index).getIndex());
+						// 옥션 리스트
+//						List<Product> products = timer.selectProduct();
+
+						// List<Product> testList;
+//						testList.get(index)
+
+						if (testList.size() >= index) {
+							Product product = testList.get(index);
 							data.setProduct(product);
-							new DetailFrame(data, list.get(index).getAuctionNo());
+							new DetailFrame(data, product);
 							frame.setVisible(false);
 						}
 					}
@@ -574,27 +602,27 @@ public class AuctionFrame extends JFrame {
 
 		previousEnroll = new JButton("이전");
 		previousEnroll.setBounds(450, 810, 110, 50);
-		previousEnroll.setContentAreaFilled(false); 
+		previousEnroll.setContentAreaFilled(false);
 		previousEnroll.setBorderPainted(false);
 		ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
 		previousEnroll.setIcon(imgpreviousEnroll);
-	
+
 		previousEnroll.addMouseListener(new MouseAdapter() {
-		
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
-			previousEnroll.setIcon(imgpreviousEnroll);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgpreviousEnroll = new ImageIcon("img/previous.png");
-			previousEnroll.setIcon(imgpreviousEnroll);
-			
-		    }
-	 
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgpreviousEnroll = new ImageIcon("img/previous_1.png");
+				previousEnroll.setIcon(imgpreviousEnroll);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgpreviousEnroll = new ImageIcon("img/previous.png");
+				previousEnroll.setIcon(imgpreviousEnroll);
+
+			}
+
 		});
 
 		contentPane.add(previousEnroll);
@@ -605,27 +633,27 @@ public class AuctionFrame extends JFrame {
 
 		nextEnroll = new JButton("다음");
 		nextEnroll.setBounds(660, 810, 110, 50);
-		nextEnroll.setContentAreaFilled(false); 
+		nextEnroll.setContentAreaFilled(false);
 		nextEnroll.setBorderPainted(false);
 		ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
 		nextEnroll.setIcon(imgnextEnroll);
-	
+
 		nextEnroll.addMouseListener(new MouseAdapter() {
-		
-		    @Override
-		    public void mouseExited(MouseEvent e) {
-			ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
-			nextEnroll.setIcon(imgnextEnroll);
-			
-		    }
-		    
-		    @Override
-		    public void mouseEntered(MouseEvent e) {
-			ImageIcon imgnextEnroll = new ImageIcon("img/next.png");
-			nextEnroll.setIcon(imgnextEnroll);
-			
-		    }
-	 
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgnextEnroll = new ImageIcon("img/next_1.png");
+				nextEnroll.setIcon(imgnextEnroll);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgnextEnroll = new ImageIcon("img/next.png");
+				nextEnroll.setIcon(imgnextEnroll);
+
+			}
+
 		});
 		contentPane.add(nextEnroll);
 
@@ -648,7 +676,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (data.isCheckBtn()) {
-					if (((timer.selectSearchProduct(data.getSearchText()).size() - 1) / 10) > (data.getIndexMainSearch() / 10)) {
+					if (((timer.selectSearchProduct(data.getSearchText()).size() - 1) / 10) > (data.getIndexMainSearch()
+							/ 10)) {
 						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
 					}
 				} else {
@@ -669,7 +698,7 @@ public class AuctionFrame extends JFrame {
 		pnl8.add(viewProductBtn8);
 		pnl9.add(viewProductBtn9);
 		pnl10.add(viewProductBtn10);
-		
+
 		JButton returnBtn = new JButton();
 		returnBtn.setBounds(750, 46, 130, 50);
 		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
@@ -696,9 +725,69 @@ public class AuctionFrame extends JFrame {
 		returnBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DataBase data = new DataBase();
+//				DataBase data = new DataBase(); // 수정
 				new AuctionFrame(data);
 				frame.setVisible(false);
+			}
+		});
+
+		// 카테고리 추가 수정
+		String[] categories = { "분류별 검색", "전자제품", "식품", "자동차", "부동산", "귀금속", "잡화", "의류&악세서리", "운동기구", "가구&인테리어", "도서",
+				"기타" };
+		categoryCombo = new JComboBox<>(categories);
+		categoryCombo.setBounds(0, 0, 150, 25);
+
+		categoryCombo.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					categoryString = (String) categoryCombo.getSelectedItem();
+				}
+			}
+		});
+		categoryCombo.setSelectedIndex(0);
+		testList = new ArrayList<>();
+		categoryString = null;
+
+		// 정렬 라디오버튼
+		deadlineSort = new JRadioButton("마감시간 순 정렬");
+		priceHighSort = new JRadioButton("가격 높은 순 정렬");
+		priceLowSort = new JRadioButton("가격 낮은 순 정렬");
+		popularSort = new JRadioButton("인기 순 정렬");
+
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(deadlineSort);
+		buttonGroup.add(priceHighSort);
+		buttonGroup.add(priceLowSort);
+		buttonGroup.add(popularSort);
+
+		deadlineSort.setSelected(true);
+
+		Font font = new Font("맑은 고딕", Font.BOLD, 14);
+		deadlineSort.setFont(font);
+		deadlineSort.setBounds(140, 20, 200, 25);
+		priceHighSort.setFont(font);
+		priceHighSort.setBounds(140, 50, 200, 25);
+		priceLowSort.setFont(font);
+		priceLowSort.setBounds(140, 80, 200, 25);
+		popularSort.setFont(font);
+		popularSort.setBounds(140, 110, 200, 25);
+
+		// 가격범위 검색
+		rangeFront = new JTextField();
+		rangeFront.setBounds(800, 100, 160, 25);
+
+		rangeBack = new JTextField();
+		rangeBack.setBounds(1000, 100, 160, 25);
+
+		JButton priceRange = new JButton("검색");
+		priceRange.setBounds(900, 130, 80, 25);
+
+		priceRange.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isPriceRange = true;
 			}
 		});
 
@@ -713,6 +802,16 @@ public class AuctionFrame extends JFrame {
 		contentPane.add(pnl8);
 		contentPane.add(pnl9);
 		contentPane.add(pnl10);
+
+		contentPane.add(categoryCombo);
+		contentPane.add(deadlineSort);
+		contentPane.add(priceHighSort);
+		contentPane.add(priceLowSort);
+		contentPane.add(popularSort);
+
+		contentPane.add(rangeFront);
+		contentPane.add(rangeBack);
+		contentPane.add(priceRange);
 
 		frame.getContentPane().add(contentPane);
 		frame.setVisible(true);
@@ -852,6 +951,7 @@ public class AuctionFrame extends JFrame {
 		lblNum1.setHorizontalAlignment(SwingConstants.CENTER);
 		Font font2 = new Font("맑은 고딕", Font.BOLD, 22);
 		lblNum1.setFont(font2);
+
 	}
 
 	public static void updatLabel(LocalDateTime now) {
@@ -868,7 +968,72 @@ public class AuctionFrame extends JFrame {
 
 			int count = 0;
 			List<Product> productList = timer.selectProduct();
-			
+
+			if (priceHighSort.isSelected())
+				Collections.sort(productList, new Comparator<Product>() {
+					@Override
+					public int compare(Product p1, Product p2) {
+						return Integer.compare(p2.getProductPriceNow(), p1.getProductPriceNow());
+					}
+				});
+
+			if (priceLowSort.isSelected())
+				Collections.sort(productList, new Comparator<Product>() {
+					@Override
+					public int compare(Product p1, Product p2) {
+						return Integer.compare(p1.getProductPriceNow(), p2.getProductPriceNow());
+					}
+				});
+
+			if (popularSort.isSelected())
+				Collections.sort(productList, new Comparator<Product>() {
+					@Override
+					public int compare(Product p1, Product p2) {
+						return Integer.compare(p2.getPopularity(), p1.getPopularity());
+					}
+				});
+
+			// 카테고리 예시
+			// 콤보박스
+			if (categoryString != null) {
+				if (!categoryString.equals("분류별 검색")) {
+					Iterator<Product> iterator2 = productList.iterator();
+					while (iterator2.hasNext()) {
+						Product product = iterator2.next();
+						if (product.getCategory() != null) {
+							if (!product.getCategory().equals(categoryString)) { // getProductCategories().equals("가구")
+								iterator2.remove();
+							}
+						}
+					}
+				}
+			}
+
+			if (isPriceRange) {
+				int num1 = Integer.parseInt(rangeFront.getText());
+				int num2 = Integer.parseInt(rangeBack.getText());
+
+				if (num2 < num1) {
+					int empty = num1;
+					num1 = num2;
+					num2 = empty;
+
+					rangeFront.setText(Integer.toString(num1));
+					rangeBack.setText(Integer.toString(num2));
+				}
+				// 가격 범위 출력 예시
+				// 체크박스에 체크가 되어있으면 가격 받아서
+				Iterator<Product> iterator = productList.iterator();
+				while (iterator.hasNext()) {
+					Product product = iterator.next();
+					if (product.getProductPriceNow() < num1 || product.getProductPriceNow() > num2) {
+						iterator.remove();
+					}
+				}
+			}
+
+			testList = productList;
+
 			for (int i = data.getIndexMain(); i < productList.size(); i++) {
 				count++;
 				if (count == 11) {
@@ -883,11 +1048,15 @@ public class AuctionFrame extends JFrame {
 					lblName1.setText(productList.get(i).getProductName());
 					lblName1.setPreferredSize(new Dimension(200, lblName1.getPreferredSize().height));
 					lblName1.setHorizontalAlignment(SwingConstants.CENTER);
-
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage1.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage1.setIcon(iconSize(imageIcon2));
 					}
+
 					String result1 = duration(productList.get(i).getEndTime(), now);
 					lblTime1.setText(result1);
 					lblTime1.setPreferredSize(new Dimension(200, lblTime1.getPreferredSize().height));
@@ -899,7 +1068,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[0].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 1: {
@@ -911,9 +1080,13 @@ public class AuctionFrame extends JFrame {
 					lblName2.setPreferredSize(new Dimension(200, lblName2.getPreferredSize().height));
 					lblName2.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage2.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage2.setIcon(iconSize(imageIcon2));
 					}
 					String result2 = duration(productList.get(i).getEndTime(), now);
 					lblTime2.setText(result2);
@@ -926,7 +1099,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[1].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 2: {
@@ -938,9 +1111,13 @@ public class AuctionFrame extends JFrame {
 					lblName3.setPreferredSize(new Dimension(200, lblName3.getPreferredSize().height));
 					lblName3.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage3.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage3.setIcon(iconSize(imageIcon2));
 					}
 
 					String result3 = duration(productList.get(i).getEndTime(), now);
@@ -954,7 +1131,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[2].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 3: {
@@ -966,9 +1143,13 @@ public class AuctionFrame extends JFrame {
 					lblName4.setPreferredSize(new Dimension(200, lblName4.getPreferredSize().height));
 					lblName4.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage4.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage4.setIcon(iconSize(imageIcon2));
 					}
 
 					String result4 = duration(productList.get(i).getEndTime(), now);
@@ -982,7 +1163,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[3].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 4: {
@@ -994,9 +1175,13 @@ public class AuctionFrame extends JFrame {
 					lblName5.setPreferredSize(new Dimension(200, lblName5.getPreferredSize().height));
 					lblName5.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage5.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage5.setIcon(iconSize(imageIcon2));
 					}
 
 					String result5 = duration(productList.get(i).getEndTime(), now);
@@ -1010,7 +1195,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[4].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 5: {
@@ -1022,9 +1207,13 @@ public class AuctionFrame extends JFrame {
 					lblName6.setPreferredSize(new Dimension(200, lblName6.getPreferredSize().height));
 					lblName6.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage6.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage6.setIcon(iconSize(imageIcon2));
 					}
 
 					String result6 = duration(productList.get(i).getEndTime(), now);
@@ -1038,7 +1227,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[5].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 6: {
@@ -1050,9 +1239,13 @@ public class AuctionFrame extends JFrame {
 					lblName7.setPreferredSize(new Dimension(200, lblName7.getPreferredSize().height));
 					lblName7.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage7.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage7.setIcon(iconSize(imageIcon2));
 					}
 					String result7 = duration(productList.get(i).getEndTime(), now);
 					lblTime7.setText(result7);
@@ -1065,7 +1258,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[6].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 7: {
@@ -1077,9 +1270,13 @@ public class AuctionFrame extends JFrame {
 					lblName8.setPreferredSize(new Dimension(200, lblName8.getPreferredSize().height));
 					lblName8.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage8.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage8.setIcon(iconSize(imageIcon2));
 					}
 					String result8 = duration(productList.get(i).getEndTime(), now);
 					lblTime8.setText(result8);
@@ -1092,7 +1289,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[7].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 8: {
@@ -1104,9 +1301,13 @@ public class AuctionFrame extends JFrame {
 					lblName9.setPreferredSize(new Dimension(200, lblName9.getPreferredSize().height));
 					lblName9.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage9.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage9.setIcon(iconSize(imageIcon2));
 					}
 					String result9 = duration(productList.get(i).getEndTime(), now);
 					lblTime9.setText(result9);
@@ -1119,7 +1320,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[8].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 9: {
@@ -1131,9 +1332,13 @@ public class AuctionFrame extends JFrame {
 					lblName10.setPreferredSize(new Dimension(200, lblName10.getPreferredSize().height));
 					lblName10.setHorizontalAlignment(SwingConstants.CENTER);
 
-					ImageIcon imageIcon = ImageRetriever.llist.get(i).getImageicon();
-					if (imageIcon != null) {
-						lblImage10.setIcon(iconSize(imageIcon));
+					byte[] imageBytes = productList.get(i).getImage().getBytes(1,
+							(int) productList.get(i).getImage().length());
+					ImageIcon imageIcon = new ImageIcon(imageBytes);
+					Image image = imageIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+					ImageIcon imageIcon2 = new ImageIcon(image);
+					if (imageIcon2 != null) {
+						lblImage10.setIcon(iconSize(imageIcon2));
 					}
 					String result10 = duration(productList.get(i).getEndTime(), now);
 					lblTime10.setText(result10);
@@ -1146,7 +1351,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[9].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				}
@@ -1173,6 +1378,72 @@ public class AuctionFrame extends JFrame {
 
 			List<Product> productList = new ArrayList<Product>();
 			productList = timer.selectSearchProduct(text);
+
+			if (priceHighSort.isSelected())
+				Collections.sort(productList, new Comparator<Product>() {
+					@Override
+					public int compare(Product p1, Product p2) {
+						return Integer.compare(p2.getProductPriceNow(), p1.getProductPriceNow());
+					}
+				});
+
+			if (priceLowSort.isSelected())
+				Collections.sort(productList, new Comparator<Product>() {
+					@Override
+					public int compare(Product p1, Product p2) {
+						return Integer.compare(p1.getProductPriceNow(), p2.getProductPriceNow());
+					}
+				});
+
+			if (popularSort.isSelected())
+				Collections.sort(productList, new Comparator<Product>() {
+					@Override
+					public int compare(Product p1, Product p2) {
+						return Integer.compare(p2.getPopularity(), p1.getPopularity());
+					}
+				});
+
+			// 카테고리 예시
+			// 콤보박스
+			if (categoryString != null) {
+				if (!categoryString.equals("분류별 검색")) {
+					Iterator<Product> iterator2 = productList.iterator();
+					while (iterator2.hasNext()) {
+						Product product = iterator2.next();
+						if (product.getCategory() != null) {
+							if (!product.getCategory().equals(categoryString)) { // getProductCategories().equals("가구")
+								iterator2.remove();
+							}
+						}
+					}
+				}
+			}
+
+			if (isPriceRange) {
+				int num1 = Integer.parseInt(rangeFront.getText());
+				int num2 = Integer.parseInt(rangeBack.getText());
+
+				if (num2 < num1) {
+					int empty = num1;
+					num1 = num2;
+					num2 = empty;
+
+					rangeFront.setText(Integer.toString(num1));
+					rangeBack.setText(Integer.toString(num2));
+				}
+				// 가격 범위 출력 예시
+				// 체크박스에 체크가 되어있으면 가격 받아서
+				Iterator<Product> iterator = productList.iterator();
+				while (iterator.hasNext()) {
+					Product product = iterator.next();
+					if (product.getProductPriceNow() < num1 || product.getProductPriceNow() > num2) {
+						iterator.remove();
+					}
+				}
+			}
+
+			testList = productList;
+
 			int count = 0;
 			for (int i = data.getIndexMainSearch(); i < productList.size(); i++) {
 				count++;
@@ -1209,7 +1480,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[0].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 1: {
@@ -1240,7 +1511,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[1].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 2: {
@@ -1272,7 +1543,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[2].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 3: {
@@ -1304,7 +1575,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[3].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 4: {
@@ -1336,7 +1607,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[4].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 5: {
@@ -1368,7 +1639,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[5].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 6: {
@@ -1399,7 +1670,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[6].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 7: {
@@ -1430,7 +1701,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[7].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 8: {
@@ -1461,7 +1732,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[8].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				case 9: {
@@ -1492,7 +1763,7 @@ public class AuctionFrame extends JFrame {
 					}
 
 					btns[9].setVisible(true);
-					list.add(new Auction(i, productList.get(i).getAuctionNo()));
+//					list.add(new Auction(i, productList.get(i).getAuctionNo()));
 					break;
 				}
 				}
