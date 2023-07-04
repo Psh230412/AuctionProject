@@ -438,7 +438,7 @@ public class DetailFrame extends JFrame {
 
 	public static ImageIcon iconSize(ImageIcon icon) {
 		Image img = icon.getImage();
-		Image changeSize = img.getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+		Image changeSize = img.getScaledInstance(400, 400, Image.SCALE_SMOOTH);
 		return new ImageIcon(changeSize);
 	}
 
