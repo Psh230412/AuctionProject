@@ -901,13 +901,13 @@ public class AuctionFrame extends JFrame {
 
 		// 가격범위 검색
 
-		rangeFront = new JTextField();
+		rangeFront = new JTextField("0");
 		rangeFront.setBounds(65, 620, 160, 25);
 
 		PlainDocument docFront = (PlainDocument) rangeFront.getDocument();
 		docFront.setDocumentFilter(new NumberOnlyFilter(15));
 
-		rangeBack = new JTextField();
+		rangeBack = new JTextField("0");
 		rangeBack.setBounds(65, 688, 160, 25);
 
 		PlainDocument docBack = (PlainDocument) rangeBack.getDocument();
