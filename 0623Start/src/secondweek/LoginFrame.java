@@ -166,7 +166,6 @@ public class LoginFrame extends JFrame {
 						Cache.putAllenrollCacheMap(data.getCurrentUser().getNo(), conn);
 						Cache.putAllParticipateMap(data.getCurrentUser().getNo(), conn);
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					new AuctionFrame(data);

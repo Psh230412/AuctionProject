@@ -902,7 +902,6 @@ public class Cache {
 					ProductCacheMap.put(productNo, new Product(setNo, productNo, auctionNo, productName, initialprice,
 							productPriceNow, productContent, startTime, endTime, image, popularity, category));
 				}
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -912,8 +911,4 @@ public class Cache {
 //			DBUtil.close(conn);
 		}
 	}
-
-
-
-
 }

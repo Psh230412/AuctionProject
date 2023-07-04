@@ -248,8 +248,9 @@ public class AuctionFrame extends JFrame {
 				data.setSearchText(null);
 				data.setCategoryText(null);
 				data.setAuctionRadioText(null);
-				data.setPriceFrontText("");
-				data.setPriceBackText("");
+				
+				data.setPriceFrontText("0");
+				data.setPriceBackText("0");
 
 			}
 		});
@@ -943,8 +944,8 @@ public class AuctionFrame extends JFrame {
 				data.setIndexMainSearch(0);
 			}
 		});
-
-		if (data.getPriceFrontText() != null) {
+		// TODO Auto-generated catch block
+		if (data.getPriceFrontText() != "0" && data.getPriceBackText() != "0") {
 			isPriceRange = true;
 			rangeFront.setText(data.getPriceFrontText());
 			rangeBack.setText(data.getPriceBackText());
