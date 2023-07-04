@@ -15,7 +15,6 @@ import java.util.List;
 import dbutil.DBUtil;
 
 public class Timer implements ITimer {
-	
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -34,7 +33,6 @@ public class Timer implements ITimer {
 					+ "        WHERE participateprice > 0\r\n" + "    ) AS A\r\n" + "    GROUP BY auctionno\r\n"
 					+ ") AS E ON C.auctionno = E.auctionno\r\n" + "WHERE C.deadline > current_timestamp() "
 					+ "ORDER BY TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), C.deadline)");
-			
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -53,7 +51,7 @@ public class Timer implements ITimer {
 				int popularity = rs.getInt("popularity");
 				String category = rs.getString("category");
 
-				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow,
+				list.add(new Product(setNo, productNo, auctionNo, productName, initialPrice, productPriceNow,
 						productContent, startTime, endTime, image, popularity, category));
 			}
 		} catch (SQLException e) {
@@ -103,7 +101,7 @@ public class Timer implements ITimer {
 				int popularity = rs.getInt("popularity");
 				String category = rs.getString("category");
 
-				list.add(new Product(setNo, productNo, auctionNo, productName, productPriceNow,
+				list.add(new Product(setNo, productNo, auctionNo, productName, initialPrice, productPriceNow,
 						productContent, startTime, endTime, image, popularity, category));
 			}
 		} catch (SQLException e) {
@@ -120,8 +118,6 @@ public class Timer implements ITimer {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		PreparedStatement stmtForDelete = null;
-		PreparedStatement stmtForRemove = null;
-		ResultSet rs = null;
 
 		try {
 			conn = DBUtil.getConnection();
@@ -134,18 +130,8 @@ public class Timer implements ITimer {
 					+ "    AND C.productno = B.productno\r\n" + ")");
 
 			stmt.executeUpdate();
-
-//			auction 테이블에서 삭제 시키기 전에 cache에서 먼저 삭제시킴
-			stmtForRemove = conn.prepareStatement("SELECT auctionno FROM auction\r\n" + 
-					"WHERE deadline < CURRENT_TIMESTAMP();");
-			
-			rs = stmtForRemove.executeQuery();
-			while(rs.next()) {
-				int auctionno = rs.getInt("auctionno");
-				Cache.remove(auctionno);
-			}
-			
 //			deadline 지난것은 successbidinfo로 보내고 auction에서 삭제 시킨다.
+
 			stmtForDelete = conn.prepareStatement("DELETE FROM auction\r\n" + "WHERE deadline<current_timestamp();");
 
 			stmtForDelete.executeUpdate();
@@ -153,12 +139,9 @@ public class Timer implements ITimer {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmtForRemove);
 			DBUtil.close(stmtForDelete);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
-			
 		}
 	}
 
@@ -256,7 +239,6 @@ public class Timer implements ITimer {
 
 			if (rs.next()) {
 				int auctionno = rs.getInt("auctionno");
-				System.out.println(auctionno);
 				return auctionno;
 			}
 		} catch (SQLException e) {
@@ -278,7 +260,6 @@ public class Timer implements ITimer {
 //		long seconds = duration.getSeconds() % 60;
 
 		long seconds = duration.getSeconds();
-		System.out.println(seconds);
 
 		if (seconds <= 60) {
 			return true;
@@ -295,8 +276,6 @@ public class Timer implements ITimer {
 
 		LocalDateTime now = LocalDateTime.now();
 
-		System.out.println(auctionno);
-
 		try {
 			conn = DBUtil.getConnection();
 
@@ -308,10 +287,8 @@ public class Timer implements ITimer {
 
 			if (rs.next()) {
 				Timestamp deadline = rs.getTimestamp("deadline");
-				System.out.println(deadline);
 
 				LocalDateTime localDateTime = deadline.toLocalDateTime();
-				System.out.println(localDateTime);
 
 				if (isLeftOneMinute(localDateTime, now)) {
 					stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
@@ -412,7 +389,6 @@ public class Timer implements ITimer {
 				} else {
 					return true;
 				}
-				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -422,5 +398,34 @@ public class Timer implements ITimer {
 			DBUtil.close(conn);
 		}
 		return true;
+	}
+
+	// 이미지 여러개 리스트
+	public Blob[] productImages(int productno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Blob[] blobs = new Blob[4];
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT * FROM product WHERE productno = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, productno);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				blobs[0] = rs.getBlob("image");
+				blobs[1] = rs.getBlob("subimage1");
+				blobs[2] = rs.getBlob("subimage2");
+				blobs[3] = rs.getBlob("subimage3");
+				return blobs;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return null;
 	}
 }

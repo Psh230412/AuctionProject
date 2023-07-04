@@ -16,7 +16,9 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -664,7 +666,13 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ListRepository repo = new ListRepository();
-				List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
+//				List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
+				List<EnrollParticipate> enrollList = new ArrayList<EnrollParticipate>();
+
+				for (Map.Entry<Integer, EnrollParticipate> entry : Cache.enrollCacheMap.entrySet()) {
+					EnrollParticipate value = entry.getValue();
+					enrollList.add(value);
+				}
 				if (Math.floor((enrollList.size() - 1) / 5) > (data.getIndex() / 5)) {
 					data.setIndex(data.getIndex() + 5);
 				}
@@ -686,7 +694,15 @@ public class MypageFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ListRepository repo = new ListRepository();
-				List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
+//				List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
+				
+				List<EnrollParticipate> participateList = new ArrayList<EnrollParticipate>();
+
+				for (Map.Entry<Integer, EnrollParticipate> entry : Cache.participateCacheMap.entrySet()) {
+					EnrollParticipate value = entry.getValue();
+					participateList.add(value);
+				}
+				
 				if (Math.floor(participateList.size() / 5) > (data.getIndexPar() / 5)) {
 					data.setIndex((data.getIndexPar() - 1) + 5);
 				}
@@ -824,7 +840,19 @@ public class MypageFrame extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
-			List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
+			// updatLabel 호출 될때마다 cache와 원본테이블 교차검증
+			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
+			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
+
+//			List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
+			
+			List<EnrollParticipate> enrollList = new ArrayList<EnrollParticipate>();
+
+			for (Map.Entry<Integer, EnrollParticipate> entry : Cache.enrollCacheMap.entrySet()) {
+				EnrollParticipate value = entry.getValue();
+				enrollList.add(value);
+			}
+			
 			EnrollParticipate enroll = null;
 
 			initialLabel();
@@ -916,7 +944,14 @@ public class MypageFrame extends JFrame {
 				}
 			}
 
-			List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
+//			List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
+			List<EnrollParticipate> participateList = new ArrayList<EnrollParticipate>();
+
+			for (Map.Entry<Integer, EnrollParticipate> entry : Cache.participateCacheMap.entrySet()) {
+				EnrollParticipate value = entry.getValue();
+				participateList.add(value);
+			}
+			
 			int count2 = 0;
 			for (int i = data.getIndexPar(); i < participateList.size(); i++) {
 				count2++;

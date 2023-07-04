@@ -24,7 +24,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -60,7 +59,9 @@ import org.quartz.impl.StdSchedulerFactory;
 import dbutil.DBUtil;
 
 public class AuctionFrame extends JFrame {
+	private Connection conn;
 
+	private boolean isModified;
 	private Scheduler scheduler;
 	private static Timer timer;
 	private static DataBase data;
@@ -249,6 +250,9 @@ public class AuctionFrame extends JFrame {
 				data.setAuctionRadioText(null);
 				data.setPriceFrontText(null);
 				data.setPriceBackText(null);
+				
+				
+				
 				new MypageFrame(data);
 				frame.dispose();
 			}
@@ -721,12 +725,18 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (data.isCheckBtn()) {
-					if (((timer.selectSearchProduct(data.getSearchText()).size() - 1) / 10) > (data.getIndexMainSearch()
-							/ 10)) {
+//					if ( ((timer.selectSearchProduct(data.getSearchText()).size() - 1) / 10) > (data.getIndexMainSearch()
+//							/ 10)) {
+//						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
+//					}
+					if (( (Cache.ProductSearchCacheMap.size() - 1) / 10) > (data.getIndexMainSearch()/ 10)) {
 						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
 					}
 				} else {
-					if (((timer.selectProduct().size() - 1) / 10) > (data.getIndexMain() / 10)) {
+//					if (((timer.selectProduct().size() - 1) / 10) > (data.getIndexMain() / 10)) {
+//						data.setIndexMain(data.getIndexMain() + 10);
+//					}
+					if (((Cache.ProductCacheMap.size() - 1) / 10) > (data.getIndexMain() / 10)) {
 						data.setIndexMain(data.getIndexMain() + 10);
 					}
 				}
@@ -1093,6 +1103,7 @@ public class AuctionFrame extends JFrame {
 		lblNum1.setFont(font2);
 
 	}
+	
 
 	public static void updatLabel(LocalDateTime now) {
 		Connection conn = null;
@@ -1104,16 +1115,12 @@ public class AuctionFrame extends JFrame {
 
 			resetLabel();
 
+//			updatLabel 호출 될때마다 cache와 원본테이블 교차검증 
+			Cache.isProductnoProductCacheMap(conn);
+			
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
 
 			int count = 0;
-			
-			
-//			아래처럼 작성하면 정해진 기간마다 데이터베이스에서 테이블을 가져와서 productList에 넣는다
-//			List<Product> productList = timer.selectProduct();
-
-//			반면에 아래의 방식은 loginFrame을 열때 한번에 저장되고 물품을 등록할때마다 추가되는 ProductCacheMap에서
-//			가져와서 productList에다가 넣는다. 
 			List<Product> productList = new ArrayList<Product>();
 			
 			for (Map.Entry<Integer, Product> entry : Cache.ProductCacheMap.entrySet()) {
@@ -1988,6 +1995,7 @@ public class AuctionFrame extends JFrame {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 
+					
 					LocalDateTime now = LocalDateTime.now();
 
 					if (data.isCheckBtn()) {
@@ -1995,7 +2003,6 @@ public class AuctionFrame extends JFrame {
 					} else {
 						updatLabel(now);
 					}
-					System.out.println(data.isCheckBtn());
 				}
 			});
 		}

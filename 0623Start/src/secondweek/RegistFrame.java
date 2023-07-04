@@ -141,22 +141,6 @@ public class RegistFrame extends JFrame {
 		mainImageLabel.setBounds(240, 100, 400, 400);
 		contentPane.add(mainImageLabel);
 		for (int i = 0; i < MAX_IMAGES; i++) {
-			smallImageLabels[i] = new JLabel();
-			smallImageLabels[i].setBounds(40, 140 + 110 * i, 100, 100);
-			smallImageLabels[i].setBorder(BorderFactory.createEmptyBorder());
-			smallImageLabels[i].addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					JLabel clickedLabel = (JLabel) e.getSource();
-					int index = Arrays.asList(smallImageLabels).indexOf(clickedLabel);
-					if (smallImageLabels[index].getIcon() != null) {
-						mainImageLabel.setIcon(bigImageLabels[index].getIcon());
-
-						for (JLabel label : smallImageLabels) {
-							label.setBorder(BorderFactory.createEmptyBorder());
-						}
-
-						clickedLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
 		    smallImageLabels[i] = new JLabel();
 		    smallImageLabels[i].setBounds(95, 76 + 110 * i, 100, 100);
 		    smallImageLabels[i].setBorder(BorderFactory.createEmptyBorder());
@@ -227,7 +211,6 @@ public class RegistFrame extends JFrame {
 
 		    bigImageLabels[i] = new JLabel();
 
-		
 		    fileSizeLabels[i] = new JLabel();
 		    fileSizeLabels[i].setBounds(220, 600 + 20 * i, 400, 100);
 		    contentPane.add(fileSizeLabels[i]);
@@ -242,7 +225,6 @@ public class RegistFrame extends JFrame {
 		imageVolume.setFont(myFont1);
 
 		JButton imageBtn = new JButton();
-		
 		imageBtn.setBounds(300, 525, 207, 80);
 		ImageIcon imgBtn = new ImageIcon("img/findimg_1.png");
 		imageBtn.setContentAreaFilled(false);
@@ -551,7 +533,7 @@ public class RegistFrame extends JFrame {
 //						물건 등록하면 cacheMap에다가 추가
 						Cache.putCacheMap(auctionId, imageBytes, imageBytes2, imageBytes3, imageBytes4);
 						Cache.putProductCacheMap();
-						
+
 						
 
 						stmt = conn.prepareStatement("INSERT INTO copy_auction\r\n"
