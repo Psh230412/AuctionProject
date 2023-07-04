@@ -162,8 +162,8 @@ public class AuctionFrame extends JFrame {
 		@Override
 		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
 				throws BadLocationException {
-			// 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
-			if (text.matches("\\d+") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
+			// 입력 문자열이 숫자이거나 null인 경우에만 대체를 허용합니다.
+			if ((text.matches("\\d+")) && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
 				super.replace(fb, offset, length, text, attrs);
 			}
 		}
@@ -248,8 +248,8 @@ public class AuctionFrame extends JFrame {
 				data.setSearchText(null);
 				data.setCategoryText(null);
 				data.setAuctionRadioText(null);
-				data.setPriceFrontText(null);
-				data.setPriceBackText(null);
+				data.setPriceFrontText("0");
+				data.setPriceBackText("0");
 
 			}
 		});
@@ -611,8 +611,10 @@ public class AuctionFrame extends JFrame {
 							data.setCategoryText(categoryString);
 
 							if (isPriceRange) {
-								data.setPriceFrontText(rangeFront.getText());
-								data.setPriceBackText(rangeBack.getText());
+								if (rangeFront.getText().equals("0") && rangeBack.getText().equals("0")) {
+									data.setPriceFrontText(rangeFront.getText());
+									data.setPriceBackText(rangeBack.getText());
+								}
 							}
 
 							new DetailFrame(data, product);
@@ -777,14 +779,10 @@ public class AuctionFrame extends JFrame {
 				deadlineSort.setSelected(true);
 				categoryCombo.setSelectedIndex(0);
 				isPriceRange = false;
-				if (rangeFront.getText() != null) {
-					rangeFront.setText("0");
-					data.setPriceFrontText("0");
-				}
-				if (rangeBack.getText() != null) {
-					rangeBack.setText("0");
-					data.setPriceBackText("0");
-				}
+				rangeFront.setText("0");
+				data.setPriceFrontText("0");
+				rangeBack.setText("0");
+				data.setPriceBackText("0");
 			}
 		});
 
