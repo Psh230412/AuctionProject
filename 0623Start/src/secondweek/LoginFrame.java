@@ -223,6 +223,36 @@ public class LoginFrame extends JFrame {
 				frame.dispose();
 			}
 		});
+		JButton manualBtn = new JButton();
+		manualBtn.setBounds(160, 200, 300, 85);
+		ImageIcon imgmanual = new ImageIcon("img/manualBtn_1.png");
+		manualBtn.setContentAreaFilled(false);
+		manualBtn.setBorderPainted(false);
+		manualBtn.setIcon(imgmanual);
+		manualBtn.setVisible(true);
+		manualBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				ImageIcon imgmanual = new ImageIcon("img/manualBtn_1.png");
+				manualBtn.setIcon(imgmanual);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgmanual = new ImageIcon("img/manualBtn.png");
+				manualBtn.setIcon(imgmanual);
+
+			}
+		});
+		manualBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ManualFrame();
+				
+			}
+		});
+		contentPane.add(manualBtn);
 
 		contentPane.add(idLbl);
 		contentPane.add(idTF);

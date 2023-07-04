@@ -231,7 +231,7 @@ public class DetailFrame extends JFrame {
 		lblPrice.setFont(lblPrice.getFont().deriveFont(14f));
 		lblPriceMin = new JLabel("최소입찰가 : 0원");
 		lblPriceMin.setFont(lblPrice.getFont().deriveFont(12f));
-		lblPriceMin.setBounds(850, 410, 150, 15);
+		lblPriceMin.setBounds(850, 410, 200, 15);
 		lblPriceMin.setForeground(Color.GRAY);
 
 		JLabel lblMessage = new JLabel("입찰가격은 최소입찰가를 상회해야 합니다.");

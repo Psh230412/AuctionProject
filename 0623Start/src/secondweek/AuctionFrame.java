@@ -162,8 +162,8 @@ public class AuctionFrame extends JFrame {
 		@Override
 		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
 				throws BadLocationException {
-			// 입력 문자열이 숫자인 경우에만 대체를 허용합니다.
-			if (text.matches("\\d+") && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
+			// 입력 문자열이 숫자이거나 null인 경우에만 대체를 허용합니다.
+			if ((text.matches("\\d+")) && (fb.getDocument().getLength() - length + text.length()) <= maxLength) {
 				super.replace(fb, offset, length, text, attrs);
 			}
 		}
@@ -248,9 +248,9 @@ public class AuctionFrame extends JFrame {
 				data.setSearchText(null);
 				data.setCategoryText(null);
 				data.setAuctionRadioText(null);
-				data.setPriceFrontText(null);
-				data.setPriceBackText(null);
-				
+				data.setPriceFrontText("");
+				data.setPriceBackText("");
+
 			}
 		});
 
@@ -350,8 +350,8 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 //				여기서 putProductSearchCacheMap() 호출 
-				if(searchTab.getText() != null) {
-					
+				if (searchTab.getText() != null) {
+
 					Cache.ProductSearchCacheMap.clear();
 					Cache.putProductSearchCacheMap(searchTab.getText());
 				}
@@ -364,16 +364,16 @@ public class AuctionFrame extends JFrame {
 
 		searchTab = new JTextField();
 		searchTab.setBounds(570, 52, 160, 25);
-
-		searchTab.requestFocus();
-		searchTab.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				data.setCheckBtn(true);
-				data.setSearchText(searchTab.getText());
-			}
-		});
+//
+//		searchTab.requestFocus();
+//		searchTab.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				data.setCheckBtn(true);
+//				data.setSearchText(searchTab.getText());
+//			}
+//		});
 
 		contentPane.add(userLbl);
 		contentPane.add(mypageBtn);
@@ -611,8 +611,10 @@ public class AuctionFrame extends JFrame {
 							data.setCategoryText(categoryString);
 
 							if (isPriceRange) {
-								data.setPriceFrontText(rangeFront.getText());
-								data.setPriceBackText(rangeBack.getText());
+								if (rangeFront.getText().equals("0") && rangeBack.getText().equals("0")) {
+									data.setPriceFrontText(rangeFront.getText());
+									data.setPriceBackText(rangeBack.getText());
+								}
 							}
 
 							new DetailFrame(data, product);
@@ -720,12 +722,12 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (data.isCheckBtn()) {
-					
+
 					if (((testList.size() - 1) / 10) > (data.getIndexMainSearch() / 10)) {
 						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
 					}
 				} else {
-					
+
 					if (((testList.size() - 1) / 10) > (data.getIndexMain() / 10)) {
 						data.setIndexMain(data.getIndexMain() + 10);
 					}
@@ -745,8 +747,8 @@ public class AuctionFrame extends JFrame {
 		pnl10.add(viewProductBtn10);
 
 		JButton returnBtn = new JButton();
-		returnBtn.setBounds(750, 46, 130, 50);
-		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		returnBtn.setBounds(740, 48, 130, 50);
+		ImageIcon imgreturnBtn = new ImageIcon("img/resetSearch_1.png");
 		returnBtn.setContentAreaFilled(false);
 		returnBtn.setBorderPainted(false);
 		returnBtn.setIcon(imgreturnBtn);
@@ -754,14 +756,14 @@ public class AuctionFrame extends JFrame {
 		returnBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseExited(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+				ImageIcon imgreturnBtn = new ImageIcon("img/resetSearch_1.png");
 				returnBtn.setIcon(imgreturnBtn);
 
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
+				ImageIcon imgreturnBtn = new ImageIcon("img/resetSearch.png");
 				returnBtn.setIcon(imgreturnBtn);
 
 			}
@@ -777,8 +779,10 @@ public class AuctionFrame extends JFrame {
 				deadlineSort.setSelected(true);
 				categoryCombo.setSelectedIndex(0);
 				isPriceRange = false;
-				rangeFront.setText(null);
-				rangeBack.setText(null);
+				rangeFront.setText("0");
+				data.setPriceFrontText("0");
+				rangeBack.setText("0");
+				data.setPriceBackText("0");
 			}
 		});
 
@@ -897,20 +901,20 @@ public class AuctionFrame extends JFrame {
 
 		// 가격범위 검색
 
-		rangeFront = new JTextField();
+		rangeFront = new JTextField("0");
 		rangeFront.setBounds(65, 620, 160, 25);
 
 		PlainDocument docFront = (PlainDocument) rangeFront.getDocument();
 		docFront.setDocumentFilter(new NumberOnlyFilter(15));
 
-		rangeBack = new JTextField();
+		rangeBack = new JTextField("0");
 		rangeBack.setBounds(65, 688, 160, 25);
 
 		PlainDocument docBack = (PlainDocument) rangeBack.getDocument();
 		docBack.setDocumentFilter(new NumberOnlyFilter(15));
 
 		JButton priceRange = new JButton("검색");
-		priceRange.setBounds(60, 750, 195, 58);
+		priceRange.setBounds(60, 743, 197, 62);
 		ImageIcon imgsearchType = new ImageIcon("img/searchBtn1_1.png");
 		priceRange.setContentAreaFilled(false);
 		priceRange.setBorderPainted(false);
@@ -1117,18 +1121,17 @@ public class AuctionFrame extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
-		
 
 			resetLabel();
 
 //			updatLabel 호출 될때마다 cache와 원본테이블 교차검증 
 			Cache.isProductnoProductCacheMap(conn);
-			
+
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
 
 			int count = 0;
 			List<Product> productList = new ArrayList<Product>();
-			
+
 			for (Map.Entry<Integer, Product> entry : Cache.ProductCacheMap.entrySet()) {
 				Product value = entry.getValue();
 				productList.add(value);
@@ -1141,9 +1144,7 @@ public class AuctionFrame extends JFrame {
 					return Integer.compare(durationSec(p1.getEndTime(), now), durationSec(p2.getEndTime(), now));
 				}
 			});
-			
-			
-			
+
 			if (priceHighSort.isSelected())
 				Collections.sort(productList, new Comparator<Product>() {
 					@Override
@@ -1185,24 +1186,27 @@ public class AuctionFrame extends JFrame {
 			}
 
 			if (isPriceRange) {
-				int num1 = Integer.parseInt(rangeFront.getText());
-				int num2 = Integer.parseInt(rangeBack.getText());
+				if (rangeFront.getText().equals("0") && rangeBack.getText().equals("0")) {
+				} else {
+					int num1 = Integer.parseInt(rangeFront.getText());
+					int num2 = Integer.parseInt(rangeBack.getText());
 
-				if (num2 < num1) {
-					int empty = num1;
-					num1 = num2;
-					num2 = empty;
+					if (num2 < num1) {
+						int empty = num1;
+						num1 = num2;
+						num2 = empty;
 
-					rangeFront.setText(Integer.toString(num1));
-					rangeBack.setText(Integer.toString(num2));
-				}
-				// 가격 범위 출력 예시
-				// 체크박스에 체크가 되어있으면 가격 받아서
-				Iterator<Product> iterator = productList.iterator();
-				while (iterator.hasNext()) {
-					Product product = iterator.next();
-					if (product.getProductPriceNow() < num1 || product.getProductPriceNow() > num2) {
-						iterator.remove();
+						rangeFront.setText(Integer.toString(num1));
+						rangeBack.setText(Integer.toString(num2));
+					}
+					// 가격 범위 출력 예시
+					// 체크박스에 체크가 되어있으면 가격 받아서
+					Iterator<Product> iterator = productList.iterator();
+					while (iterator.hasNext()) {
+						Product product = iterator.next();
+						if (product.getProductPriceNow() < num1 || product.getProductPriceNow() > num2) {
+							iterator.remove();
+						}
 					}
 				}
 			}
@@ -1550,9 +1554,7 @@ public class AuctionFrame extends JFrame {
 
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMainSearch() / 10) + 1) + " - ");
 
-			
 			List<Product> productList = new ArrayList<Product>();
-			
 //			productList = timer.selectSearchProduct(text);
 			for (Map.Entry<Integer, Product> entry : Cache.ProductSearchCacheMap.entrySet()) {
 				Product value = entry.getValue();
@@ -1983,11 +1985,11 @@ public class AuctionFrame extends JFrame {
 		}
 		return false;
 	}
+
 	public static int durationSec(LocalDateTime targetDateTime, LocalDateTime now) {
 		Duration duration = Duration.between(now, targetDateTime);
 		long seconds = duration.getSeconds();
-		
-		
+
 		return (int) seconds;
 	}
 
@@ -2000,7 +2002,6 @@ public class AuctionFrame extends JFrame {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 
-					
 					LocalDateTime now = LocalDateTime.now();
 
 					if (data.isCheckBtn()) {
