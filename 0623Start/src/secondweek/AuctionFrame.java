@@ -59,9 +59,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import dbutil.DBUtil;
 
 public class AuctionFrame extends JFrame {
-	private Connection conn;
 
-	private boolean isModified;
 	private Scheduler scheduler;
 	private static Timer timer;
 	private static DataBase data;
@@ -242,6 +240,8 @@ public class AuctionFrame extends JFrame {
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				new MypageFrame(data);
+				frame.dispose();
 				data.setIndexMain(0);
 				data.setIndexMainSearch(0);
 				data.setCheckBtn(false);
@@ -251,10 +251,6 @@ public class AuctionFrame extends JFrame {
 				data.setPriceFrontText(null);
 				data.setPriceBackText(null);
 				
-				
-				
-				new MypageFrame(data);
-				frame.dispose();
 			}
 		});
 
@@ -608,8 +604,8 @@ public class AuctionFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if (data.isCheckBtn()) {
 						List<Product> products = timer.selectSearchProduct(data.getSearchText());
-						if (products.size() >= index) {
-							Product product = testList.get(index);
+						if (products.size() >= index + data.getIndexMainSearch()) {
+							Product product = testList.get(index + data.getIndexMainSearch());
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
@@ -629,9 +625,8 @@ public class AuctionFrame extends JFrame {
 
 						// List<Product> testList;
 //						testList.get(index)
-
-						if (testList.size() >= index) {
-							Product product = testList.get(index);
+						if (testList.size() >= index + data.getIndexMain()) {
+							Product product = testList.get(index + data.getIndexMain());
 							data.setProduct(product);
 
 							data.setCategoryText(categoryString);
@@ -725,18 +720,13 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (data.isCheckBtn()) {
-//					if ( ((timer.selectSearchProduct(data.getSearchText()).size() - 1) / 10) > (data.getIndexMainSearch()
-//							/ 10)) {
-//						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
-//					}
-					if (( (Cache.ProductSearchCacheMap.size() - 1) / 10) > (data.getIndexMainSearch()/ 10)) {
+					
+					if (((testList.size() - 1) / 10) > (data.getIndexMainSearch() / 10)) {
 						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
 					}
 				} else {
-//					if (((timer.selectProduct().size() - 1) / 10) > (data.getIndexMain() / 10)) {
-//						data.setIndexMain(data.getIndexMain() + 10);
-//					}
-					if (((Cache.ProductCacheMap.size() - 1) / 10) > (data.getIndexMain() / 10)) {
+					
+					if (((testList.size() - 1) / 10) > (data.getIndexMain() / 10)) {
 						data.setIndexMain(data.getIndexMain() + 10);
 					}
 				}
@@ -780,17 +770,15 @@ public class AuctionFrame extends JFrame {
 		returnBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				
 				data.setCheckBtn(false);
-				data.setSearchText("");
+				data.setSearchText(null);
 				data.setIndexMainSearch(0);
-				searchTab.setText("");
+				searchTab.setText(null);
 				deadlineSort.setSelected(true);
 				categoryCombo.setSelectedIndex(0);
 				isPriceRange = false;
-				rangeFront.setText("");
-				rangeBack.setText("");
+				rangeFront.setText(null);
+				rangeBack.setText(null);
 			}
 		});
 
@@ -799,12 +787,17 @@ public class AuctionFrame extends JFrame {
 				"기타" };
 		categoryCombo = new JComboBox<>(categories);
 		categoryCombo.setBounds(60, 270, 150, 25);
+//		Font font = new Font("맑은 고딕", Font.BOLD, 10);
+
+		categoryCombo.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 
 		categoryCombo.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					categoryString = (String) categoryCombo.getSelectedItem();
+					data.setIndexMain(0);
+					data.setIndexMainSearch(0);
 				}
 			}
 		});
@@ -823,6 +816,11 @@ public class AuctionFrame extends JFrame {
 		priceHighSort = new JRadioButton("가격 높은 순 정렬");
 		priceLowSort = new JRadioButton("가격 낮은 순 정렬");
 		popularSort = new JRadioButton("인기 순 정렬");
+
+		deadlineSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		priceHighSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		priceLowSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		popularSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(deadlineSort);
@@ -851,6 +849,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(deadlineSort.getText());
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -858,6 +858,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(priceHighSort.getText());
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -865,6 +867,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(priceLowSort.getText());
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -872,6 +876,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(popularSort.getText());
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -915,7 +921,6 @@ public class AuctionFrame extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				ImageIcon imgsearchType = new ImageIcon("img/searchBtn1_1.png");
 				priceRange.setIcon(imgsearchType);
-
 			}
 
 			@Override
@@ -930,6 +935,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				isPriceRange = true;
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -1103,7 +1110,6 @@ public class AuctionFrame extends JFrame {
 		lblNum1.setFont(font2);
 
 	}
-	
 
 	public static void updatLabel(LocalDateTime now) {
 		Connection conn = null;
@@ -1170,7 +1176,7 @@ public class AuctionFrame extends JFrame {
 					while (iterator2.hasNext()) {
 						Product product = iterator2.next();
 						if (product.getCategory() != null) {
-							if (!product.getCategory().equals(categoryString)) { // getProductCategories().equals("가구")
+							if (!product.getCategory().equals(categoryString)) {
 								iterator2.remove();
 							}
 						}
@@ -1952,7 +1958,6 @@ public class AuctionFrame extends JFrame {
 				}
 			}
 		} catch (SQLException e) {
-
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(conn);

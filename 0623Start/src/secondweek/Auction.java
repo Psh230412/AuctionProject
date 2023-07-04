@@ -11,7 +11,7 @@ public class Auction {
 	private String productname;
 	private int finalprice;
 	private Timestamp deadline;
-	
+
 	public Auction(ImageIcon imageIcon, String productname, int finalprice, Timestamp deadline) {
 		super();
 		this.imageIcon = imageIcon;
@@ -19,7 +19,7 @@ public class Auction {
 		this.finalprice = finalprice;
 		this.deadline = deadline;
 	}
-	
+
 	public Auction(int index, int auctionNo) {
 		super();
 		this.index = index;
@@ -78,9 +78,4 @@ public class Auction {
 	public void setAuctionNo(int auctionNo) {
 		this.auctionNo = auctionNo;
 	}
-	
-	
-	
-	
-	
 }

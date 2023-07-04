@@ -62,11 +62,6 @@ public class MypageFrame extends JFrame {
 	private static JLabel lblImage23;
 	private static JLabel lblImage24;
 	private static JLabel lblImage25;
-	private static JLabel lblImage31;
-	private static JLabel lblImage32;
-	private static JLabel lblImage33;
-	private static JLabel lblImage34;
-	private static JLabel lblImage35;
 
 	private static JLabel lblName11;
 	private static JLabel lblName12;
@@ -78,11 +73,6 @@ public class MypageFrame extends JFrame {
 	private static JLabel lblName23;
 	private static JLabel lblName24;
 	private static JLabel lblName25;
-	private static JLabel lblName31;
-	private static JLabel lblName32;
-	private static JLabel lblName33;
-	private static JLabel lblName34;
-	private static JLabel lblName35;
 
 	private static JLabel lblTime11;
 	private static JLabel lblTime12;
@@ -95,12 +85,6 @@ public class MypageFrame extends JFrame {
 	private static JLabel lblTime24;
 	private static JLabel lblTime25;
 
-	private static JLabel lblBid1;
-	private static JLabel lblBid2;
-	private static JLabel lblBid3;
-	private static JLabel lblBid4;
-	private static JLabel lblBid5;
-
 	private static JLabel lblPrice11;
 	private static JLabel lblPrice12;
 	private static JLabel lblPrice13;
@@ -111,17 +95,11 @@ public class MypageFrame extends JFrame {
 	private static JLabel lblPrice23;
 	private static JLabel lblPrice24;
 	private static JLabel lblPrice25;
-	private static JLabel lblPrice31;
-	private static JLabel lblPrice32;
-	private static JLabel lblPrice33;
-	private static JLabel lblPrice34;
-	private static JLabel lblPrice35;
 
-	private static JLabel[] images = new JLabel[15];
-	private static JLabel[] names = new JLabel[15];
+	private static JLabel[] images = new JLabel[10];
+	private static JLabel[] names = new JLabel[10];
 	private static JLabel[] times = new JLabel[10];
-	private static JLabel[] bids = new JLabel[5];
-	private static JLabel[] prices = new JLabel[15];
+	private static JLabel[] prices = new JLabel[10];
 
 	private static JButton previousEnroll;
 	private static JButton nextEnroll;
@@ -147,13 +125,6 @@ public class MypageFrame extends JFrame {
 		images[7] = lblImage23;
 		images[8] = lblImage24;
 		images[9] = lblImage25;
-
-		// 낙찰/유찰패널 제품이미지라벨
-		images[10] = lblImage31;
-		images[11] = lblImage32;
-		images[12] = lblImage33;
-		images[13] = lblImage34;
-		images[14] = lblImage35;
 	}
 
 	public static void inputNames() {
@@ -170,13 +141,6 @@ public class MypageFrame extends JFrame {
 		names[7] = lblName23;
 		names[8] = lblName24;
 		names[9] = lblName25;
-
-		// 낙찰/유찰패널 제품이름라벨
-		names[10] = lblName31;
-		names[11] = lblName32;
-		names[12] = lblName33;
-		names[13] = lblName34;
-		names[14] = lblName35;
 	}
 
 	public static void inputTimes() {
@@ -195,15 +159,6 @@ public class MypageFrame extends JFrame {
 		times[9] = lblTime25;
 	}
 
-	public static void inputBids() {
-		// 낙찰/유찰패널 낙찰여부라벨
-		bids[0] = lblBid1;
-		bids[1] = lblBid2;
-		bids[2] = lblBid3;
-		bids[3] = lblBid4;
-		bids[4] = lblBid5;
-	}
-
 	public static void inputPrices() {
 		// 등록패널 가격라벨
 		prices[0] = lblPrice11;
@@ -218,13 +173,6 @@ public class MypageFrame extends JFrame {
 		prices[7] = lblPrice23;
 		prices[8] = lblPrice24;
 		prices[9] = lblPrice25;
-
-		// 낙찰/유찰패널 가격라벨
-		prices[10] = lblPrice31;
-		prices[11] = lblPrice32;
-		prices[12] = lblPrice33;
-		prices[13] = lblPrice34;
-		prices[14] = lblPrice35;
 	}
 
 	public MypageFrame(DataBase data) {
@@ -247,7 +195,7 @@ public class MypageFrame extends JFrame {
 
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-				Image image = toolkit.getImage("img/myPage_1.png");
+				Image image = toolkit.getImage("img/myPage_1.jpg");
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
@@ -545,17 +493,6 @@ public class MypageFrame extends JFrame {
 		lblImage25 = new JLabel("");
 		pnl25.add(lblImage25);
 
-		lblImage31 = new JLabel("");
-		pnl31.add(lblImage31);
-		lblImage32 = new JLabel("");
-		pnl32.add(lblImage32);
-		lblImage33 = new JLabel("");
-		pnl33.add(lblImage33);
-		lblImage34 = new JLabel("");
-		pnl34.add(lblImage34);
-		lblImage35 = new JLabel("");
-		pnl35.add(lblImage35);
-
 		lblName11 = new JLabel("");
 		pnl11.add(lblName11);
 		lblName12 = new JLabel("");
@@ -577,17 +514,6 @@ public class MypageFrame extends JFrame {
 		pnl24.add(lblName24);
 		lblName25 = new JLabel("");
 		pnl25.add(lblName25);
-
-		lblName31 = new JLabel("");
-		pnl31.add(lblName31);
-		lblName32 = new JLabel("");
-		pnl32.add(lblName32);
-		lblName33 = new JLabel("");
-		pnl33.add(lblName33);
-		lblName34 = new JLabel("");
-		pnl34.add(lblName34);
-		lblName35 = new JLabel("");
-		pnl35.add(lblName35);
 
 		lblTime11 = new JLabel("00 : 00 : 00");
 		pnl11.add(lblTime11);
@@ -611,17 +537,6 @@ public class MypageFrame extends JFrame {
 		lblTime25 = new JLabel("00 : 00 : 00");
 		pnl25.add(lblTime25);
 
-		lblBid1 = new JLabel(" / ");
-		pnl31.add(lblBid1);
-		lblBid2 = new JLabel(" / ");
-		pnl32.add(lblBid2);
-		lblBid3 = new JLabel(" / ");
-		pnl33.add(lblBid3);
-		lblBid4 = new JLabel(" / ");
-		pnl34.add(lblBid4);
-		lblBid5 = new JLabel(" / ");
-		pnl35.add(lblBid5);
-
 		lblPrice11 = new JLabel(" - ");
 		pnl11.add(lblPrice11);
 		lblPrice12 = new JLabel(" - ");
@@ -642,16 +557,6 @@ public class MypageFrame extends JFrame {
 		pnl24.add(lblPrice24);
 		lblPrice25 = new JLabel(" - ");
 		pnl25.add(lblPrice25);
-		lblPrice31 = new JLabel(" - ");
-		pnl31.add(lblPrice31);
-		lblPrice32 = new JLabel(" - ");
-		pnl32.add(lblPrice32);
-		lblPrice33 = new JLabel(" - ");
-		pnl33.add(lblPrice33);
-		lblPrice34 = new JLabel(" - ");
-		pnl34.add(lblPrice34);
-		lblPrice35 = new JLabel(" - ");
-		pnl35.add(lblPrice35);
 
 		previousEnroll.addActionListener(new ActionListener() {
 			@Override
@@ -695,16 +600,16 @@ public class MypageFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ListRepository repo = new ListRepository();
 //				List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
-				
+
 				List<EnrollParticipate> participateList = new ArrayList<EnrollParticipate>();
 
 				for (Map.Entry<Integer, EnrollParticipate> entry : Cache.participateCacheMap.entrySet()) {
 					EnrollParticipate value = entry.getValue();
 					participateList.add(value);
 				}
-				
-				if (Math.floor(participateList.size() / 5) > (data.getIndexPar() / 5)) {
-					data.setIndex((data.getIndexPar() - 1) + 5);
+
+				if (Math.floor((participateList.size() - 1) / 5) > (data.getIndexPar() / 5)) {
+					data.setIndexPar(data.getIndexPar() + 5);
 				}
 			}
 		});
@@ -712,7 +617,6 @@ public class MypageFrame extends JFrame {
 		inputImages();
 		inputNames();
 		inputTimes();
-		inputBids();
 		inputPrices();
 
 		for (int i = 0; i < names.length; i++) {
@@ -721,10 +625,6 @@ public class MypageFrame extends JFrame {
 
 		for (int i = 0; i < times.length; i++) {
 			times[i].setForeground(Color.RED);
-		}
-
-		for (int i = 0; i < bids.length; i++) {
-			bids[i].setForeground(Color.BLACK);
 		}
 
 		for (int i = 0; i < prices.length; i++) {
@@ -796,10 +696,6 @@ public class MypageFrame extends JFrame {
 			times[i].setFont(font);
 		}
 
-		for (int i = 0; i < bids.length; i++) {
-			bids[i].setText("");
-		}
-
 		for (int i = 0; i < prices.length; i++) {
 			prices[i].setText("");
 			prices[i].setHorizontalAlignment(SwingConstants.RIGHT);
@@ -837,6 +733,7 @@ public class MypageFrame extends JFrame {
 		Connection conn = null;
 		lblNum1.setText(" - " + String.valueOf((data.getIndex() / 5) + 1) + " - ");
 		lblNum2.setText(" - " + String.valueOf((data.getIndexPar() / 5) + 1) + " - ");
+		initialLabel();
 
 		try {
 			conn = DBUtil.getConnection();
@@ -845,17 +742,15 @@ public class MypageFrame extends JFrame {
 			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
 
 //			List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
-			
+
 			List<EnrollParticipate> enrollList = new ArrayList<EnrollParticipate>();
 
 			for (Map.Entry<Integer, EnrollParticipate> entry : Cache.enrollCacheMap.entrySet()) {
 				EnrollParticipate value = entry.getValue();
 				enrollList.add(value);
 			}
-			
-			EnrollParticipate enroll = null;
 
-			initialLabel();
+			EnrollParticipate enroll = null;
 
 			if (enrollList != null) {
 				int count = 0;
@@ -951,96 +846,97 @@ public class MypageFrame extends JFrame {
 				EnrollParticipate value = entry.getValue();
 				participateList.add(value);
 			}
-			
-			int count2 = 0;
-			for (int i = data.getIndexPar(); i < participateList.size(); i++) {
-				count2++;
-				if (count2 == 6) {
-					break;
-				}
-				if (participateList.get(i) == null) {
-					continue;
-				} else {
 
-					switch (i % 5) {
-					case 0: {
-						lblPrice21.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice21.setPreferredSize(new Dimension(140, lblPrice21.getPreferredSize().height));
-
-						lblImage21.setIcon(iconSize(participateList.get(i).getImage()));
-
-						String result21 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime21.setText(result21);
-						lblTime21.setPreferredSize(new Dimension(120, lblTime21.getPreferredSize().height));
-
-						lblName21.setText(participateList.get(i).getProductname());
-						lblName21.setPreferredSize(new Dimension(100, lblName21.getPreferredSize().height));
-
+			EnrollParticipate participate = null;
+			if (participateList != null) {
+				int count2 = 0;
+				for (int i = data.getIndexPar(); i < participateList.size(); i++) {
+					participate = participateList.get(i);
+					count2++;
+					if (count2 == 6) {
 						break;
 					}
-					case 1: {
-						lblPrice22.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice22.setPreferredSize(new Dimension(140, lblPrice22.getPreferredSize().height));
+					if (enroll == null) {
+						continue;
+					} else {
+						switch (i % 5) {
+						case 0: {
+							lblPrice21.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice21.setPreferredSize(new Dimension(140, lblPrice21.getPreferredSize().height));
 
-						lblImage22.setIcon(iconSize(participateList.get(i).getImage()));
+							lblImage21.setIcon(iconSize(participate.getImage()));
 
-						String result22 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime22.setText(result22);
-						lblTime22.setPreferredSize(new Dimension(120, lblTime22.getPreferredSize().height));
+							String result21 = durationBid(participate.getEndTime(), now);
+							lblTime21.setText(result21);
+							lblTime21.setPreferredSize(new Dimension(120, lblTime21.getPreferredSize().height));
 
-						lblName22.setText(participateList.get(i).getProductname());
-						lblName22.setPreferredSize(new Dimension(100, lblName22.getPreferredSize().height));
-						break;
-					}
-					case 2: {
-						lblPrice23.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice23.setPreferredSize(new Dimension(140, lblPrice23.getPreferredSize().height));
+							lblName21.setText(participate.getProductname());
+							lblName21.setPreferredSize(new Dimension(100, lblName21.getPreferredSize().height));
 
-						lblImage23.setIcon(iconSize(participateList.get(i).getImage()));
+							break;
+						}
+						case 1: {
+							lblPrice22.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice22.setPreferredSize(new Dimension(140, lblPrice22.getPreferredSize().height));
 
-						String result23 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime23.setText(result23);
-						lblTime23.setPreferredSize(new Dimension(120, lblTime23.getPreferredSize().height));
+							lblImage22.setIcon(iconSize(participate.getImage()));
 
-						lblName23.setText(participateList.get(i).getProductname());
-						lblName23.setPreferredSize(new Dimension(100, lblName23.getPreferredSize().height));
-						break;
-					}
-					case 3: {
-						lblPrice24.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice24.setPreferredSize(new Dimension(140, lblPrice24.getPreferredSize().height));
+							String result22 = durationBid(participate.getEndTime(), now);
+							lblTime22.setText(result22);
+							lblTime22.setPreferredSize(new Dimension(120, lblTime22.getPreferredSize().height));
 
-						lblImage24.setIcon(iconSize(participateList.get(i).getImage()));
+							lblName22.setText(participate.getProductname());
+							lblName22.setPreferredSize(new Dimension(100, lblName22.getPreferredSize().height));
+							break;
+						}
+						case 2: {
+							lblPrice23.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice23.setPreferredSize(new Dimension(140, lblPrice23.getPreferredSize().height));
 
-						String result24 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime24.setText(result24);
-						lblTime24.setPreferredSize(new Dimension(120, lblTime24.getPreferredSize().height));
+							lblImage23.setIcon(iconSize(participate.getImage()));
 
-						lblName24.setText(participateList.get(i).getProductname());
-						lblName24.setPreferredSize(new Dimension(100, lblName24.getPreferredSize().height));
-						break;
-					}
-					case 4: {
-						lblPrice25.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice25.setPreferredSize(new Dimension(140, lblPrice25.getPreferredSize().height));
+							String result23 = durationBid(participate.getEndTime(), now);
+							lblTime23.setText(result23);
+							lblTime23.setPreferredSize(new Dimension(120, lblTime23.getPreferredSize().height));
 
-						lblImage25.setIcon(iconSize(participateList.get(i).getImage()));
+							lblName23.setText(participate.getProductname());
+							lblName23.setPreferredSize(new Dimension(100, lblName23.getPreferredSize().height));
+							break;
+						}
+						case 3: {
+							lblPrice24.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice24.setPreferredSize(new Dimension(140, lblPrice24.getPreferredSize().height));
 
-						String result25 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime25.setText(result25);
-						lblTime25.setPreferredSize(new Dimension(120, lblTime25.getPreferredSize().height));
+							lblImage24.setIcon(iconSize(participate.getImage()));
 
-						lblName25.setText(participateList.get(i).getProductname());
-						lblName25.setPreferredSize(new Dimension(100, lblName25.getPreferredSize().height));
+							String result24 = durationBid(participate.getEndTime(), now);
+							lblTime24.setText(result24);
+							lblTime24.setPreferredSize(new Dimension(120, lblTime24.getPreferredSize().height));
 
-						break;
-					}
+							lblName24.setText(participate.getProductname());
+							lblName24.setPreferredSize(new Dimension(100, lblName24.getPreferredSize().height));
+							break;
+						}
+						case 4: {
+							lblPrice25.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice25.setPreferredSize(new Dimension(140, lblPrice25.getPreferredSize().height));
+
+							lblImage25.setIcon(iconSize(participate.getImage()));
+
+							String result25 = durationBid(participate.getEndTime(), now);
+							lblTime25.setText(result25);
+							lblTime25.setPreferredSize(new Dimension(120, lblTime25.getPreferredSize().height));
+
+							lblName25.setText(participate.getProductname());
+							lblName25.setPreferredSize(new Dimension(100, lblName25.getPreferredSize().height));
+
+							break;
+						}
+						}
 					}
 				}
 			}
-		} catch (
-
-		SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(conn);
@@ -1049,14 +945,6 @@ public class MypageFrame extends JFrame {
 
 	public static String formatInt(int price) {
 		return String.format("%,d원", price);
-	}
-
-	public static String bidOrNot(boolean b) {
-		if (b) {
-			return "낙찰";
-		} else {
-			return "유찰";
-		}
 	}
 
 	public static String durationFailed(LocalDateTime targetDateTime, LocalDateTime now, int auctionno,

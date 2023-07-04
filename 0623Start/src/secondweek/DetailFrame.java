@@ -304,14 +304,17 @@ public class DetailFrame extends JFrame {
 								JOptionPane.YES_NO_OPTION);
 						if (choice == JOptionPane.YES_OPTION) {
 							// 입찰 쿼리문
-							timer.insertParticipate(data.getCurrentUser().getNo(), data.getProduct().getAuctionNo(),
-									Integer.parseInt(bid));
-
-							int auctionno = timer.getAuctionNo(data.getProduct().getProductNo());
-							timer.plusOneMinute(auctionno);
-
-							int setNo = product.getSetNo();
-							timer.updatePrice(setNo, bid);
+							// TODO Auto-generated catch block
+							Connection conn = null;
+							try {
+								conn = DBUtil.getConnection();
+								
+								bid(product, bid, conn);
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							} finally {
+								DBUtil.close(conn);
+							}
 
 							new AuctionFrame(data);
 							frame.dispose();
@@ -412,6 +415,18 @@ public class DetailFrame extends JFrame {
 
 		frame.getContentPane().add(contentPane);
 		frame.setVisible(true);
+	}
+	
+	public void bid(Product product, String bid, Connection conn) throws SQLException {
+		// TODO Auto-generated catch block
+		timer.insertParticipate(data.getCurrentUser().getNo(), product.getAuctionNo(),
+				Integer.parseInt(bid));
+
+		int auctionno = timer.getAuctionNo(product.getProductNo());
+		timer.plusOneMinute(auctionno, conn);
+
+		int setNo = product.getSetNo();
+		timer.updatePrice(setNo, bid, conn);
 	}
 
 	public boolean bidMin(String bid) {

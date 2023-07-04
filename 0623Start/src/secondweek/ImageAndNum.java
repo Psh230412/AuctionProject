@@ -32,6 +32,4 @@ public class ImageAndNum {
 	public String toString() {
 		return "ImageAndNum [imageicon=" + imageicon + ", productno=" + productno + "]";
 	}
-	
-	
 }

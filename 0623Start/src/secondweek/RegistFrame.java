@@ -138,7 +138,7 @@ public class RegistFrame extends JFrame {
 		contentPane.add(imageRoot4);
 
 		mainImageLabel = new JLabel();
-		mainImageLabel.setBounds(240, 100, 400, 400);
+		mainImageLabel.setBounds(240, 90, 400, 400);
 		contentPane.add(mainImageLabel);
 		for (int i = 0; i < MAX_IMAGES; i++) {
 		    smallImageLabels[i] = new JLabel();
@@ -315,7 +315,7 @@ public class RegistFrame extends JFrame {
 		    }
 		});
 		detailBox = new JTextArea(5, 20); // 상세정보 입력칸
-		detailBox.setBounds(730, 360, 350, 180);
+		detailBox.setBounds(730, 365, 350, 180);
 		contentPane.add(detailBox);
 		detailBox.setColumns(10);
 		detailBox.setLineWrap(true);
@@ -370,7 +370,7 @@ public class RegistFrame extends JFrame {
 
 		String[] auctionTimeOptions = { "1시간", "4시간", "24시간" };
 		JComboBox<String> auctionTimeBox = new JComboBox<>(auctionTimeOptions);
-		auctionTimeBox.setBounds(825, 230, 190, 25); // 위치와 크기를 설정해주세요.
+		auctionTimeBox.setBounds(825, 253, 200, 35); // 위치와 크기를 설정해주세요.
 		contentPane.add(auctionTimeBox);
 
 		registrationBtn.addActionListener(new ActionListener() {
@@ -572,22 +572,22 @@ public class RegistFrame extends JFrame {
 			}
 		});
 		JButton mainBtn = new JButton();
-		mainBtn.setBounds(970, 680, 130, 50);
-		ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
+		mainBtn.setBounds(970, 680, 130, 48);
+		ImageIcon imgmain = new ImageIcon("img/Goback_1.png");
 		mainBtn.setContentAreaFilled(false);
 		mainBtn.setBorderPainted(false);
 		mainBtn.setIcon(imgmain);
 		mainBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseExited(MouseEvent e) {
-				ImageIcon imgmain = new ImageIcon("img/gomain_1.png");
+				ImageIcon imgmain = new ImageIcon("img/Goback_1.png");
 				mainBtn.setIcon(imgmain);
 
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				ImageIcon imgmain = new ImageIcon("img/gomain.png");
+				ImageIcon imgmain = new ImageIcon("img/Goback.png");
 				mainBtn.setIcon(imgmain);
 
 			}
@@ -598,8 +598,8 @@ public class RegistFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new AuctionFrame(data);
-				frame.setVisible(false);
+				new MypageFrame(data);
+				frame.dispose();
 			}
 		});
 

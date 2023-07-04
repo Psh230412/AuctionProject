@@ -14,7 +14,7 @@ import java.util.List;
 
 import dbutil.DBUtil;
 
-public class Timer implements ITimer {
+public class Timer {
 	public List<Product> selectProduct() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -166,25 +166,18 @@ public class Timer implements ITimer {
 		}
 	}
 
-	@Override
-	public void updatePrice(int setNo, String bid) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-
+	public void updatePrice(int setNo, String bid, Connection conn) throws SQLException {
 		try {
 			conn = DBUtil.getConnection();
 
-			stmt = conn.prepareStatement("update auction\r\n" + "set finalprice = ?\r\n" + "WHERE setno = ?;");
+			PreparedStatement stmt = conn
+					.prepareStatement("update auction\r\n" + "set finalprice = ?\r\n" + "WHERE setno = ?;");
 			stmt.setInt(1, Integer.parseInt(bid));
 			stmt.setInt(2, setNo);
 
 			stmt.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
 		}
 	}
 
@@ -265,25 +258,19 @@ public class Timer implements ITimer {
 			return true;
 		}
 		return false;
-
 	}
 
-	public void plusOneMinute(int auctionno) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		PreparedStatement stmtForPlusDuration = null;
-		ResultSet rs = null;
-
+	public void plusOneMinute(int auctionno, Connection conn) throws SQLException {
 		LocalDateTime now = LocalDateTime.now();
 
 		try {
 			conn = DBUtil.getConnection();
 
-			stmt = conn.prepareStatement("SELECT deadline FROM auction where auctionno = ? ;");
+			PreparedStatement stmt = conn.prepareStatement("SELECT deadline FROM auction where auctionno = ? ;");
 
 			stmt.setInt(1, auctionno);
 
-			rs = stmt.executeQuery();
+			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				Timestamp deadline = rs.getTimestamp("deadline");
@@ -291,7 +278,7 @@ public class Timer implements ITimer {
 				LocalDateTime localDateTime = deadline.toLocalDateTime();
 
 				if (isLeftOneMinute(localDateTime, now)) {
-					stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
+					PreparedStatement stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
 							+ "SET deadline = DATE_ADD(deadline, INTERVAL 1 MINUTE)\r\n" + "where auctionno = ? ;");
 					stmtForPlusDuration.setInt(1, auctionno);
 					stmtForPlusDuration.executeUpdate();
@@ -300,19 +287,11 @@ public class Timer implements ITimer {
 					return;
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmtForPlusDuration);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
 		}
-
 	}
 
 	// 입찰가격 입력
-	@Override
 	public void insertParticipate(int userNo, int auctionNo, int price) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -340,33 +319,24 @@ public class Timer implements ITimer {
 	}
 
 	// 최근입찰가격용
-	public List<Integer> participateList(int auctionno, Connection conn) {
-//			Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+	public List<Integer> participateList(int auctionno, Connection conn) throws SQLException {
 		List<Integer> list = new ArrayList<>();
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "SELECT A.participateprice FROM participate A \r\n"
-					+ "INNER JOIN auction B ON A.auctionno = B.auctionno \r\n" + "WHERE B.auctionno = ?\r\n"
-					+ "ORDER BY A.participatetime DESC\r\n" + "LIMIT 4";
-			stmt = conn.prepareStatement(sql);
+
+		String sql = "SELECT A.participateprice FROM participate A \r\n"
+				+ "INNER JOIN auction B ON A.auctionno = B.auctionno \r\n" + "WHERE B.auctionno = ?\r\n"
+				+ "ORDER BY A.participatetime DESC\r\n" + "LIMIT 4";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
 			stmt.setInt(1, auctionno);
-			rs = stmt.executeQuery();
+			ResultSet rs = stmt.executeQuery();
 
 			while (rs.next()) {
 				int participatePrice = rs.getInt("participateprice");
 				list.add(participatePrice);
 			}
 			return list;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
 		}
-		return null;
 	}
 
 	public boolean isContinue(int auctionno, int userno) {
