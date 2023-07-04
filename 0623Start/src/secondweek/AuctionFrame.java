@@ -769,7 +769,9 @@ public class AuctionFrame extends JFrame {
 				categoryCombo.setSelectedIndex(0);
 				isPriceRange = false;
 				rangeFront.setText(null);
+				data.setPriceFrontText(null);
 				rangeBack.setText(null);
+				data.setPriceBackText(null);
 			}
 		});
 
