@@ -270,17 +270,19 @@ public class DetailFrame extends JFrame {
 			}
 
 		});
-
+		// TODO Auto-generated catch block
 		if (!timer.isContinue(product.getAuctionNo(), data.getCurrentUser().getNo())) {
 			lblisContinue.setText("연속 입찰은 불가능 합니다.");
 			participateBtn.setEnabled(false);
 		}
-
+		
+		// TODO Auto-generated catch block
 		if (!timer.isOwn(data.getCurrentUser().getNo(), data.getProduct().getProductNo())) {
 			lblisOwn.setText(data.getProduct().getProductName() + "은(는) 본인이 등록한 상품입니다.");
 			participateBtn.setBackground(Color.black);
 			participateBtn.setEnabled(false);
-
+			
+		// TODO Auto-generated catch block
 		} else if (timer.isContinue(product.getAuctionNo(), data.getCurrentUser().getNo())) {
 			participateBtn.addActionListener(new ActionListener() {
 
@@ -301,14 +303,17 @@ public class DetailFrame extends JFrame {
 								JOptionPane.YES_NO_OPTION);
 						if (choice == JOptionPane.YES_OPTION) {
 							// 입찰 쿼리문
-							timer.insertParticipate(data.getCurrentUser().getNo(), data.getProduct().getAuctionNo(),
-									Integer.parseInt(bid));
-
-							int auctionno = timer.getAuctionNo(data.getProduct().getProductNo());
-							timer.plusOneMinute(auctionno);
-
-							int setNo = product.getSetNo();
-							timer.updatePrice(setNo, bid);
+							// TODO Auto-generated catch block
+							Connection conn = null;
+							try {
+								conn = DBUtil.getConnection();
+								
+								bid(product, bid, conn);
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							} finally {
+								DBUtil.close(conn);
+							}
 
 							new AuctionFrame(data);
 							frame.dispose();
@@ -410,6 +415,18 @@ public class DetailFrame extends JFrame {
 		frame.getContentPane().add(contentPane);
 		frame.setVisible(true);
 	}
+	
+	public void bid(Product product, String bid, Connection conn) throws SQLException {
+		// TODO Auto-generated catch block
+		timer.insertParticipate(data.getCurrentUser().getNo(), product.getAuctionNo(),
+				Integer.parseInt(bid));
+
+		int auctionno = timer.getAuctionNo(product.getProductNo());
+		timer.plusOneMinute(auctionno, conn);
+
+		int setNo = product.getSetNo();
+		timer.updatePrice(setNo, bid, conn);
+	}
 
 	public boolean bidMin(String bid) {
 		int result = Integer.parseInt(bid);
@@ -460,7 +477,8 @@ public class DetailFrame extends JFrame {
 			prePriceLbl2.setText("");
 			prePriceLbl3.setText("");
 			prePriceLbl4.setText("");
-
+			
+			// TODO Auto-generated catch block
 			List<Integer> priceList = timer.participateList(product.getAuctionNo(), conn);
 			if (priceList != null) {
 				for (int i = 0; i < priceList.size(); i++) {
@@ -486,7 +504,6 @@ public class DetailFrame extends JFrame {
 					}
 				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

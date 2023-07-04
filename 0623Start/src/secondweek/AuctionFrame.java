@@ -712,8 +712,7 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (data.isCheckBtn()) {
-					if (((testList.size() - 1) / 10) > (data.getIndexMainSearch()
-							/ 10)) {
+					if (((testList.size() - 1) / 10) > (data.getIndexMainSearch() / 10)) {
 						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
 					}
 				} else {
@@ -779,7 +778,7 @@ public class AuctionFrame extends JFrame {
 		categoryCombo = new JComboBox<>(categories);
 		categoryCombo.setBounds(60, 270, 150, 25);
 //		Font font = new Font("맑은 고딕", Font.BOLD, 10);
-		
+
 		categoryCombo.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 
 		categoryCombo.addItemListener(new ItemListener() {
@@ -807,7 +806,7 @@ public class AuctionFrame extends JFrame {
 		priceHighSort = new JRadioButton("가격 높은 순 정렬");
 		priceLowSort = new JRadioButton("가격 낮은 순 정렬");
 		popularSort = new JRadioButton("인기 순 정렬");
-		
+
 		deadlineSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		priceHighSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 		priceLowSort.setFont(new Font("맑은 고딕", Font.BOLD, 16));
@@ -1103,15 +1102,12 @@ public class AuctionFrame extends JFrame {
 	}
 
 	public static void updatLabel(LocalDateTime now) {
-		Connection conn = null;
 		list = new ArrayList<>();
 
 		try {
-			conn = DBUtil.getConnection();
-			ImageRetriever.retrieveImage(conn);
 
 			resetLabel();
-			
+
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
 
 			int count = 0;
@@ -1149,7 +1145,7 @@ public class AuctionFrame extends JFrame {
 					while (iterator2.hasNext()) {
 						Product product = iterator2.next();
 						if (product.getCategory() != null) {
-							if (!product.getCategory().equals(categoryString)) { // getProductCategories().equals("가구")
+							if (!product.getCategory().equals(categoryString)) {
 								iterator2.remove();
 							}
 						}
@@ -1505,23 +1501,16 @@ public class AuctionFrame extends JFrame {
 				}
 			}
 		} catch (SQLException e) {
-
 			e.printStackTrace();
-		} finally {
-			DBUtil.close(conn);
 		}
 	}
 
 	public static void updateSearchLabel(LocalDateTime now, String text) {
-		Connection conn = null;
 		list = new ArrayList<>();
 
 		resetLabel();
 
 		try {
-			conn = DBUtil.getConnection();
-			ImageRetriever.retrieveImage(conn);
-
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMainSearch() / 10) + 1) + " - ");
 
 			List<Product> productList = new ArrayList<Product>();
@@ -1917,10 +1906,7 @@ public class AuctionFrame extends JFrame {
 				}
 			}
 		} catch (SQLException e) {
-
 			e.printStackTrace();
-		} finally {
-			DBUtil.close(conn);
 		}
 	}
 
