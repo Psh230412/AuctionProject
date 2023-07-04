@@ -530,6 +530,10 @@ public class RegistFrame extends JFrame {
 							inputAuctionSetNo.executeUpdate();
 						}
 
+//						물건 등록하면 cacheMap에다가 추가
+						Cache.putProductCacheMap();
+
+						
 
 						stmt = conn.prepareStatement("INSERT INTO copy_auction\r\n"
 								+ "						SELECT *\r\n" + "						FROM auction\r\n"

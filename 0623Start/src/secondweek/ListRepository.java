@@ -119,7 +119,7 @@ public class ListRepository {
 					+ "INNER JOIN (\n" 
 					+ "    SELECT p.*\n" 
 					+ "    FROM participate p\n"
-					+ "    INNER JOIN (\n" 
+					+ "    INNER JOIN (\n"
 					+ "        SELECT auctionno, MAX(participatetime) AS max_time\n"
 					+ "        FROM participate\n" 
 					+ "        GROUP BY auctionno\n"
@@ -199,6 +199,7 @@ public class ListRepository {
 		}
 		return list;
 	}
+
 
 	// 낙찰/유찰 리스트
 	public List<Integer> getIsBid() {

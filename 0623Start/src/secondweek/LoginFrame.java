@@ -1,3 +1,4 @@
+
 package secondweek;
 
 import java.awt.Graphics;
@@ -9,6 +10,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,6 +23,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import dbutil.DBUtil;
+
 public class LoginFrame extends JFrame {
 	LoginSignupRepository repo;
 	User loginUser;
@@ -27,6 +32,22 @@ public class LoginFrame extends JFrame {
 	private JFrame frame;
 
 	public LoginFrame(DataBase data) {
+		Connection conn = null;
+
+		try {
+			conn = DBUtil.getConnection();
+//		Cache.addAllIntoCacheMap();
+			Cache.addAllIntoProductCacheMap(conn);
+//			로그인을 하기 전이라서 data.getCurrentUser() null이다
+//			Cache.putAllenrollCacheMap(data.getCurrentUser().getNo(), conn);
+//			Cache.putAllParticipateMap(data.getCurrentUser().getNo(), conn);
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			DBUtil.close(conn);
+		}
+
 		repo = new LoginSignupRepository();
 		loginUser = null;
 
@@ -46,7 +67,7 @@ public class LoginFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-	
+
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -139,6 +160,15 @@ public class LoginFrame extends JFrame {
 				String password = new String(passwordPF.getPassword());
 				if (loginCondition(id, password)) {
 					data.setCurrentUser(loginUser);
+					Connection conn = null;
+					try {
+						conn = DBUtil.getConnection();
+						Cache.putAllenrollCacheMap(data.getCurrentUser().getNo(), conn);
+						Cache.putAllParticipateMap(data.getCurrentUser().getNo(), conn);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					new AuctionFrame(data);
 					frame.dispose();
 				}
@@ -230,12 +260,11 @@ public class LoginFrame extends JFrame {
 		} else {
 			JOptionPane.showMessageDialog(null, "로그인되었습니다.");
 			loginUser = user;
+			
 			frame.setVisible(false);
 			return true;
 		}
 	}
-	
-	
 
 	public static void main(String[] args) {
 		DataBase data = new DataBase();

@@ -110,6 +110,8 @@ public class DetailFrame extends JFrame {
 		}
 	}
 
+//	Product product = testList.get(index);
+//	new DetailFrame(data, product);
 	public DetailFrame(DataBase data, Product product) {
 
 		this.data = data;
@@ -271,19 +273,17 @@ public class DetailFrame extends JFrame {
 			}
 
 		});
-		// TODO Auto-generated catch block
+
 		if (!timer.isContinue(product.getAuctionNo(), data.getCurrentUser().getNo())) {
 			lblisContinue.setText("연속 입찰은 불가능 합니다.");
 			participateBtn.setEnabled(false);
 		}
-		
-		// TODO Auto-generated catch block
+
 		if (!timer.isOwn(data.getCurrentUser().getNo(), data.getProduct().getProductNo())) {
 			lblisOwn.setText(data.getProduct().getProductName() + "은(는) 본인이 등록한 상품입니다.");
 			participateBtn.setBackground(Color.black);
 			participateBtn.setEnabled(false);
-			
-		// TODO Auto-generated catch block
+
 		} else if (timer.isContinue(product.getAuctionNo(), data.getCurrentUser().getNo())) {
 			participateBtn.addActionListener(new ActionListener() {
 
@@ -478,8 +478,7 @@ public class DetailFrame extends JFrame {
 			prePriceLbl3.setText("");
 			prePriceLbl2.setText("");
 			prePriceLbl1.setText("");
-			
-			// TODO Auto-generated catch block
+
 			List<Integer> priceList = timer.participateList(product.getAuctionNo(), conn);
 			if (priceList != null) {
 				for (int i = 0; i < priceList.size(); i++) {
@@ -505,6 +504,7 @@ public class DetailFrame extends JFrame {
 					}
 				}
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

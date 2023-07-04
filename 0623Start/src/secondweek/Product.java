@@ -34,6 +34,22 @@ public class Product {
 		this.popularity = popularity;
 		this.category = category;
 	}
+//	public Product(int setNo, int productNo, int auctionNo, String productName, int productPriceNow,
+//			String productContent, LocalDateTime startTime, LocalDateTime endTime, Blob image,int popularity,
+//			String category) {
+//		super();
+//		this.setNo = setNo;
+//		this.productNo = productNo;
+//		this.auctionNo = auctionNo;
+//		this.productName = productName;
+//		this.productPriceNow = productPriceNow;
+//		this.productContent = productContent;
+//		this.startTime = startTime;
+//		this.endTime = endTime;
+//		this.image = image;
+//		this.popularity = popularity;
+//		this.category = category;
+//	}
 
 	public Product(int setNo, int productNo, int auctionNo, String productName, int productPriceNow,
 			String productContent, LocalDateTime startTime, LocalDateTime endTime, Blob image) {
