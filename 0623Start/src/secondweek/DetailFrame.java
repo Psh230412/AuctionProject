@@ -3,19 +3,27 @@ package secondweek;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -69,6 +77,10 @@ public class DetailFrame extends JFrame {
 	private static JLabel prePriceLbl4;
 
 	private JLabel lblisContinue;
+
+	private static final int MAX_IMAGES = 4;
+	private JLabel[] smallImageLabels = new JLabel[MAX_IMAGES];
+	private JLabel[] bigImageLabels = new JLabel[MAX_IMAGES];
 
 	// 이미지, 제품이름, 상세설명, 남은시간, 가격
 
@@ -136,6 +148,65 @@ public class DetailFrame extends JFrame {
 		}
 		ImageIcon imageIcon = new ImageIcon(imageBites);
 		lblImage.setIcon(iconSize(imageIcon));
+
+		// 제품에 해당하는 이미지 4개 가져옴
+		Blob[] blobs = timer.productImages(product.getProductNo());
+
+		// 작은 이미지 4개
+		for (int i = 0; i < MAX_IMAGES; i++) {
+			smallImageLabels[i] = new JLabel();
+			smallImageLabels[i].setBounds(40, 220 + 110 * i, 100, 100);
+			contentPane.add(smallImageLabels[i]);
+
+			smallImageLabels[i].setBorder(BorderFactory.createEmptyBorder());
+			BufferedImage image = null;
+			try {
+				if (blobs[i] != null) {
+					image = blobToBufferedImage(blobs[i]);
+					BufferedImage resizeImage = resizeImage(image, BufferedImage.TYPE_INT_ARGB, 100, 100);
+					smallImageLabels[i].setIcon(new ImageIcon(resizeImage));
+				}
+			} catch (SQLException e3) {
+				e3.printStackTrace();
+			} catch (IOException e3) {
+				e3.printStackTrace();
+			}
+
+			smallImageLabels[i].addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JLabel clickedLabel = (JLabel) e.getSource();
+					int index = Arrays.asList(smallImageLabels).indexOf(clickedLabel);
+					if (smallImageLabels[index].getIcon() != null) {
+						lblImage.setIcon(bigImageLabels[index].getIcon());
+
+						for (JLabel label : smallImageLabels) {
+							label.setBorder(BorderFactory.createEmptyBorder());
+						}
+
+						clickedLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+
+						try {
+							BufferedImage productImage = blobToBufferedImage(blobs[index]);
+							int type = productImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+									: productImage.getType();
+							BufferedImage bigResizedImage = resizeImage(productImage, type, 400, 400);
+							bigImageLabels[index].setIcon(new ImageIcon(bigResizedImage));
+
+							BufferedImage smallResizedImage = resizeImage(productImage, type, 100, 100);
+							smallImageLabels[index].setIcon(new ImageIcon(smallResizedImage));
+
+							lblImage.setIcon(new ImageIcon(bigResizedImage));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (SQLException e2) {
+							e2.printStackTrace();
+						}
+					}
+				}
+			});
+			bigImageLabels[i] = new JLabel();
+		}
 
 		lblName = new JLabel("제품명");
 		lblName.setFont(lblName.getFont().deriveFont(16f));
@@ -434,6 +505,26 @@ public class DetailFrame extends JFrame {
 		long seconds = duration.getSeconds() % 60;
 
 		return String.format("%02d일 %02d:%02d:%02d", days, hours, minutes, seconds);
+	}
+
+	public static BufferedImage resizeImage(BufferedImage originalImage, int type, int width, int height) {
+		BufferedImage resizedImage = new BufferedImage(width, height, type);
+		Graphics2D g = resizedImage.createGraphics();
+
+		g.drawImage(originalImage, 0, 0, width, height, null);
+		g.dispose();
+		return resizedImage;
+	}
+
+	public BufferedImage blobToBufferedImage(Blob blob) throws SQLException, IOException {
+		byte[] bytes = blob.getBytes(1, (int) blob.length());
+
+		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+		BufferedImage bufferedImage = ImageIO.read(bis);
+
+		bis.close();
+
+		return bufferedImage;
 	}
 
 	public static class AutionUpdateJob implements Job {

@@ -276,7 +276,6 @@ public class Timer implements ITimer {
 
 		LocalDateTime now = LocalDateTime.now();
 
-
 		try {
 			conn = DBUtil.getConnection();
 
@@ -399,5 +398,34 @@ public class Timer implements ITimer {
 			DBUtil.close(conn);
 		}
 		return true;
+	}
+
+	// 이미지 여러개 리스트
+	public Blob[] productImages(int productno) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Blob[] blobs = new Blob[4];
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT * FROM product WHERE productno = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, productno);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				blobs[0] = rs.getBlob("image");
+				blobs[1] = rs.getBlob("subimage1");
+				blobs[2] = rs.getBlob("subimage2");
+				blobs[3] = rs.getBlob("subimage3");
+				return blobs;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return null;
 	}
 }
