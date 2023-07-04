@@ -28,6 +28,7 @@ public class PasswordSearchFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		contentPane = new JPanel() {
 
@@ -155,7 +156,7 @@ public class PasswordSearchFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				DataBase data = new DataBase();
 				new LoginFrame(data);
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		contentPane.setLayout(null);
