@@ -239,6 +239,8 @@ public class AuctionFrame extends JFrame {
 		mypageBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				new MypageFrame(data);
+				frame.dispose();
 				data.setIndexMain(0);
 				data.setIndexMainSearch(0);
 				data.setCheckBtn(false);
@@ -247,8 +249,7 @@ public class AuctionFrame extends JFrame {
 				data.setAuctionRadioText(null);
 				data.setPriceFrontText(null);
 				data.setPriceBackText(null);
-				new MypageFrame(data);
-				frame.dispose();
+				
 			}
 		});
 
