@@ -22,14 +22,14 @@ import dbutil.DBUtil;
 // 스케줄러 안에는 auction테이블의 주요키와 map의 key를 비교하는 코드
 
 public class Cache {
-//	AuctionFrame 기본창에서 쓰임
+//	AuctionFrame 에서 쓰임
 	public static HashMap<Integer, Product> ProductCacheMap = new HashMap<>();
 //	AuctionFrame 검색창에서 쓰임
 //	검색을 했을 때 만들어진다.
 	public static HashMap<Integer, Product> ProductSearchCacheMap = new HashMap<>();
 //	등록물품 MypageFrame에서 쓰임
 	public static HashMap<Integer, EnrollParticipate> enrollCacheMap = new HashMap<>();
-//	등록물품 MypageFrame에서 쓰임
+//	입찰물품 MypageFrame에서 쓰임
 	public static HashMap<Integer, EnrollParticipate> participateCacheMap = new HashMap<>();
 
 	public static ImageIcon setImage(byte[] imageBytes) {
@@ -94,6 +94,8 @@ public class Cache {
 				int productno = rs2.getInt("productno");
 				participateList.add(productno);
 			}
+			
+			
 
 //			테이블에서 삭제가 됏는데 캐시에 반영이 안됐다는 뜻이다.
 			if (participateCacheset.size() > participateList.size()) {
@@ -119,7 +121,7 @@ public class Cache {
 			if (participateCacheset.size() < participateList.size()) {
 
 				stmtRevise = conn.prepareStatement(
-						"SELECT C.setno, A.userno, E.productno, E.productname,  C.finalprice, C.deadline, C.auctionno\r\n" + 
+						"SELECT C.setno, A.userno, E.productno, E.productname, E.image, C.finalprice, C.deadline, C.auctionno\r\n" + 
 						"FROM user A INNER JOIN ( SELECT p.*   FROM participate p\r\n" + 
 						"INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n" + 
 						"FROM participate GROUP BY auctionno\r\n" + 
@@ -129,7 +131,7 @@ public class Cache {
 						"INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? AND E.productno = ?\r\n" + 
 						"AND C.deadline > CURRENT_TIME() ORDER BY C.deadline;");
 				stmtRevise2 = conn.prepareStatement(
-						"SELECT C.setno, A.userno, E.productno, E.productname,C.finalprice, C.deadline, C.auctionno\r\n" + 
+						"SELECT C.setno, A.userno, E.productno, E.image,E.productname,C.finalprice, C.deadline, C.auctionno\r\n" + 
 						"FROM user A INNER JOIN (SELECT p.* FROM participate p\r\n" + 
 						"INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n" + 
 						"FROM participate GROUP BY auctionno\r\n" + 
@@ -160,11 +162,12 @@ public class Cache {
 							Integer auctionnoParse = rsForstmtRevise.getObject("auctionno", Integer.class);
 							String productname = rsForstmtRevise.getString("productname");
 							Blob imageBlob = rsForstmtRevise.getBlob("image");
+							int finalprice = rsForstmtRevise.getInt("finalprice");
 
+							
 							byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
 							ImageIcon imageIcon = setImage(imageBytes);
 
-							int finalprice = rsForstmtRevise.getInt("finalprice");
 
 							LocalDateTime endTime = rsForstmtRevise.getObject("deadline", LocalDateTime.class);
 
@@ -183,11 +186,11 @@ public class Cache {
 							Integer auctionnoParse = rsForstmtRevise2.getObject("auctionno", Integer.class);
 							String productname = rsForstmtRevise2.getString("productname");
 							Blob imageBlob = rsForstmtRevise2.getBlob("image");
+							int finalprice = rsForstmtRevise2.getInt("finalprice");
 
 							byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
 							ImageIcon imageIcon = setImage(imageBytes);
 
-							int finalprice = rsForstmtRevise2.getInt("finalprice");
 
 							LocalDateTime endTime = rsForstmtRevise2.getObject("deadline", LocalDateTime.class);
 
@@ -601,8 +604,27 @@ public class Cache {
 
 			while (rs.next()) {
 				int productno = rs.getInt("productno");
+				
+				int finalprice = rs.getInt("finalprice");
+				
+				Timestamp deadline = rs.getTimestamp("deadline");
+				
+				
+				if(ProductCacheMap.get(productno).getEndTime() != deadline.toLocalDateTime()) {
+					ProductCacheMap.get(productno).setEndTime(deadline.toLocalDateTime());
+				}
+				
+				if(ProductCacheMap.get(productno).getProductPriceNow() != finalprice) {
+					
+					ProductCacheMap.get(productno).setProductPriceNow(finalprice);
+					
+				}
+				
+				
 				Productlist.add(productno);
 			}
+			
+			
 
 //			테이블에서 삭제가 됏는데 캐시에 반영이 안됐다는 뜻이다.
 			if (ProductCacheset.size() > Productlist.size()) {
@@ -648,20 +670,20 @@ public class Cache {
 						rsforStmtRevise = stmtRevise.executeQuery();
 						while (rsforStmtRevise.next()) {
 
-							int setNo = rs.getInt("setno");
-							int productNo = rs.getInt("productno");
-							int auctionNo = rs.getInt("auctionno");
-							String productName = rs.getString("productname");
-							int initialprice = rs.getInt("initialprice");
-							int productPriceNow = rs.getInt("finalprice");
-							String productContent = rs.getString("detailinfo");
-							Blob image = rs.getBlob("image");
-							Timestamp timestamp = rs.getTimestamp("starttime");
+							int setNo = rsforStmtRevise.getInt("setno");
+							int productNo = rsforStmtRevise.getInt("productno");
+							int auctionNo = rsforStmtRevise.getInt("auctionno");
+							String productName = rsforStmtRevise.getString("productname");
+							int initialprice = rsforStmtRevise.getInt("initialprice");
+							int productPriceNow = rsforStmtRevise.getInt("finalprice");
+							String productContent = rsforStmtRevise.getString("detailinfo");
+							Blob image = rsforStmtRevise.getBlob("image");
+							Timestamp timestamp = rsforStmtRevise.getTimestamp("starttime");
 							LocalDateTime startTime = timestamp.toLocalDateTime();
-							Timestamp timestamp2 = rs.getTimestamp("deadline");
+							Timestamp timestamp2 = rsforStmtRevise.getTimestamp("deadline");
 							LocalDateTime endTime = timestamp2.toLocalDateTime();
-							int popularity = rs.getInt("popularity");
-							String category = rs.getString("category");
+							int popularity = rsforStmtRevise.getInt("popularity");
+							String category = rsforStmtRevise.getString("category");
 
 							if (productNo == item && !ProductCacheMap.containsKey(productNo)) {
 

@@ -77,6 +77,8 @@ public class DetailFrame extends JFrame {
 	private static JLabel prePriceLbl4;
 
 	private JLabel lblisContinue;
+	
+	private static String textTime;
 
 	private static final int MAX_IMAGES = 4;
 	private JLabel[] smallImageLabels = new JLabel[MAX_IMAGES];
@@ -349,6 +351,11 @@ public class DetailFrame extends JFrame {
 		backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Connection conn = null;
+				
+				
+				
+				
 				new AuctionFrame(data);
 				frame.dispose();
 			}
@@ -390,6 +397,8 @@ public class DetailFrame extends JFrame {
 		contentPane.add(backButton);
 
 		contentPane.add(lblisContinue);
+		
+		
 
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
@@ -412,6 +421,13 @@ public class DetailFrame extends JFrame {
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
+		textTime = "0";
+		System.out.println(textTime);
+		if (textTime.equals("00:00:00")) {
+			frame.dispose();
+			new AuctionFrame(data);
+		}
+		
 
 		frame.getContentPane().add(contentPane);
 		frame.setVisible(true);
@@ -469,8 +485,18 @@ public class DetailFrame extends JFrame {
 
 			lblName.setText(product.getProductName());
 			lblDetail.setText(product.getProductContent());
+			
 			String result1 = duration(product.getEndTime(), now);
+			
+			textTime = result1;
+			
+			if(lblTime.getText().equals("00일 00:00:00")) {
+//				frame.dispose();
+				new AuctionFrame(data);
+			}
+			
 			lblTime.setText(result1);
+			
 			lblPrice.setText(formatInt(product.getProductPriceNow()));
 			lblPriceMin.setText("최소입찰가 : " + formatInt(PriceMin(product.getProductPriceNow(), product.getAuctionNo())));
 
