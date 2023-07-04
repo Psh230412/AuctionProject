@@ -279,6 +279,7 @@ public class DetailFrame extends JFrame {
 		if (!timer.isOwn(data.getCurrentUser().getNo(), data.getProduct().getProductNo())) {
 			lblisOwn.setText(data.getProduct().getProductName() + "은(는) 본인이 등록한 상품입니다.");
 			participateBtn.setBackground(Color.black);
+			participateBtn.setEnabled(false);
 
 		} else if (timer.isContinue(product.getAuctionNo(), data.getCurrentUser().getNo())) {
 			participateBtn.addActionListener(new ActionListener() {
