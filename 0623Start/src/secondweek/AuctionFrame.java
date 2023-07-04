@@ -351,7 +351,7 @@ public class AuctionFrame extends JFrame {
 				data.setCheckBtn(true);
 				data.setSearchText(searchTab.getText());
 				data.setIndexMain(0);
-
+				
 			}
 		});
 
