@@ -680,7 +680,7 @@ public class MypageFrame extends JFrame {
 		}
 
 	}
-
+	
 	private static void initialLabel() {
 		for (int i = 0; i < names.length; i++) {
 			names[i].setText("");
@@ -771,9 +771,12 @@ public class MypageFrame extends JFrame {
 			    }
 			}
 
+			Collections.reverse(negativeTimeList);
+
 			enrollList.clear();
 			enrollList.addAll(positiveTimeList);
 			enrollList.addAll(negativeTimeList);
+
 
 
 			EnrollParticipate enroll = null;
@@ -891,6 +894,8 @@ public class MypageFrame extends JFrame {
 			        positiveTimeList2.add(participate);
 			    }
 			}
+			
+			Collections.reverse(negativeTimeList2);
 
 			participateList.clear();
 			participateList.addAll(positiveTimeList2);
