@@ -1,8 +1,6 @@
 package secondweek;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -11,9 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -63,6 +57,7 @@ public class ChangeInformationFrame extends JFrame {
 	private JLabel nameLabel;
 	private JLabel areaLabel;
 	private JLabel passwordCheckLabel;
+
 	public int getSelectedGender() {
 		return selectedGender;
 	}
@@ -92,6 +87,7 @@ public class ChangeInformationFrame extends JFrame {
 			}
 		}
 	}
+
 	// 중복되는 닉네임 있는지 검색후 해당하는 개수 반환
 	public int searchNickName(String newNickName) {
 		Connection conn = null;
@@ -127,14 +123,15 @@ public class ChangeInformationFrame extends JFrame {
 
 	// 닉네임 조건 - 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하
 	public boolean matchNickName(String newNickName) {
-		Pattern p = Pattern.compile("[\\w\\uAC00-\\uD7AF]{4,20}");
+		Pattern p = Pattern.compile("[\\w\\uAC00-\\uD7AF]{4,20}"); // o
+
 		Matcher m = p.matcher(newNickName);
 		return m.matches();
 	}
 
 	// 비밀번호 조건 - 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하
-	public boolean MatchPassword(String newPassword) {
-		Pattern p = Pattern.compile("[a-z+A-z+0-9+]{10,20}");
+	public boolean matchPassword(String newPassword) {
+		Pattern p = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[a-zA-Z0-9]{10,20}$"); // o
 		Matcher m = p.matcher(newPassword);
 		return m.matches();
 	}
@@ -153,16 +150,16 @@ public class ChangeInformationFrame extends JFrame {
 			if (rs.next()) {
 				String name = rs.getString("name");
 				nameLabel.setText(name);
-				
+
 				String originalNickName = rs.getString("nickname");
 				nickNameText.setText(originalNickName);
-				
+
 				String originalPhoneNumber = rs.getString("phonenumber");
 				String middle = originalPhoneNumber.substring(3, 7);
 				String last = originalPhoneNumber.substring(7, 11);
 				phoneNumberCenter.setText(middle);
 				phoneNumberLast.setText(last);
-				
+
 				Integer gender = rs.getInt("gender");
 				ImageIcon imgmanlbl1 = new ImageIcon("img/man.png");
 				ImageIcon imgwomanlbl1 = new ImageIcon("img/girl.png");
@@ -171,11 +168,11 @@ public class ChangeInformationFrame extends JFrame {
 				} else if (gender == 0) {
 					womanBtn.setIcon(imgwomanlbl1);
 				}
-				
+
 				String bigArea = rs.getString("bigarea");
 				String mediumArea = rs.getString("mediumarea");
 				String detailArea = rs.getString("detailarea");
-				String totalArea = bigArea + " " + mediumArea + " " + detailArea; 
+				String totalArea = bigArea + " " + mediumArea + " " + detailArea;
 				areaLabel.setText(totalArea);
 			}
 		} catch (SQLException e) {
@@ -191,8 +188,8 @@ public class ChangeInformationFrame extends JFrame {
 		frame = new JFrame();
 		frame.setSize(1200, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		  frame.setResizable(false);
-		  frame.setLocationRelativeTo(null);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 		contentPane = new JPanel() {
 
 			@Override
@@ -228,15 +225,15 @@ public class ChangeInformationFrame extends JFrame {
 		passwordIdentifyBtn.setIcon(imgpass);
 		passwordIdentifyBtn.setContentAreaFilled(false);
 		passwordIdentifyBtn.setBorderPainted(false);
-		
+
 		nameLabel = new JLabel();
 		nameLabel.setBounds(670, 60, 310, 34);
 		contentPane.add(nameLabel);
-		
+
 		areaLabel = new JLabel();
 		areaLabel.setBounds(700, 358, 200, 34);
 		contentPane.add(areaLabel);
-		
+
 		nikconfirmBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -287,7 +284,8 @@ public class ChangeInformationFrame extends JFrame {
 				String newPass = newPassword.getText();
 				String nowPass = nowPassword.getText();
 				String checkPass = newPasswordMatch.getText();
-				int loginUser = data.getCurrentUser().getNo();/* 해당 사용자의 번호를 얻는 코드 */;
+				int loginUser = data.getCurrentUser().getNo();
+				/* 해당 사용자의 번호를 얻는 코드 */;
 				String validityCheck = checkPasswordValidity(loginUser, newPass, nowPass, checkPass);
 				if ("OK".equals(validityCheck)) {
 					passwordCheckLabel.setForeground(Color.GREEN);
@@ -301,26 +299,26 @@ public class ChangeInformationFrame extends JFrame {
 		JButton returnBtn = new JButton();
 		returnBtn.setBounds(50, 25, 130, 50);
 		ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
-		 returnBtn.setContentAreaFilled(false); 
-		 returnBtn.setBorderPainted(false);
-		 returnBtn.setIcon(imgreturnBtn);
-		  
-		 returnBtn.addMouseListener(new MouseAdapter() {
-			    @Override
-			    public void mouseExited(MouseEvent e) {
+		returnBtn.setContentAreaFilled(false);
+		returnBtn.setBorderPainted(false);
+		returnBtn.setIcon(imgreturnBtn);
+
+		returnBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
 				returnBtn.setIcon(imgreturnBtn);
-				
-			    }
-			    
-			    @Override
-			    public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
 				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
 				returnBtn.setIcon(imgreturnBtn);
-				
-			    }
-			});
-		
+
+			}
+		});
+
 		returnBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -350,18 +348,16 @@ public class ChangeInformationFrame extends JFrame {
 		genderGroup.add(manBtn);
 		genderGroup.add(womanBtn);
 
-	
-			
 		JLabel errorLabel = new JLabel("닉네임을 확인 해주세요.");
 		errorLabel.setBounds(670, 150, 200, 30);
 		errorLabel.setFont(new Font("돋움", Font.PLAIN, 12));
 		errorLabel.setForeground(Color.RED);
 		contentPane.add(errorLabel);
 		JLabel pwerrorLabel = new JLabel("비밀번호를 확인 해주세요.");
-		 pwerrorLabel.setBounds(680, 650, 200, 30);
-		 pwerrorLabel.setFont(new Font("돋움", Font.PLAIN, 12));
-		 pwerrorLabel.setForeground(Color.RED);
-		 contentPane.add(pwerrorLabel);
+		pwerrorLabel.setBounds(680, 650, 200, 30);
+		pwerrorLabel.setFont(new Font("돋움", Font.PLAIN, 12));
+		pwerrorLabel.setForeground(Color.RED);
+		contentPane.add(pwerrorLabel);
 		contentPane.add(returnBtn);
 		contentPane.add(nikconfirmBtn);
 		contentPane.add(passwordIdentifyBtn);
@@ -373,7 +369,7 @@ public class ChangeInformationFrame extends JFrame {
 
 		bigAreaCombo.setBounds(700, 310, 120, 25);
 		contentPane.add(bigAreaCombo);
-		mediumAreaCombo.setBounds(848, 310,120, 25);
+		mediumAreaCombo.setBounds(848, 310, 120, 25);
 		contentPane.add(mediumAreaCombo);
 		smallAreaCombo.setBounds(996, 310, 120, 25);
 		contentPane.add(smallAreaCombo);
@@ -459,9 +455,9 @@ public class ChangeInformationFrame extends JFrame {
 		});
 		informationResetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			    nickNameText.setText("");
-			    phoneNumberCenter.setText("");
-			    phoneNumberLast.setText("");
+				nickNameText.setText("");
+				phoneNumberCenter.setText("");
+				phoneNumberLast.setText("");
 			}
 		});
 		informationResetBtn.setBounds(910, 350, 150, 80);
@@ -504,23 +500,24 @@ public class ChangeInformationFrame extends JFrame {
 							return;
 						}
 						String phoneNumberCenter1 = phoneNumberCenter.getText();
-		                String phoneNumberLast2 = phoneNumberLast.getText();
-		                if (phoneNumberCenter1.isEmpty() || phoneNumberLast2.isEmpty()) {
-		                    JOptionPane.showMessageDialog(null, "전화번호를 모두 입력해주세요", "입력오류", JOptionPane.WARNING_MESSAGE);
-		                    return;
-		                }
-		                String phoneNumber = "010" + phoneNumberCenter + phoneNumberLast;
+						String phoneNumberLast2 = phoneNumberLast.getText();
+						if (phoneNumberCenter1.isEmpty() || phoneNumberLast2.isEmpty()) {
+							JOptionPane.showMessageDialog(null, "전화번호를 모두 입력해주세요", "입력오류", JOptionPane.WARNING_MESSAGE);
+							return;
+						}
+						String phoneNumber = "010" + phoneNumberCenter + phoneNumberLast;
 
-		                String bigArea = (String) bigAreaCombo.getSelectedItem();
-		                String mediumArea = (String) mediumAreaCombo.getSelectedItem();
-		                String detailArea = (String) smallAreaCombo.getSelectedItem();
+						String bigArea = (String) bigAreaCombo.getSelectedItem();
+						String mediumArea = (String) mediumAreaCombo.getSelectedItem();
+						String detailArea = (String) smallAreaCombo.getSelectedItem();
 
-		                if (bigArea == null || mediumArea == null || detailArea == null) {
-		                    JOptionPane.showMessageDialog(null, "지역 선택을 모두 완료해주세요", "입력오류", JOptionPane.WARNING_MESSAGE);
-		                    return;
-		                }
+						if (bigArea == null || mediumArea == null || detailArea == null) {
+							JOptionPane.showMessageDialog(null, "지역 선택을 모두 완료해주세요", "입력오류",
+									JOptionPane.WARNING_MESSAGE);
+							return;
+						}
 
-		                int loginUser = data.getCurrentUser().getNo();
+						int loginUser = data.getCurrentUser().getNo();
 
 						changeUserInformation = conn
 								.prepareStatement("update user set nickname = ?, phonenumber = ?, bigarea = ?,"
@@ -592,13 +589,12 @@ public class ChangeInformationFrame extends JFrame {
 				newPasswordMatch.setText("");
 			}
 		});
-		passwordResetBtn.setBounds(910, 660,150, 80);
+		passwordResetBtn.setBounds(910, 660, 150, 80);
 		contentPane.add(passwordResetBtn);
 		passwordCheckLabel = new JLabel();
 		passwordCheckLabel.setBounds(650, 650, 200, 50);
 		contentPane.add(passwordCheckLabel);
-		
-		
+
 		JButton passwordChangeBtn = new JButton();
 		passwordChangeBtn.addActionListener(new ActionListener() {
 			@Override
@@ -620,8 +616,7 @@ public class ChangeInformationFrame extends JFrame {
 					PreparedStatement changeUserPassword = null;
 					try {
 						conn = DBUtil.getConnection();
-						changeUserPassword = conn
-								.prepareStatement("update user set password = ? where userno = ?");
+						changeUserPassword = conn.prepareStatement("update user set password = ? where userno = ?");
 						changeUserPassword.setString(1, newPass);
 						changeUserPassword.setInt(2, loginUser);
 						changeUserPassword.executeUpdate();
@@ -663,12 +658,14 @@ public class ChangeInformationFrame extends JFrame {
 		returnOriginal(data);
 
 	}
+
 	private String checkPasswordValidity(int loginUser, String newPass, String nowPass, String checkPass) {
 		Connection conn = null;
 		PreparedStatement checkPassword = null;
 		try {
 			conn = DBUtil.getConnection();
-			checkPassword = conn.prepareStatement("SELECT COUNT(*) AS count FROM user WHERE userno = ? AND password = ?");
+			checkPassword = conn
+					.prepareStatement("SELECT COUNT(*) AS count FROM user WHERE userno = ? AND password = ?");
 			checkPassword.setInt(1, loginUser);
 			checkPassword.setString(2, nowPass);
 
@@ -676,9 +673,9 @@ public class ChangeInformationFrame extends JFrame {
 			rs.next();
 			int count = rs.getInt("count");
 
-			if (count == 0) { 
+			if (count == 0) {
 				return "현재 비밀번호가 틀립니다.";
-			} else if (MatchPassword(newPass) == false) {
+			} else if (matchPassword(newPass) == false) {
 				return "비밀번호의 조건 : 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하";
 			} else if (!newPass.equals(checkPass)) {
 				return "새비밀번호와 비밀번호 확인이 동일하지 않습니다";
@@ -693,6 +690,7 @@ public class ChangeInformationFrame extends JFrame {
 		}
 		return "";
 	}
+
 	private static List<String> getMediumAreas(String bigArea) {
 		List<String> mediumAreas = new ArrayList<>();
 		if (bigArea.equals("수도권")) {
