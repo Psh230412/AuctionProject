@@ -248,8 +248,8 @@ public class AuctionFrame extends JFrame {
 				data.setSearchText(null);
 				data.setCategoryText(null);
 				data.setAuctionRadioText(null);
-				data.setPriceFrontText("0");
-				data.setPriceBackText("0");
+				data.setPriceFrontText("");
+				data.setPriceBackText("");
 
 			}
 		});
@@ -1186,24 +1186,27 @@ public class AuctionFrame extends JFrame {
 			}
 
 			if (isPriceRange) {
-				int num1 = Integer.parseInt(rangeFront.getText());
-				int num2 = Integer.parseInt(rangeBack.getText());
+				if (rangeFront.getText().equals("0") && rangeBack.getText().equals("0")) {
+				} else {
+					int num1 = Integer.parseInt(rangeFront.getText());
+					int num2 = Integer.parseInt(rangeBack.getText());
 
-				if (num2 < num1) {
-					int empty = num1;
-					num1 = num2;
-					num2 = empty;
+					if (num2 < num1) {
+						int empty = num1;
+						num1 = num2;
+						num2 = empty;
 
-					rangeFront.setText(Integer.toString(num1));
-					rangeBack.setText(Integer.toString(num2));
-				}
-				// 가격 범위 출력 예시
-				// 체크박스에 체크가 되어있으면 가격 받아서
-				Iterator<Product> iterator = productList.iterator();
-				while (iterator.hasNext()) {
-					Product product = iterator.next();
-					if (product.getProductPriceNow() < num1 || product.getProductPriceNow() > num2) {
-						iterator.remove();
+						rangeFront.setText(Integer.toString(num1));
+						rangeBack.setText(Integer.toString(num2));
+					}
+					// 가격 범위 출력 예시
+					// 체크박스에 체크가 되어있으면 가격 받아서
+					Iterator<Product> iterator = productList.iterator();
+					while (iterator.hasNext()) {
+						Product product = iterator.next();
+						if (product.getProductPriceNow() < num1 || product.getProductPriceNow() > num2) {
+							iterator.remove();
+						}
 					}
 				}
 			}
