@@ -167,17 +167,17 @@ public class Timer {
 	}
 
 	public void updatePrice(int setNo, String bid, Connection conn) throws SQLException {
+		PreparedStatement stmt = null;
 		try {
-			conn = DBUtil.getConnection();
 
-			PreparedStatement stmt = conn
-					.prepareStatement("update auction\r\n" + "set finalprice = ?\r\n" + "WHERE setno = ?;");
+			stmt = conn.prepareStatement("update auction\r\n" + "set finalprice = ?\r\n" + "WHERE setno = ?;");
 			stmt.setInt(1, Integer.parseInt(bid));
 			stmt.setInt(2, setNo);
 
 			stmt.executeUpdate();
 
 		} finally {
+			DBUtil.close(stmt);
 		}
 	}
 
@@ -262,15 +262,18 @@ public class Timer {
 
 	public void plusOneMinute(int auctionno, Connection conn) throws SQLException {
 		LocalDateTime now = LocalDateTime.now();
+		PreparedStatement stmt = null;
+		PreparedStatement stmtForPlusDuration = null;
+		ResultSet rs = null;
 
 		try {
 			conn = DBUtil.getConnection();
 
-			PreparedStatement stmt = conn.prepareStatement("SELECT deadline FROM auction where auctionno = ? ;");
+			stmt = conn.prepareStatement("SELECT deadline FROM auction where auctionno = ? ;");
 
 			stmt.setInt(1, auctionno);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				Timestamp deadline = rs.getTimestamp("deadline");
@@ -278,7 +281,7 @@ public class Timer {
 				LocalDateTime localDateTime = deadline.toLocalDateTime();
 
 				if (isLeftOneMinute(localDateTime, now)) {
-					PreparedStatement stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
+					stmtForPlusDuration = conn.prepareStatement("UPDATE auction \r\n"
 							+ "SET deadline = DATE_ADD(deadline, INTERVAL 1 MINUTE)\r\n" + "where auctionno = ? ;");
 					stmtForPlusDuration.setInt(1, auctionno);
 					stmtForPlusDuration.executeUpdate();
@@ -288,6 +291,9 @@ public class Timer {
 				}
 			}
 		} finally {
+			DBUtil.close(stmtForPlusDuration);
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
 		}
 	}
 
@@ -321,21 +327,26 @@ public class Timer {
 	// 최근입찰가격용
 	public List<Integer> participateList(int auctionno, Connection conn) throws SQLException {
 		List<Integer> list = new ArrayList<>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		String sql = "SELECT A.participateprice FROM participate A \r\n"
 				+ "INNER JOIN auction B ON A.auctionno = B.auctionno \r\n" + "WHERE B.auctionno = ?\r\n"
 				+ "ORDER BY A.participatetime DESC\r\n" + "LIMIT 4";
 
-		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+		try {
+			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, auctionno);
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			while (rs.next()) {
 				int participatePrice = rs.getInt("participateprice");
 				list.add(participatePrice);
 			}
 			return list;
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(rs);
 		}
 	}
 
