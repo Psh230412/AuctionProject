@@ -245,7 +245,7 @@ public class MypageFrame extends JFrame {
 
 				Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-				Image image = toolkit.getImage("img/myPage_1.png");
+				Image image = toolkit.getImage("img/myPage_1.jpg");
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
