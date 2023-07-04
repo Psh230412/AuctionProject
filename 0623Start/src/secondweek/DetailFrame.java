@@ -422,8 +422,7 @@ public class DetailFrame extends JFrame {
 			e.printStackTrace();
 		}
 		textTime = "0";
-		System.out.println(textTime);
-		if (textTime.equals("00:00:00")) {
+		if (textTime.equals("00일 00:00:00")) {
 			frame.dispose();
 			new AuctionFrame(data);
 		}
@@ -489,11 +488,7 @@ public class DetailFrame extends JFrame {
 			String result1 = duration(product.getEndTime(), now);
 			
 			textTime = result1;
-			
-			if(lblTime.getText().equals("00일 00:00:00")) {
-//				frame.dispose();
-				new AuctionFrame(data);
-			}
+		
 			
 			lblTime.setText(result1);
 			
