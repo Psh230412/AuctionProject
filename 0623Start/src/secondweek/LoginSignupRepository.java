@@ -18,7 +18,7 @@ import dbutil.DBUtil;
 public class LoginSignupRepository {
 
 	// 로그인 시도할때 아이디, 비밀번호가 DB에 있는지 검색하고 있으면 유저 반환
-	public User searchIdPassword(String id, String password, Connection conn) throws SQLException{
+	public User searchIdPassword(String id, String password, Connection conn) throws SQLException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -35,7 +35,7 @@ public class LoginSignupRepository {
 				int depositParse = rs.getInt("deposit");
 				return new User(userno, idParse, passwordParse, depositParse);
 			}
-		}  finally {
+		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
 		}
@@ -43,7 +43,7 @@ public class LoginSignupRepository {
 	}
 
 	// 회원가입할 때 중복되는 아이디가 DB에 있는지 검색하고 있으면 그 아이디 반환
-	public String searchId(String id, Connection conn) {
+	public String searchId(String id, Connection conn) throws SQLException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -56,15 +56,13 @@ public class LoginSignupRepository {
 				String idParse = rs.getString("id");
 				return idParse;
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
 		}
 		return null;
 	}
-	
+
 	// 비밀번호 찾기
 	public String passwordSearch(String id, String name, String telNumStr) {
 		Connection conn = null;
@@ -93,7 +91,8 @@ public class LoginSignupRepository {
 	}
 
 	public int insertUserInfo(String id, String password, String nickname, String name, LocalDate date, int genderInt,
-			String phonenumber, String bigAreaComboStr, String mediumAreaComboStr, String smallAreaComboStr, Connection conn) {
+			String phonenumber, String bigAreaComboStr, String mediumAreaComboStr, String smallAreaComboStr,
+			Connection conn) throws SQLException {
 		PreparedStatement stmt = null;
 		try {
 			String sql = "INSERT INTO user (`id`, `password`, `nickname`, `name`, `birthday`, `gender`, `phonenumber`, `bigarea`, `mediumarea`, `detailarea`, `deposit`) \r\n"
@@ -110,18 +109,15 @@ public class LoginSignupRepository {
 			stmt.setString(8, bigAreaComboStr);
 			stmt.setString(9, mediumAreaComboStr);
 			stmt.setString(10, smallAreaComboStr);
-			
+
 			return stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			DBUtil.close(stmt);
 		}
-		return 0;
 	}
 
 	// 중복되는 닉네임 있는지 검색후 해당하는 개수 반환
-	public int searchNickName(String newNickName, Connection conn) {
+	public int searchNickName(String newNickName, Connection conn) throws SQLException{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -132,8 +128,6 @@ public class LoginSignupRepository {
 			if (rs.next()) {
 				return rs.getInt("count");
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
@@ -142,7 +136,7 @@ public class LoginSignupRepository {
 	}
 
 	// 생성 가능한 닉네임인지?
-	public boolean correctNickName(String newNickName, Connection conn) {
+	public boolean correctNickName(String newNickName, Connection conn) throws SQLException {
 		if (searchNickName(newNickName, conn) == 0 && matchNickName(newNickName)) {
 			return true;
 		} else {
@@ -176,7 +170,7 @@ public class LoginSignupRepository {
 		return m.matches();
 	}
 
-	// 비밀번호 조건 - 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하 
+	// 비밀번호 조건 - 영대소문자, 숫자 각 1개씩 필수포함 10자리이상 20자리이하
 	public boolean matchPassword(String newPassword) {
 		Pattern p = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[a-zA-Z0-9]{10,20}$"); // o
 		Matcher m = p.matcher(newPassword);
