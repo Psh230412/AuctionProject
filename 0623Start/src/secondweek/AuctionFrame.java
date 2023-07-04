@@ -250,7 +250,7 @@ public class AuctionFrame extends JFrame {
 				data.setAuctionRadioText(null);
 				data.setPriceFrontText(null);
 				data.setPriceBackText(null);
-				
+
 			}
 		});
 
@@ -350,15 +350,15 @@ public class AuctionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 //				여기서 putProductSearchCacheMap() 호출 
-				if(searchTab.getText() != null) {
-					
+				if (searchTab.getText() != null) {
+
 					Cache.ProductSearchCacheMap.clear();
 					Cache.putProductSearchCacheMap(searchTab.getText());
 				}
 				data.setCheckBtn(true);
 				data.setSearchText(searchTab.getText());
 				data.setIndexMain(0);
-				
+
 			}
 		});
 
@@ -720,12 +720,12 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (data.isCheckBtn()) {
-					
+
 					if (((testList.size() - 1) / 10) > (data.getIndexMainSearch() / 10)) {
 						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
 					}
 				} else {
-					
+
 					if (((testList.size() - 1) / 10) > (data.getIndexMain() / 10)) {
 						data.setIndexMain(data.getIndexMain() + 10);
 					}
@@ -777,10 +777,14 @@ public class AuctionFrame extends JFrame {
 				deadlineSort.setSelected(true);
 				categoryCombo.setSelectedIndex(0);
 				isPriceRange = false;
-				rangeFront.setText(null);
-				data.setPriceFrontText(null);
-				rangeBack.setText(null);
-				data.setPriceBackText(null);
+				if (rangeFront.getText() != null) {
+					rangeFront.setText("0");
+					data.setPriceFrontText("0");
+				}
+				if (rangeBack.getText() != null) {
+					rangeBack.setText("0");
+					data.setPriceBackText("0");
+				}
 			}
 		});
 
@@ -1119,18 +1123,17 @@ public class AuctionFrame extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
-		
 
 			resetLabel();
 
 //			updatLabel 호출 될때마다 cache와 원본테이블 교차검증 
 			Cache.isProductnoProductCacheMap(conn);
-			
+
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
 
 			int count = 0;
 			List<Product> productList = new ArrayList<Product>();
-			
+
 			for (Map.Entry<Integer, Product> entry : Cache.ProductCacheMap.entrySet()) {
 				Product value = entry.getValue();
 				productList.add(value);
@@ -1143,9 +1146,7 @@ public class AuctionFrame extends JFrame {
 					return Integer.compare(durationSec(p1.getEndTime(), now), durationSec(p2.getEndTime(), now));
 				}
 			});
-			
-			
-			
+
 			if (priceHighSort.isSelected())
 				Collections.sort(productList, new Comparator<Product>() {
 					@Override
@@ -1552,9 +1553,8 @@ public class AuctionFrame extends JFrame {
 
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMainSearch() / 10) + 1) + " - ");
 
-			
 			List<Product> productList = new ArrayList<Product>();
-			
+
 //			productList = timer.selectSearchProduct(text);
 			for (Map.Entry<Integer, Product> entry : Cache.ProductSearchCacheMap.entrySet()) {
 				Product value = entry.getValue();
@@ -1985,11 +1985,11 @@ public class AuctionFrame extends JFrame {
 		}
 		return false;
 	}
+
 	public static int durationSec(LocalDateTime targetDateTime, LocalDateTime now) {
 		Duration duration = Duration.between(now, targetDateTime);
 		long seconds = duration.getSeconds();
-		
-		
+
 		return (int) seconds;
 	}
 
@@ -2002,7 +2002,6 @@ public class AuctionFrame extends JFrame {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 
-					
 					LocalDateTime now = LocalDateTime.now();
 
 					if (data.isCheckBtn()) {
