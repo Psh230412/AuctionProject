@@ -687,8 +687,8 @@ public class MypageFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ListRepository repo = new ListRepository();
 				List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
-				if (Math.floor(participateList.size() / 5) > (data.getIndexPar() / 5)) {
-					data.setIndex((data.getIndexPar() - 1) + 5);
+				if (Math.floor((participateList.size() - 1) / 5) > (data.getIndexPar() / 5)) {
+					data.setIndexPar(data.getIndexPar() + 5);
 				}
 			}
 		});
@@ -817,17 +817,18 @@ public class MypageFrame extends JFrame {
 	}
 
 	public static void updatLabel(LocalDateTime now) {
+		// TODO Auto-generated catch block
 		ListRepository repo = new ListRepository();
 		Connection conn = null;
 		lblNum1.setText(" - " + String.valueOf((data.getIndex() / 5) + 1) + " - ");
 		lblNum2.setText(" - " + String.valueOf((data.getIndexPar() / 5) + 1) + " - ");
+		initialLabel();
 
 		try {
 			conn = DBUtil.getConnection();
 			List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
 			EnrollParticipate enroll = null;
 
-			initialLabel();
 
 			if (enrollList != null) {
 				int count = 0;
@@ -917,89 +918,92 @@ public class MypageFrame extends JFrame {
 			}
 
 			List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
-			int count2 = 0;
-			for (int i = data.getIndexPar(); i < participateList.size(); i++) {
-				count2++;
-				if (count2 == 6) {
-					break;
-				}
-				if (participateList.get(i) == null) {
-					continue;
-				} else {
-
-					switch (i % 5) {
-					case 0: {
-						lblPrice21.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice21.setPreferredSize(new Dimension(140, lblPrice21.getPreferredSize().height));
-
-						lblImage21.setIcon(iconSize(participateList.get(i).getImage()));
-
-						String result21 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime21.setText(result21);
-						lblTime21.setPreferredSize(new Dimension(120, lblTime21.getPreferredSize().height));
-
-						lblName21.setText(participateList.get(i).getProductname());
-						lblName21.setPreferredSize(new Dimension(100, lblName21.getPreferredSize().height));
-
+			EnrollParticipate participate = null;
+			if (participateList != null) {
+				int count2 = 0;
+				for (int i = data.getIndexPar(); i < participateList.size(); i++) {
+					participate = participateList.get(i);
+					count2++;
+					if (count2 == 6) {
 						break;
 					}
-					case 1: {
-						lblPrice22.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice22.setPreferredSize(new Dimension(140, lblPrice22.getPreferredSize().height));
+					if (enroll == null) {
+						continue;
+					} else {
+						switch (i % 5) {
+						case 0: {
+							lblPrice21.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice21.setPreferredSize(new Dimension(140, lblPrice21.getPreferredSize().height));
 
-						lblImage22.setIcon(iconSize(participateList.get(i).getImage()));
+							lblImage21.setIcon(iconSize(participate.getImage()));
 
-						String result22 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime22.setText(result22);
-						lblTime22.setPreferredSize(new Dimension(120, lblTime22.getPreferredSize().height));
+							String result21 = durationBid(participate.getEndTime(), now);
+							lblTime21.setText(result21);
+							lblTime21.setPreferredSize(new Dimension(120, lblTime21.getPreferredSize().height));
 
-						lblName22.setText(participateList.get(i).getProductname());
-						lblName22.setPreferredSize(new Dimension(100, lblName22.getPreferredSize().height));
-						break;
-					}
-					case 2: {
-						lblPrice23.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice23.setPreferredSize(new Dimension(140, lblPrice23.getPreferredSize().height));
+							lblName21.setText(participate.getProductname());
+							lblName21.setPreferredSize(new Dimension(100, lblName21.getPreferredSize().height));
 
-						lblImage23.setIcon(iconSize(participateList.get(i).getImage()));
+							break;
+						}
+						case 1: {
+							lblPrice22.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice22.setPreferredSize(new Dimension(140, lblPrice22.getPreferredSize().height));
 
-						String result23 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime23.setText(result23);
-						lblTime23.setPreferredSize(new Dimension(120, lblTime23.getPreferredSize().height));
+							lblImage22.setIcon(iconSize(participate.getImage()));
 
-						lblName23.setText(participateList.get(i).getProductname());
-						lblName23.setPreferredSize(new Dimension(100, lblName23.getPreferredSize().height));
-						break;
-					}
-					case 3: {
-						lblPrice24.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice24.setPreferredSize(new Dimension(140, lblPrice24.getPreferredSize().height));
+							String result22 = durationBid(participate.getEndTime(), now);
+							lblTime22.setText(result22);
+							lblTime22.setPreferredSize(new Dimension(120, lblTime22.getPreferredSize().height));
 
-						lblImage24.setIcon(iconSize(participateList.get(i).getImage()));
+							lblName22.setText(participate.getProductname());
+							lblName22.setPreferredSize(new Dimension(100, lblName22.getPreferredSize().height));
+							break;
+						}
+						case 2: {
+							lblPrice23.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice23.setPreferredSize(new Dimension(140, lblPrice23.getPreferredSize().height));
 
-						String result24 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime24.setText(result24);
-						lblTime24.setPreferredSize(new Dimension(120, lblTime24.getPreferredSize().height));
+							lblImage23.setIcon(iconSize(participate.getImage()));
 
-						lblName24.setText(participateList.get(i).getProductname());
-						lblName24.setPreferredSize(new Dimension(100, lblName24.getPreferredSize().height));
-						break;
-					}
-					case 4: {
-						lblPrice25.setText(formatInt(participateList.get(i).getProductPriceNow()));
-						lblPrice25.setPreferredSize(new Dimension(140, lblPrice25.getPreferredSize().height));
+							String result23 = durationBid(participate.getEndTime(), now);
+							lblTime23.setText(result23);
+							lblTime23.setPreferredSize(new Dimension(120, lblTime23.getPreferredSize().height));
 
-						lblImage25.setIcon(iconSize(participateList.get(i).getImage()));
+							lblName23.setText(participate.getProductname());
+							lblName23.setPreferredSize(new Dimension(100, lblName23.getPreferredSize().height));
+							break;
+						}
+						case 3: {
+							lblPrice24.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice24.setPreferredSize(new Dimension(140, lblPrice24.getPreferredSize().height));
 
-						String result25 = durationBid(participateList.get(i).getEndTime(), now);
-						lblTime25.setText(result25);
-						lblTime25.setPreferredSize(new Dimension(120, lblTime25.getPreferredSize().height));
+							lblImage24.setIcon(iconSize(participate.getImage()));
 
-						lblName25.setText(participateList.get(i).getProductname());
-						lblName25.setPreferredSize(new Dimension(100, lblName25.getPreferredSize().height));
+							String result24 = durationBid(participate.getEndTime(), now);
+							lblTime24.setText(result24);
+							lblTime24.setPreferredSize(new Dimension(120, lblTime24.getPreferredSize().height));
 
-						break;
-					}
+							lblName24.setText(participate.getProductname());
+							lblName24.setPreferredSize(new Dimension(100, lblName24.getPreferredSize().height));
+							break;
+						}
+						case 4: {
+							lblPrice25.setText(formatInt(participate.getProductPriceNow()));
+							lblPrice25.setPreferredSize(new Dimension(140, lblPrice25.getPreferredSize().height));
+
+							lblImage25.setIcon(iconSize(participate.getImage()));
+
+							String result25 = durationBid(participate.getEndTime(), now);
+							lblTime25.setText(result25);
+							lblTime25.setPreferredSize(new Dimension(120, lblTime25.getPreferredSize().height));
+
+							lblName25.setText(participate.getProductname());
+							lblName25.setPreferredSize(new Dimension(100, lblName25.getPreferredSize().height));
+
+							break;
+						}
+						}
 					}
 				}
 			}

@@ -789,7 +789,6 @@ public class AuctionFrame extends JFrame {
 					categoryString = (String) categoryCombo.getSelectedItem();
 					data.setIndexMain(0);
 					data.setIndexMainSearch(0);
-					// TODO Auto-generated catch block
 				}
 			}
 		});
@@ -841,7 +840,6 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(deadlineSort.getText());
-				// TODO Auto-generated catch block
 				data.setIndexMain(0);
 				data.setIndexMainSearch(0);
 			}
