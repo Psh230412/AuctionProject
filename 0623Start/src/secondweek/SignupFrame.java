@@ -1,7 +1,6 @@
 package secondweek;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -12,6 +11,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,9 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.DocumentFilter.FilterBypass;
 import javax.swing.text.PlainDocument;
+
+import dbutil.DBUtil;
 
 public class SignupFrame extends JFrame {
 	LoginSignupRepository repo;
@@ -101,99 +103,105 @@ public class SignupFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-	
+
 		signupPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(signupPanel);
 		signupPanel.setLayout(null);
 
 		// -----------------------------------------------------------------------------
-				nameTF = new JTextField(10);
-				nameTF.setBounds(650, 70, 240, 25);
+		nameTF = new JTextField(10);
+		nameTF.setBounds(650, 70, 240, 25);
 
-				nicknameTF = new JTextField(10);
-				nicknameTF.setBounds(650, 168, 240, 25);
+		nicknameTF = new JTextField(10);
+		nicknameTF.setBounds(650, 168, 240, 25);
 
-				JButton nicknameIdentifyBtn = new JButton("닉네임 확인");
-				nicknameIdentifyBtn.setBounds(960, 163, 150, 55);
+		JButton nicknameIdentifyBtn = new JButton("닉네임 확인");
+		nicknameIdentifyBtn.setBounds(960, 163, 150, 55);
+		ImageIcon imgnicknameIdenBtn = new ImageIcon("img/nickconfirm_1.png");
+		nicknameIdentifyBtn.setContentAreaFilled(false);
+		nicknameIdentifyBtn.setBorderPainted(false);
+		nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
+		nicknameIdentifyBtn.setVisible(true);
+		nicknameIdentifyBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
 				ImageIcon imgnicknameIdenBtn = new ImageIcon("img/nickconfirm_1.png");
-				nicknameIdentifyBtn.setContentAreaFilled(false);
-				nicknameIdentifyBtn.setBorderPainted(false);
 				nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
-				nicknameIdentifyBtn.setVisible(true);
-				nicknameIdentifyBtn.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseExited(MouseEvent e) {
-						ImageIcon imgnicknameIdenBtn = new ImageIcon(
-								"img/nickconfirm_1.png");
-						nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
 
-					}
+			}
 
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						ImageIcon imgnicknameIdenBtn = new ImageIcon(
-								"img/nickconfirm.png");
-						nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				ImageIcon imgnicknameIdenBtn = new ImageIcon("img/nickconfirm.png");
+				nicknameIdentifyBtn.setIcon(imgnicknameIdenBtn);
 
-					}
-				});
-				nicknameInfoLbl = new JLabel("닉네임을 확인해주세요.");
-				nicknameInfoLbl.setBounds(650, 194, 200, 21);
+			}
+		});
+		nicknameInfoLbl = new JLabel("닉네임을 확인해주세요.");
+		nicknameInfoLbl.setBounds(650, 194, 200, 21);
 
-				nicknameIdentifyBtn.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String nickname = nicknameTF.getText();
-						nicknameCheck(nickname);
-					}
-				});
+		nicknameIdentifyBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nickname = nicknameTF.getText();
 
-				telFrontTF = new JTextField(5);
-				telFrontTF.setBounds(650, 225, 100, 25);
-				telCenterTF = new JTextField(5);
-				telCenterTF.setBounds(795, 225, 120, 25);
-				telBackTF = new JTextField(5);
-				telBackTF.setBounds(970, 225, 100, 25);
+				Connection conn = null;
+				try {
+					conn = DBUtil.getConnection();
+					nicknameCheck(nickname, conn);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} finally {
+					DBUtil.close(conn);
+				}
+			}
+		});
 
-				PlainDocument docCenter1 = (PlainDocument) telFrontTF.getDocument();
-				docCenter1.setDocumentFilter(new NumberOnlyFilter(3));
-				PlainDocument docCenter2 = (PlainDocument) telCenterTF.getDocument();
-				docCenter2.setDocumentFilter(new NumberOnlyFilter(4));
-				PlainDocument docCenter3 = (PlainDocument) telBackTF.getDocument();
-				docCenter3.setDocumentFilter(new NumberOnlyFilter(4));
+		telFrontTF = new JTextField(5);
+		telFrontTF.setBounds(650, 225, 100, 25);
+		telCenterTF = new JTextField(5);
+		telCenterTF.setBounds(795, 225, 120, 25);
+		telBackTF = new JTextField(5);
+		telBackTF.setBounds(970, 225, 100, 25);
 
-				yearCombo.setBounds(650, 370, 100, 25);
-				signupPanel.add(yearCombo);
-				monthCombo.setBounds(780, 370, 100, 25);
-				signupPanel.add(monthCombo);
-				dayCombo.setBounds(910, 370, 100, 25);
-				signupPanel.add(dayCombo);
+		PlainDocument docCenter1 = (PlainDocument) telFrontTF.getDocument();
+		docCenter1.setDocumentFilter(new NumberOnlyFilter(3));
+		PlainDocument docCenter2 = (PlainDocument) telCenterTF.getDocument();
+		docCenter2.setDocumentFilter(new NumberOnlyFilter(4));
+		PlainDocument docCenter3 = (PlainDocument) telBackTF.getDocument();
+		docCenter3.setDocumentFilter(new NumberOnlyFilter(4));
 
-		
-				ImageIcon imgmanlbl = new ImageIcon("img/man2.png");
-				ImageIcon imgwomanlbl = new ImageIcon("img/girl2.png");
-				JRadioButton manBtn = new JRadioButton("남성");
-				manBtn.setContentAreaFilled(true);
-				manBtn.setBorderPainted(true);
-				manBtn.setBounds(602, 268, 50, 40);
-				manBtn.setIcon(imgmanlbl);
+		yearCombo.setBounds(650, 370, 100, 25);
+		signupPanel.add(yearCombo);
+		monthCombo.setBounds(780, 370, 100, 25);
+		signupPanel.add(monthCombo);
+		dayCombo.setBounds(910, 370, 100, 25);
+		signupPanel.add(dayCombo);
 
-				JRadioButton womanBtn = new JRadioButton("여성");
-				womanBtn.setContentAreaFilled(true);
-				womanBtn.setBorderPainted(true);
-				womanBtn.setIcon(imgwomanlbl);
-				womanBtn.setBounds(660, 268, 50, 40);
+		ImageIcon imgmanlbl = new ImageIcon("img/man2.png");
+		ImageIcon imgwomanlbl = new ImageIcon("img/girl2.png");
+		JRadioButton manBtn = new JRadioButton("남성");
+		manBtn.setContentAreaFilled(true);
+		manBtn.setBorderPainted(true);
+		manBtn.setBounds(602, 268, 50, 40);
+		manBtn.setIcon(imgmanlbl);
 
-				ButtonGroup radioGroup = new ButtonGroup();
-				radioGroup.add(manBtn);
-				radioGroup.add(womanBtn);
-				
-				bigAreaCombo = new JComboBox<>();
-				bigAreaCombo.setBounds(650, 325, 100, 25);
-				mediumAreaCombo = new JComboBox<>();
-				mediumAreaCombo.setBounds(780, 325, 100, 25);
-				smallAreaCombo = new JComboBox<>();
-				smallAreaCombo.setBounds(910, 325, 100, 25);
+		JRadioButton womanBtn = new JRadioButton("여성");
+		womanBtn.setContentAreaFilled(true);
+		womanBtn.setBorderPainted(true);
+		womanBtn.setIcon(imgwomanlbl);
+		womanBtn.setBounds(660, 268, 50, 40);
+
+		ButtonGroup radioGroup = new ButtonGroup();
+		radioGroup.add(manBtn);
+		radioGroup.add(womanBtn);
+
+		bigAreaCombo = new JComboBox<>();
+		bigAreaCombo.setBounds(650, 325, 100, 25);
+		mediumAreaCombo = new JComboBox<>();
+		mediumAreaCombo.setBounds(780, 325, 100, 25);
+		smallAreaCombo = new JComboBox<>();
+		smallAreaCombo.setBounds(910, 325, 100, 25);
 
 		// 지역 대 분류
 		List<String> bigAreas = new ArrayList<>();
@@ -241,19 +249,18 @@ public class SignupFrame extends JFrame {
 			}
 		});
 
-	
-				signupPanel.add(nameTF);
-				signupPanel.add(nicknameTF);
-				signupPanel.add(nicknameInfoLbl);
-				signupPanel.add(nicknameIdentifyBtn);
-				signupPanel.add(telFrontTF);
-				signupPanel.add(telCenterTF);
-				signupPanel.add(telBackTF);
-				signupPanel.add(manBtn);
-				signupPanel.add(womanBtn);
-				signupPanel.add(bigAreaCombo);
-				signupPanel.add(mediumAreaCombo);
-				signupPanel.add(smallAreaCombo);
+		signupPanel.add(nameTF);
+		signupPanel.add(nicknameTF);
+		signupPanel.add(nicknameInfoLbl);
+		signupPanel.add(nicknameIdentifyBtn);
+		signupPanel.add(telFrontTF);
+		signupPanel.add(telCenterTF);
+		signupPanel.add(telBackTF);
+		signupPanel.add(manBtn);
+		signupPanel.add(womanBtn);
+		signupPanel.add(bigAreaCombo);
+		signupPanel.add(mediumAreaCombo);
+		signupPanel.add(smallAreaCombo);
 
 		// --------------------------------------------------------------------------------
 
@@ -379,26 +386,22 @@ public class SignupFrame extends JFrame {
 
 		idIdentifyLbl = new JLabel("아이디를 확인해주세요.");
 		idIdentifyLbl.setBounds(650, 135, 280, 35);
-		JLabel idConditionLbl = new JLabel(
-				"아이디 : 영소문자 필수, 숫자포함가능(10자이상 20자이하)");
+		JLabel idConditionLbl = new JLabel("아이디 : 영소문자 필수, 숫자포함가능(10자이상 20자이하)");
 		idConditionLbl.setBounds(650, 520, 450, 35);
 		idConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		idConditionLbl.setForeground(Color.GRAY);
 
-		JLabel passwordConditionLbl = new JLabel(
-				"비밀번호 : 대문자, 소문자, 숫자 각 1개이상 필수포함(10자이상 20자이하)");
+		JLabel passwordConditionLbl = new JLabel("비밀번호 : 대문자, 소문자, 숫자 각 1개이상 필수포함(10자이상 20자이하)");
 		passwordConditionLbl.setBounds(650, 550, 450, 35);
 		passwordConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		passwordConditionLbl.setForeground(Color.GRAY);
 
-		JLabel nameConditionLbl = new JLabel(
-				"이름 : 영문자 or 한글로만 20자이하(영문-4자이상, 한글-2자이상)");
+		JLabel nameConditionLbl = new JLabel("이름 : 영문자 or 한글로만 20자이하(영문-4자이상, 한글-2자이상)");
 		nameConditionLbl.setBounds(650, 505, 600, 35);
 		nameConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		nameConditionLbl.setForeground(Color.GRAY);
 
-		JLabel nicknameConditionLbl = new JLabel(
-				"닉네임 : 영대소문자, 한글, 숫자 포함 (4자이상 20자이하)");
+		JLabel nicknameConditionLbl = new JLabel("닉네임 : 영대소문자, 한글, 숫자 포함 (4자이상 20자이하)");
 		nicknameConditionLbl.setBounds(650, 535, 450, 35);
 		nicknameConditionLbl.setFont(new Font("돋움", Font.PLAIN, 12));
 		nicknameConditionLbl.setForeground(Color.GRAY);
@@ -461,7 +464,15 @@ public class SignupFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String id = idTF.getText();
-				idCheck(id);
+				Connection conn = null;
+				try {
+					conn = DBUtil.getConnection();
+					idCheck(id, conn);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} finally {
+					DBUtil.close(conn);
+				}
 			}
 		});
 
@@ -497,22 +508,13 @@ public class SignupFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				// 아이디
-				String id = idTF.getText();
-				idCheck(id);
-				// 비번, 비번확인
-				String password = new String(passwordPF.getPassword());
-				String password2 = new String(passwordPF2.getPassword());
-				passwordCheck(password, password2);
 				// 이름
 				String name = nameTF.getText();
 				if (!nameCheck(name)) {
 					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.이름");
 					return;
 				}
-				// 닉네임
-				String nickname = nicknameTF.getText();
-				nicknameCheck(nickname);
+
 				// 전화번호
 				String phone1 = telFrontTF.getText();
 				String phone2 = telCenterTF.getText();
@@ -528,8 +530,8 @@ public class SignupFrame extends JFrame {
 				// 생년월일
 				LocalDate date = null;
 				if (selectedYear != null && selectedMonth != null && selectedDay != null) {
-					if (!selectedYear.equals("연도") && !selectedMonth.equals("월") && !selectedDay.equals("일")) { 
-						date = dayCheck(selectedYear, selectedMonth, selectedDay); 
+					if (!selectedYear.equals("연도") && !selectedMonth.equals("월") && !selectedDay.equals("일")) {
+						date = dayCheck(selectedYear, selectedMonth, selectedDay);
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.생년월일");
@@ -550,18 +552,38 @@ public class SignupFrame extends JFrame {
 					return;
 				}
 
-				if (idCondition && passwordCondition && nicknameCondition) {
-					int result = repo.insertUserInfo(id, password, nickname, name, date, genderInt, phonenumber,
-							bigAreaComboStr, mediumAreaComboStr, smallAreaComboStr);
-					if (result != 0) {
-						JOptionPane.showMessageDialog(null, "회원가입되었습니다.");
-						DataBase data = new DataBase();
-						new LoginFrame(data);
-						frame.dispose();
+				// 비번, 비번확인
+				String password = new String(passwordPF.getPassword());
+				String password2 = new String(passwordPF2.getPassword());
+				passwordCheck(password, password2);
+
+				Connection conn = null;
+				try {
+					// 아이디
+					String id = idTF.getText();
+					idCheck(id, conn);
+
+					// 닉네임
+					String nickname = nicknameTF.getText();
+					nicknameCheck(nickname, conn);
+
+					if (idCondition && passwordCondition && nicknameCondition) {
+						int result = repo.insertUserInfo(id, password, nickname, name, date, genderInt, phonenumber,
+								bigAreaComboStr, mediumAreaComboStr, smallAreaComboStr, conn);
+						if (result != 0) {
+							JOptionPane.showMessageDialog(null, "회원가입되었습니다.");
+							DataBase data = new DataBase();
+							new LoginFrame(data);
+							frame.dispose();
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.아이디비번");
+						initialLabel();
 					}
-				} else {
-					JOptionPane.showMessageDialog(null, "입력 정보를 다시 확인해주세요.아이디비번");
-					initialLabel();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} finally {
+					DBUtil.close(conn);
 				}
 			}
 		});
@@ -616,8 +638,8 @@ public class SignupFrame extends JFrame {
 		frame.setVisible(true);
 	}
 
-	private void idCheck(String id) {
-		if ((id.length() != 0) && repo.matchId(id) && repo.searchId(id) == null) {
+	private void idCheck(String id, Connection conn) throws SQLException {
+		if ((id.length() != 0) && repo.matchId(id) && repo.searchId(id, conn) == null) {
 			idIdentifyLbl.setText("사용 가능한 아이디입니다.");
 			idIdentifyLbl.setForeground(Color.GREEN);
 			idCondition = true;
@@ -649,8 +671,8 @@ public class SignupFrame extends JFrame {
 		}
 	}
 
-	private void nicknameCheck(String nickName) {
-		if ((nickName.length() != 0) && (repo.matchNickName(nickName)) && (repo.searchNickName(nickName) == 0)) {
+	private void nicknameCheck(String nickName, Connection conn) throws SQLException {
+		if ((nickName.length() != 0) && (repo.matchNickName(nickName)) && (repo.searchNickName(nickName, conn) == 0)) {
 			nicknameInfoLbl.setText("사용 가능한 닉네임입니다.");
 			nicknameInfoLbl.setForeground(Color.GREEN);
 			nicknameCondition = true;
@@ -677,7 +699,7 @@ public class SignupFrame extends JFrame {
 		return num1 + num2 + num3;
 	}
 
-	private LocalDate dayCheck(String year, String month, String day) { 
+	private LocalDate dayCheck(String year, String month, String day) {
 		LocalDate date = null;
 		int yearint = Integer.parseInt(year);
 		int monthint = Integer.parseInt(month);

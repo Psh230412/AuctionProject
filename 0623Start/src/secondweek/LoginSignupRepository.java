@@ -18,12 +18,10 @@ import dbutil.DBUtil;
 public class LoginSignupRepository {
 
 	// 로그인 시도할때 아이디, 비밀번호가 DB에 있는지 검색하고 있으면 유저 반환
-	public User searchIdPassword(String id, String password) {
-		Connection conn = null;
+	public User searchIdPassword(String id, String password, Connection conn) throws SQLException{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM user WHERE id = ? AND password = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
@@ -37,24 +35,18 @@ public class LoginSignupRepository {
 				int depositParse = rs.getInt("deposit");
 				return new User(userno, idParse, passwordParse, depositParse);
 			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
+		}  finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
-			DBUtil.close(conn);
 		}
 		return null;
 	}
 
 	// 회원가입할 때 중복되는 아이디가 DB에 있는지 검색하고 있으면 그 아이디 반환
-	public String searchId(String id) {
-		Connection conn = null;
+	public String searchId(String id, Connection conn) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM user WHERE id = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
@@ -69,11 +61,11 @@ public class LoginSignupRepository {
 		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
-			DBUtil.close(conn);
 		}
 		return null;
 	}
-
+	
+	// 비밀번호 찾기
 	public String passwordSearch(String id, String name, String telNumStr) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -101,11 +93,9 @@ public class LoginSignupRepository {
 	}
 
 	public int insertUserInfo(String id, String password, String nickname, String name, LocalDate date, int genderInt,
-			String phonenumber, String bigAreaComboStr, String mediumAreaComboStr, String smallAreaComboStr) {
-		Connection conn = null;
+			String phonenumber, String bigAreaComboStr, String mediumAreaComboStr, String smallAreaComboStr, Connection conn) {
 		PreparedStatement stmt = null;
 		try {
-			conn = DBUtil.getConnection();
 			String sql = "INSERT INTO user (`id`, `password`, `nickname`, `name`, `birthday`, `gender`, `phonenumber`, `bigarea`, `mediumarea`, `detailarea`, `deposit`) \r\n"
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0);";
 			stmt = conn.prepareStatement(sql);
@@ -126,18 +116,15 @@ public class LoginSignupRepository {
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(stmt);
-			DBUtil.close(conn);
 		}
 		return 0;
 	}
 
 	// 중복되는 닉네임 있는지 검색후 해당하는 개수 반환
-	public int searchNickName(String newNickName) {
-		Connection conn = null;
+	public int searchNickName(String newNickName, Connection conn) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			conn = DBUtil.getConnection();
 			String sql = "SELECT COUNT(*) AS count FROM user WHERE nickname = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, newNickName);
@@ -150,14 +137,13 @@ public class LoginSignupRepository {
 		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
-			DBUtil.close(conn);
 		}
 		return 0;
 	}
 
 	// 생성 가능한 닉네임인지?
-	public boolean correctNickName(String newNickName) {
-		if (searchNickName(newNickName) == 0 && matchNickName(newNickName)) {
+	public boolean correctNickName(String newNickName, Connection conn) {
+		if (searchNickName(newNickName, conn) == 0 && matchNickName(newNickName)) {
 			return true;
 		} else {
 			return false;
