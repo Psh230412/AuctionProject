@@ -364,16 +364,16 @@ public class AuctionFrame extends JFrame {
 
 		searchTab = new JTextField();
 		searchTab.setBounds(570, 52, 160, 25);
-
-		searchTab.requestFocus();
-		searchTab.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				data.setCheckBtn(true);
-				data.setSearchText(searchTab.getText());
-			}
-		});
+//
+//		searchTab.requestFocus();
+//		searchTab.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				data.setCheckBtn(true);
+//				data.setSearchText(searchTab.getText());
+//			}
+//		});
 
 		contentPane.add(userLbl);
 		contentPane.add(mypageBtn);
@@ -1554,7 +1554,6 @@ public class AuctionFrame extends JFrame {
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMainSearch() / 10) + 1) + " - ");
 
 			List<Product> productList = new ArrayList<Product>();
-
 //			productList = timer.selectSearchProduct(text);
 			for (Map.Entry<Integer, Product> entry : Cache.ProductSearchCacheMap.entrySet()) {
 				Product value = entry.getValue();
