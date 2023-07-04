@@ -745,8 +745,8 @@ public class AuctionFrame extends JFrame {
 		pnl10.add(viewProductBtn10);
 
 		JButton returnBtn = new JButton();
-		returnBtn.setBounds(750, 46, 130, 50);
-		ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+		returnBtn.setBounds(740, 48, 130, 50);
+		ImageIcon imgreturnBtn = new ImageIcon("img/resetSearch_1.png");
 		returnBtn.setContentAreaFilled(false);
 		returnBtn.setBorderPainted(false);
 		returnBtn.setIcon(imgreturnBtn);
@@ -754,14 +754,14 @@ public class AuctionFrame extends JFrame {
 		returnBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseExited(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback_1.png");
+				ImageIcon imgreturnBtn = new ImageIcon("img/resetSearch_1.png");
 				returnBtn.setIcon(imgreturnBtn);
 
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				ImageIcon imgreturnBtn = new ImageIcon("img/Goback.png");
+				ImageIcon imgreturnBtn = new ImageIcon("img/resetSearch.png");
 				returnBtn.setIcon(imgreturnBtn);
 
 			}
@@ -916,7 +916,7 @@ public class AuctionFrame extends JFrame {
 		docBack.setDocumentFilter(new NumberOnlyFilter(15));
 
 		JButton priceRange = new JButton("검색");
-		priceRange.setBounds(60, 750, 195, 58);
+		priceRange.setBounds(60, 743, 197, 62);
 		ImageIcon imgsearchType = new ImageIcon("img/searchBtn1_1.png");
 		priceRange.setContentAreaFilled(false);
 		priceRange.setBorderPainted(false);
