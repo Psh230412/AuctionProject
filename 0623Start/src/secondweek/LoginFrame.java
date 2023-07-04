@@ -7,10 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,8 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import dbutil.DBUtil;
 
 public class LoginFrame extends JFrame {
 	LoginSignupRepository repo;
@@ -50,7 +46,7 @@ public class LoginFrame extends JFrame {
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
-
+	
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -214,33 +210,32 @@ public class LoginFrame extends JFrame {
 	}
 
 	public boolean loginCondition(String id, String password) {
-		// 아이디와 비밀번호가 비어있으면 "아이디와 비밀번호를 입력하세요"
+		// 1. 아이디와 비밀번호가 비어있으면 "아이디와 비밀번호를 입력하세요"
 		if (id.length() == 0 || password.length() == 0) {
 			JOptionPane.showMessageDialog(null, "아이디와 비밀번호를 입력하세요.");
 			return false;
 		}
 
-		// DB 검색 결과 해당하는 계정이 있어야함
-		Connection conn = null;
-		User user = null;
-		try {
-			conn = DBUtil.getConnection();
-			user = repo.searchIdPassword(id, password, conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(conn);
-		}
+//		// 2. 아이디와 비밀번호는 영문자 또는 숫자만으로 15자 이내로 이루어져야 함
+//		if (!(repo.isMatchesString(id) && repo.isMatchesString(password))) {
+//			JOptionPane.showMessageDialog(null, "아이디 혹은 비밀번호가 틀렸습니다.");
+//			return false;
+//		}
 
+		// 3. DB 검색 결과 해당하는 계정이 있어야함
+		User user = repo.searchIdPassword(id, password);
 		if (user == null) {
 			JOptionPane.showMessageDialog(null, "아이디 혹은 비밀번호가 틀렸습니다.");
 			return false;
 		} else {
 			JOptionPane.showMessageDialog(null, "로그인되었습니다.");
 			loginUser = user;
+			frame.setVisible(false);
 			return true;
 		}
 	}
+	
+	
 
 	public static void main(String[] args) {
 		DataBase data = new DataBase();
