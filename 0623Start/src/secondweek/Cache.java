@@ -245,7 +245,8 @@ public class Cache {
 							+ "INNER JOIN enrollmentinfo B ON A.userno = B.userno\r\n"
 							+ "INNER JOIN product C ON B.productno = C.productno \r\n"
 							+ "INNER JOIN copy_auction D ON B.setno = D.setno WHERE A.userno = ? \r\n"
-							+ "AND D.deadline > current_timestamp() ORDER BY D.deadline;");
+							+ "AND D.deadline > current_timestamp() "
+							+ "ORDER BY D.deadline;");
 
 			stmt2 = conn.prepareStatement(
 					"SELECT B.setno, A.userno, C.productno, C.productname, D.deadline, D.finalprice, D.auctionno FROM user A\r\n"
