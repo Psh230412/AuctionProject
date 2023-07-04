@@ -30,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -61,7 +62,7 @@ public class DetailFrame extends JFrame {
 
 	private static JLabel lblImage;
 	private static JLabel lblName;
-	private static JLabel lblDetail;
+//	private static JLabel lblDetail;
 	private static JLabel lblTime;
 
 	private static JLabel lblPrice;
@@ -79,6 +80,8 @@ public class DetailFrame extends JFrame {
 	private JLabel lblisContinue;
 	
 	private static String textTime;
+	
+	private static JTextArea detailTextArea;
 
 	private static final int MAX_IMAGES = 4;
 	private JLabel[] smallImageLabels = new JLabel[MAX_IMAGES];
@@ -215,11 +218,18 @@ public class DetailFrame extends JFrame {
 		lblName = new JLabel("제품명");
 		lblName.setFont(lblName.getFont().deriveFont(16f));
 		lblName.setBounds(850, 150, 150, 25);
-		lblDetail = new JLabel("상세설명");
-		lblDetail.setForeground(Color.GRAY);
+//		lblDetail = new JLabel("상세설명");
+//		lblDetail.setForeground(Color.GRAY);
 		
-		lblDetail.setBounds(720, 480, 360, 116);
-		lblDetail.setToolTipText(lblDetail.getText());
+		detailTextArea = new JTextArea();
+		detailTextArea.setForeground(Color.GRAY);
+		detailTextArea.setBounds(800, 490, 300, 116);
+		detailTextArea.setEditable(false);
+		detailTextArea.setLineWrap(true);
+		
+//		lblDetail.setBounds(720, 480, 360, 116);
+//		lblDetail.setToolTipText(lblDetail.getText());
+		
 		lblTime = new JLabel("00:00:00");
 		lblTime.setFont(new Font("돋움", Font.BOLD, 20));
 		lblTime.setForeground(Color.RED);
@@ -386,7 +396,7 @@ public class DetailFrame extends JFrame {
 
 		contentPane.add(lblImage);
 		contentPane.add(lblName);
-		contentPane.add(lblDetail);
+//		contentPane.add(lblDetail);
 		contentPane.add(lblTime);
 		contentPane.add(lblPrice);
 		contentPane.add(lblPriceMin);
@@ -397,7 +407,7 @@ public class DetailFrame extends JFrame {
 		contentPane.add(backButton);
 
 		contentPane.add(lblisContinue);
-		
+		contentPane.add(detailTextArea);
 		
 
 		try {
@@ -483,7 +493,7 @@ public class DetailFrame extends JFrame {
 			Product product = data.getProduct();
 
 			lblName.setText(product.getProductName());
-			lblDetail.setText(product.getProductContent());
+			detailTextArea.setText(product.getProductContent());
 			
 			String result1 = duration(product.getEndTime(), now);
 			
