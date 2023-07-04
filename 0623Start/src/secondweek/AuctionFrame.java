@@ -712,12 +712,12 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (data.isCheckBtn()) {
-					if (((timer.selectSearchProduct(data.getSearchText()).size() - 1) / 10) > (data.getIndexMainSearch()
+					if (((testList.size() - 1) / 10) > (data.getIndexMainSearch()
 							/ 10)) {
 						data.setIndexMainSearch(data.getIndexMainSearch() + 10);
 					}
 				} else {
-					if (((timer.selectProduct().size() - 1) / 10) > (data.getIndexMain() / 10)) {
+					if (((testList.size() - 1) / 10) > (data.getIndexMain() / 10)) {
 						data.setIndexMain(data.getIndexMain() + 10);
 					}
 				}
@@ -762,14 +762,14 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				data.setCheckBtn(false);
-				data.setSearchText("");
+				data.setSearchText(null);
 				data.setIndexMainSearch(0);
-				searchTab.setText("");
+				searchTab.setText(null);
 				deadlineSort.setSelected(true);
 				categoryCombo.setSelectedIndex(0);
 				isPriceRange = false;
-				rangeFront.setText("");
-				rangeBack.setText("");
+				rangeFront.setText(null);
+				rangeBack.setText(null);
 			}
 		});
 
@@ -779,6 +779,7 @@ public class AuctionFrame extends JFrame {
 		categoryCombo = new JComboBox<>(categories);
 		categoryCombo.setBounds(60, 270, 150, 25);
 //		Font font = new Font("맑은 고딕", Font.BOLD, 10);
+		
 		categoryCombo.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 
 		categoryCombo.addItemListener(new ItemListener() {
@@ -786,6 +787,9 @@ public class AuctionFrame extends JFrame {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					categoryString = (String) categoryCombo.getSelectedItem();
+					data.setIndexMain(0);
+					data.setIndexMainSearch(0);
+					// TODO Auto-generated catch block
 				}
 			}
 		});
@@ -837,6 +841,9 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(deadlineSort.getText());
+				// TODO Auto-generated catch block
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -844,6 +851,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(priceHighSort.getText());
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -851,6 +860,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(priceLowSort.getText());
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -858,6 +869,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				data.setAuctionRadioText(popularSort.getText());
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -901,7 +914,6 @@ public class AuctionFrame extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				ImageIcon imgsearchType = new ImageIcon("img/searchBtn1_1.png");
 				priceRange.setIcon(imgsearchType);
-
 			}
 
 			@Override
@@ -916,6 +928,8 @@ public class AuctionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				isPriceRange = true;
+				data.setIndexMain(0);
+				data.setIndexMainSearch(0);
 			}
 		});
 
@@ -1092,14 +1106,14 @@ public class AuctionFrame extends JFrame {
 
 	public static void updatLabel(LocalDateTime now) {
 		Connection conn = null;
-		list = new ArrayList();
+		list = new ArrayList<>();
 
 		try {
 			conn = DBUtil.getConnection();
 			ImageRetriever.retrieveImage(conn);
 
 			resetLabel();
-
+			
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
 
 			int count = 0;
@@ -1502,7 +1516,7 @@ public class AuctionFrame extends JFrame {
 
 	public static void updateSearchLabel(LocalDateTime now, String text) {
 		Connection conn = null;
-		list = new ArrayList();
+		list = new ArrayList<>();
 
 		resetLabel();
 
