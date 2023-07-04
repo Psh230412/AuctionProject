@@ -1,6 +1,7 @@
 package secondweek;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -57,6 +58,9 @@ public class ChangeInformationFrame extends JFrame {
 	private JLabel nameLabel;
 	private JLabel areaLabel;
 	private JLabel passwordCheckLabel;
+	
+	private JLabel errorLabel;
+	private JLabel pwerrorLabel;
 
 	public int getSelectedGender() {
 		return selectedGender;
@@ -265,19 +269,25 @@ public class ChangeInformationFrame extends JFrame {
 
 			}
 		});
+		
+		// 
 		nikconfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String nickName = nickNameText.getText();
 				if (matchNickName(nickName) == false) {
-					nikconfirmBtn.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
+					errorLabel.setText("닉네임은 영대소문자 or 한글 or 숫자 포함 4자리이상 20자리이하여야 합니다.");
+					errorLabel.setForeground(Color.RED);
 				} else if (searchNickName(nickName) != 0) {
-					nikconfirmBtn.setText("이미 존재하는 닉네임입니다.");
+					errorLabel.setText("이미 존재하는 닉네임입니다.");
+					errorLabel.setForeground(Color.RED);
 				} else if (correctNickName(nickName) == true) {
-					nikconfirmBtn.setText("사용가능한 닉네임 입니다.");
+					errorLabel.setText("사용가능한 닉네임 입니다.");
+					errorLabel.setForeground(Color.GREEN);
 				}
 			}
 		});
+		// 
 		passwordIdentifyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -288,11 +298,11 @@ public class ChangeInformationFrame extends JFrame {
 				/* 해당 사용자의 번호를 얻는 코드 */;
 				String validityCheck = checkPasswordValidity(loginUser, newPass, nowPass, checkPass);
 				if ("OK".equals(validityCheck)) {
-					passwordCheckLabel.setForeground(Color.GREEN);
-					passwordCheckLabel.setText("적절한 비밀번호 입니다.");
+					pwerrorLabel.setForeground(Color.GREEN);
+					pwerrorLabel.setText("적절한 비밀번호 입니다.");
 				} else {
-					passwordCheckLabel.setForeground(Color.RED);
-					passwordCheckLabel.setText(validityCheck);
+					pwerrorLabel.setForeground(Color.RED);
+					pwerrorLabel.setText(validityCheck);
 				}
 			}
 		});
@@ -348,12 +358,13 @@ public class ChangeInformationFrame extends JFrame {
 		genderGroup.add(manBtn);
 		genderGroup.add(womanBtn);
 
-		JLabel errorLabel = new JLabel("닉네임을 확인 해주세요.");
+		// 
+		errorLabel = new JLabel("닉네임을 확인 해주세요.");
 		errorLabel.setBounds(670, 150, 200, 30);
 		errorLabel.setFont(new Font("돋움", Font.PLAIN, 12));
 		errorLabel.setForeground(Color.RED);
 		contentPane.add(errorLabel);
-		JLabel pwerrorLabel = new JLabel("비밀번호를 확인 해주세요.");
+		pwerrorLabel = new JLabel("비밀번호를 확인 해주세요.");
 		pwerrorLabel.setBounds(680, 650, 200, 30);
 		pwerrorLabel.setFont(new Font("돋움", Font.PLAIN, 12));
 		pwerrorLabel.setForeground(Color.RED);
@@ -458,6 +469,8 @@ public class ChangeInformationFrame extends JFrame {
 				nickNameText.setText("");
 				phoneNumberCenter.setText("");
 				phoneNumberLast.setText("");
+				errorLabel.setText("닉네임을 확인 해주세요.");
+				errorLabel.setForeground(Color.RED);
 			}
 		});
 		informationResetBtn.setBounds(910, 350, 150, 80);
@@ -505,7 +518,7 @@ public class ChangeInformationFrame extends JFrame {
 							JOptionPane.showMessageDialog(null, "전화번호를 모두 입력해주세요", "입력오류", JOptionPane.WARNING_MESSAGE);
 							return;
 						}
-						String phoneNumber = "010" + phoneNumberCenter + phoneNumberLast;
+						String phoneNumber = "010" + phoneNumberCenter1 + phoneNumberLast2; //@@
 
 						String bigArea = (String) bigAreaCombo.getSelectedItem();
 						String mediumArea = (String) mediumAreaCombo.getSelectedItem();
@@ -531,6 +544,7 @@ public class ChangeInformationFrame extends JFrame {
 						changeUserInformation.setInt(6, loginUser);
 
 						changeUserInformation.executeUpdate();
+						JOptionPane.showMessageDialog(null, "회원정보가 변경되었습니다."); 
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "올바르게 입력해주십시오", "입력오류", JOptionPane.WARNING_MESSAGE);
 						e2.printStackTrace();
@@ -540,6 +554,7 @@ public class ChangeInformationFrame extends JFrame {
 						DBUtil.close(changeUserInformation);
 						DBUtil.close(conn);
 					}
+					
 				}
 			}
 		});
@@ -587,6 +602,8 @@ public class ChangeInformationFrame extends JFrame {
 				nowPassword.setText("");
 				newPassword.setText("");
 				newPasswordMatch.setText("");
+				pwerrorLabel.setText("비밀번호를 확인 해주세요.");
+				pwerrorLabel.setForeground(Color.RED);
 			}
 		});
 		passwordResetBtn.setBounds(910, 660, 150, 80);
@@ -620,6 +637,7 @@ public class ChangeInformationFrame extends JFrame {
 						changeUserPassword.setString(1, newPass);
 						changeUserPassword.setInt(2, loginUser);
 						changeUserPassword.executeUpdate();
+						JOptionPane.showMessageDialog(null, "비밀번호가 변경되었습니다."); 
 					} catch (NumberFormatException | SQLException e2) {
 						e2.printStackTrace();
 					} finally {
