@@ -17,6 +17,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -737,11 +739,11 @@ public class MypageFrame extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
-			// updatLabel 호출 될때마다 cache와 원본테이블 교차검증
-			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
-			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
-
-//			List<EnrollParticipate> enrollList = repo.getEnrollment(data.getCurrentUser().getNo());
+	
+			
+			Cache.isProductnoProductCacheMap(conn);
+//			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
+//			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
 
 			List<EnrollParticipate> enrollList = new ArrayList<EnrollParticipate>();
 
@@ -750,6 +752,7 @@ public class MypageFrame extends JFrame {
 				enrollList.add(value);
 			}
 
+			
 			EnrollParticipate enroll = null;
 
 			if (enrollList != null) {
@@ -989,6 +992,7 @@ public class MypageFrame extends JFrame {
 		public void execute(JobExecutionContext context) throws JobExecutionException {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
+					
 
 					LocalDateTime now = LocalDateTime.now();
 					updatLabel(now);

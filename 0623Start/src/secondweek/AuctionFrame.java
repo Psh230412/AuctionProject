@@ -1126,6 +1126,8 @@ public class AuctionFrame extends JFrame {
 
 //			updatLabel 호출 될때마다 cache와 원본테이블 교차검증 
 			Cache.isProductnoProductCacheMap(conn);
+//			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
+//			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
 
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMain() / 10) + 1) + " - ");
 
@@ -1551,6 +1553,10 @@ public class AuctionFrame extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
+			
+			Cache.isProductnoProductCacheMap(conn);
+			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
+			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
 
 			lblNum1.setText(" - " + String.valueOf((data.getIndexMainSearch() / 10) + 1) + " - ");
 

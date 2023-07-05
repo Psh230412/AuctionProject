@@ -36,11 +36,7 @@ public class LoginFrame extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
-//		Cache.addAllIntoCacheMap();
 			Cache.addAllIntoProductCacheMap(conn);
-//			로그인을 하기 전이라서 data.getCurrentUser() null이다
-//			Cache.putAllenrollCacheMap(data.getCurrentUser().getNo(), conn);
-//			Cache.putAllParticipateMap(data.getCurrentUser().getNo(), conn);
 			
 		} catch (SQLException e1) {
 			e1.printStackTrace();

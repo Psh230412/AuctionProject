@@ -532,6 +532,7 @@ public class RegistFrame extends JFrame {
 
 //						물건 등록하면 cacheMap에다가 추가
 						Cache.putProductCacheMap();
+						
 
 						
 
