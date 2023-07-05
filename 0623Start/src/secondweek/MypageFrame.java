@@ -680,7 +680,7 @@ public class MypageFrame extends JFrame {
 		}
 
 	}
-
+	
 	private static void initialLabel() {
 		for (int i = 0; i < names.length; i++) {
 			names[i].setText("");
@@ -745,14 +745,40 @@ public class MypageFrame extends JFrame {
 //			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
 //			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
 
-			List<EnrollParticipate> enrollList = new ArrayList<EnrollParticipate>();
+			List<EnrollParticipate> enrollList = new ArrayList<>();
 
 			for (Map.Entry<Integer, EnrollParticipate> entry : Cache.enrollCacheMap.entrySet()) {
-				EnrollParticipate value = entry.getValue();
-				enrollList.add(value);
+			    EnrollParticipate value = entry.getValue();
+			    enrollList.add(value);
+			}
+
+			Collections.sort(enrollList, new Comparator<EnrollParticipate>() {
+			    @Override
+			    public int compare(EnrollParticipate o1, EnrollParticipate o2) {
+			        return o1.getEndTime().compareTo(o2.getEndTime());
+			    }
+			});
+
+			List<EnrollParticipate> negativeTimeList = new ArrayList<>();
+			List<EnrollParticipate> positiveTimeList = new ArrayList<>();
+
+			for (EnrollParticipate enrollParticipate : enrollList) {
+			    long diff = enrollParticipate.getEndTime().compareTo(now);
+			    if (diff < 0) {
+			        negativeTimeList.add(enrollParticipate);
+			    } else {
+			        positiveTimeList.add(enrollParticipate);
+			    }
 			}
 
 			
+			Collections.reverse(negativeTimeList);
+
+			enrollList.clear();
+			enrollList.addAll(positiveTimeList);
+			enrollList.addAll(negativeTimeList);
+
+
 			EnrollParticipate enroll = null;
 
 			if (enrollList != null) {
@@ -843,12 +869,39 @@ public class MypageFrame extends JFrame {
 			}
 
 //			List<EnrollParticipate> participateList = repo.getParticipateList(data.getCurrentUser().getNo());
-			List<EnrollParticipate> participateList = new ArrayList<EnrollParticipate>();
+			List<EnrollParticipate> participateList = new ArrayList<>();
 
 			for (Map.Entry<Integer, EnrollParticipate> entry : Cache.participateCacheMap.entrySet()) {
-				EnrollParticipate value = entry.getValue();
-				participateList.add(value);
+			    EnrollParticipate value = entry.getValue();
+			    participateList.add(value);
 			}
+
+			Collections.sort(participateList, new Comparator<EnrollParticipate>() {
+			    @Override
+			    public int compare(EnrollParticipate o1, EnrollParticipate o2) {
+			        return o1.getEndTime().compareTo(o2.getEndTime());
+			    }
+			});
+
+			List<EnrollParticipate> negativeTimeList2 = new ArrayList<>();
+			List<EnrollParticipate> positiveTimeList2 = new ArrayList<>();
+
+			for (EnrollParticipate participate : participateList) {
+			    long diff = participate.getEndTime().compareTo(now);
+			    if (diff < 0) {
+			        negativeTimeList2.add(participate);
+			    } else {
+			        positiveTimeList2.add(participate);
+			    }
+			}
+			
+			Collections.reverse(negativeTimeList2);
+
+			participateList.clear();
+			participateList.addAll(positiveTimeList2);
+			participateList.addAll(negativeTimeList2);
+
+			
 
 			EnrollParticipate participate = null;
 			if (participateList != null) {

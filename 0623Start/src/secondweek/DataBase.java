@@ -12,8 +12,8 @@ public class DataBase {
 
 	private String categoryText;
 	private String auctionRadioText;
-	private String priceFrontText;
-	private String priceBackText;
+	private String priceFrontText = "0";
+	private String priceBackText = "0";
 
 	public DataBase() {
 //		currentUser = new User(1, "abc", "abc", 2010); // 테스트용 User 계정
