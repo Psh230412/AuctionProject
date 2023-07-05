@@ -38,8 +38,9 @@ public class Cache {
 
 		return new ImageIcon(image);
 	}
-	public static void isProductnoparticipateCacheMap (int userno, Connection conn) throws SQLException {
-		Set<Integer>  participateCacheset = participateCacheMap.keySet();
+
+	public static void isProductnoparticipateCacheMap(int userno, Connection conn) throws SQLException {
+		Set<Integer> participateCacheset = participateCacheMap.keySet();
 		// 등록 테이블의 productno가 담기는 리스트
 		List<Integer> participateList = new ArrayList();
 
@@ -56,6 +57,7 @@ public class Cache {
 //			컬럼의 이름
 //			setno, userno, productno, productname, finalprice, deadline, auctionno
 			stmt = conn.prepareStatement(
+
 					"SELECT C.setno, A.userno, E.productno, E.productname, C.finalprice, C.deadline, C.auctionno\r\n"
 							+ "FROM user A INNER JOIN ( SELECT p.*   FROM participate p\r\n"
 							+ "INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n"
@@ -64,20 +66,7 @@ public class Cache {
 							+ ") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n"
 							+ "INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n"
 							+ "INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? \r\n"
-							+ "AND C.deadline > CURRENT_TIME() ORDER BY C.deadline;");
-//			컬럼의 이름 
-//			setno, userno, productno, productname, finalprice, deadline, auctionno
-					"SELECT C.setno, A.userno, E.productno, E.productname, C.finalprice, C.deadline, C.auctionno\r\n" + 
-					"FROM user A INNER JOIN ( SELECT p.*   FROM participate p\r\n" + 
-					"INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n" + 
-					"FROM participate GROUP BY auctionno\r\n" + 
-					") AS PP ON p.auctionno = PP.auctionno AND p.participatetime = PP.max_time\r\n" + 
-					") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n" + 
-					"INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n" + 
-					"INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? \r\n" + 
-					"ORDER BY C.deadline;");
-
-			
+							+ "ORDER BY C.deadline;");
 
 			stmt.setInt(1, userno);
 
@@ -87,6 +76,7 @@ public class Cache {
 				int productno = rs.getInt("productno");
 				participateList.add(productno);
 				if (participateCacheMap.get(productno) != null) {
+					int setno = rs.getInt("setno");
 					if (participateCacheMap.get(productno).getSetno() != setno) {
 						participateCacheMap.get(productno).setSetno(setno);
 					}
@@ -113,41 +103,6 @@ public class Cache {
 
 				}
 			}
-			while (rs2.next()) {
-				int productno = rs2.getInt("productno");
-				int setno = rs2.getInt("setno");
-
-				participateList.add(productno);
-				if (participateCacheMap.get(productno) != null) {
-					if (participateCacheMap.get(productno).getSetno() != setno) {
-						participateCacheMap.get(productno).setSetno(setno);
-					}
-					int userNo = rs2.getInt("userno");
-					if (participateCacheMap.get(productno).getUserno() != userNo) {
-						participateCacheMap.get(productno).setUserno(userNo);
-					}
-					String productname = rs2.getString("productname");
-					if (!participateCacheMap.get(productno).getProductname().equals(productname)) {
-						participateCacheMap.get(productno).setProductname(productname);
-					}
-					int finalprice = rs2.getInt("finalprice");
-					if (participateCacheMap.get(productno).getProductPriceNow() != finalprice) {
-						participateCacheMap.get(productno).setProductPriceNow(finalprice);
-					}
-					Timestamp deadline = rs2.getTimestamp("deadline");
-					if (!participateCacheMap.get(productno).getEndTime().equals(deadline.toLocalDateTime())) {
-						participateCacheMap.get(productno).setEndTime(deadline.toLocalDateTime());
-					}
-					int auctionno = rs2.getInt("auctionno");
-					if (participateCacheMap.get(productno).getAuctionno() != auctionno) {
-						participateCacheMap.get(productno).setAuctionno(auctionno);
-					}
-					
-
-				}
-			}
-			
-			
 
 //			테이블에서 삭제가 됏는데 캐시에 반영이 안됐다는 뜻이다.
 			if (participateCacheset.size() > participateList.size()) {
@@ -173,16 +128,16 @@ public class Cache {
 			if (participateCacheset.size() < participateList.size()) {
 
 				stmtRevise = conn.prepareStatement(
-					
-						"SELECT C.setno, A.userno, E.productno, E.productname, E.image, C.finalprice, C.deadline, C.auctionno\r\n" + 
-						"FROM user A INNER JOIN ( SELECT p.*   FROM participate p\r\n" + 
-						"INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n" + 
-						"FROM participate GROUP BY auctionno\r\n" + 
-						") AS PP ON p.auctionno = PP.auctionno AND p.participatetime = PP.max_time\r\n" + 
-						") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n" + 
-						"INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n" + 
-						"INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? AND E.productno = ?\r\n" + 
-						"ORDER BY C.deadline;");
+
+						"SELECT C.setno, A.userno, E.productno, E.productname, E.image, C.finalprice, C.deadline, C.auctionno\r\n"
+								+ "FROM user A INNER JOIN ( SELECT p.*   FROM participate p\r\n"
+								+ "INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n"
+								+ "FROM participate GROUP BY auctionno\r\n"
+								+ ") AS PP ON p.auctionno = PP.auctionno AND p.participatetime = PP.max_time\r\n"
+								+ ") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n"
+								+ "INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n"
+								+ "INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? AND E.productno = ?\r\n"
+								+ "ORDER BY C.deadline;");
 
 				Iterator<Integer> iterator = participateList.iterator();
 				while (iterator.hasNext()) {
@@ -190,7 +145,6 @@ public class Cache {
 					if (!participateCacheset.contains(item)) {
 						stmtRevise.setInt(1, userno);
 						stmtRevise.setInt(2, item);
-
 
 						rsForstmtRevise = stmtRevise.executeQuery();
 
@@ -206,7 +160,6 @@ public class Cache {
 							byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
 							ImageIcon imageIcon = setImage(imageBytes);
 
-
 							LocalDateTime endTime = rsForstmtRevise.getObject("deadline", LocalDateTime.class);
 
 							if (!participateCacheMap.containsKey(productnoParse)) {
@@ -215,10 +168,7 @@ public class Cache {
 
 							}
 
-							
 						}
-					
-						
 
 					}
 				}
@@ -257,7 +207,6 @@ public class Cache {
 							+ "INNER JOIN copy_auction D ON B.setno = D.setno WHERE A.userno = ? \r\n"
 							+ "ORDER BY D.deadline;");
 
-
 			stmt.setInt(1, userno);
 
 			rs = stmt.executeQuery();
@@ -267,6 +216,7 @@ public class Cache {
 				enrollList.add(productno);
 
 				if (enrollCacheMap.get(productno) != null) {
+					int setno = rs.getInt("setno");
 					if (enrollCacheMap.get(productno).getSetno() != setno) {
 						enrollCacheMap.get(productno).setSetno(setno);
 					}
@@ -293,8 +243,6 @@ public class Cache {
 
 				}
 			}
-			
-			
 
 //			테이블에서 삭제가 됏는데 캐시에 반영이 안됐다는 뜻이다.
 			if (enrollCacheset.size() > enrollList.size()) {
@@ -333,7 +281,6 @@ public class Cache {
 						stmtRevise.setInt(1, userno);
 						stmtRevise.setInt(2, item);
 
-
 						rsForstmtRevise = stmtRevise.executeQuery();
 
 						while (rsForstmtRevise.next()) {
@@ -359,7 +306,6 @@ public class Cache {
 							}
 
 						}
-						
 
 					}
 				}
@@ -369,13 +315,13 @@ public class Cache {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 			DBUtil.close(rsForstmtRevise);
-		
+
 			DBUtil.close(rs);
-		
+
 			DBUtil.close(stmtRevise);
-			
+
 			DBUtil.close(stmt);
 //			DBUtil.close(conn);
 		}
@@ -600,40 +546,43 @@ public class Cache {
 				int productno = rs.getInt("productno");
 
 				int auctionno = rs.getInt("auctionno");
-				if (ProductCacheMap.get(productno).getAuctionNo() != auctionno) {
-					ProductCacheMap.get(productno).setAuctionNo(auctionno);
-				}
-				Timestamp starttime = rs.getTimestamp("starttime");
-				if (!ProductCacheMap.get(productno).getStartTime().equals(starttime.toLocalDateTime())) {
-					ProductCacheMap.get(productno).setStartTime(starttime.toLocalDateTime());
-				}
-				Timestamp deadline = rs.getTimestamp("deadline");
-				if (!ProductCacheMap.get(productno).getEndTime().equals(deadline.toLocalDateTime())) {
-					ProductCacheMap.get(productno).setEndTime(deadline.toLocalDateTime());
-				}
-				int finalprice = rs.getInt("finalprice");
-				if (ProductCacheMap.get(productno).getProductPriceNow() != finalprice) {
-					ProductCacheMap.get(productno).setProductPriceNow(finalprice);
-				}
-				int setno = rs.getInt("setno");
-				if (ProductCacheMap.get(productno).getSetNo() != setno) {
-					ProductCacheMap.get(productno).setSetNo(setno);
-					;
-				}
-				String productname = rs.getString("productname");
-				if (!ProductCacheMap.get(productno).getProductName().equals(productname)) {
-					ProductCacheMap.get(productno).setProductName(productname);
-				}
-				String category = rs.getString("category");
-				if (!ProductCacheMap.get(productno).getCategory().equals(category)) {
-					ProductCacheMap.get(productno).setCategory(category);
-				}
-				int popularity = rs.getInt("popularity");
-				if (ProductCacheMap.get(productno).getPopularity() != popularity) {
-					ProductCacheMap.get(productno).setPopularity(popularity);
-				}
-
 				Productlist.add(productno);
+				if (ProductCacheMap.get(productno) != null) {
+					if (ProductCacheMap.get(productno).getAuctionNo() != auctionno) {
+						ProductCacheMap.get(productno).setAuctionNo(auctionno);
+					}
+					Timestamp starttime = rs.getTimestamp("starttime");
+					if (!ProductCacheMap.get(productno).getStartTime().equals(starttime.toLocalDateTime())) {
+						ProductCacheMap.get(productno).setStartTime(starttime.toLocalDateTime());
+					}
+					Timestamp deadline = rs.getTimestamp("deadline");
+					if (!ProductCacheMap.get(productno).getEndTime().equals(deadline.toLocalDateTime())) {
+						ProductCacheMap.get(productno).setEndTime(deadline.toLocalDateTime());
+					}
+					int finalprice = rs.getInt("finalprice");
+					if (ProductCacheMap.get(productno).getProductPriceNow() != finalprice) {
+						ProductCacheMap.get(productno).setProductPriceNow(finalprice);
+					}
+					int setno = rs.getInt("setno");
+					if (ProductCacheMap.get(productno).getSetNo() != setno) {
+						ProductCacheMap.get(productno).setSetNo(setno);
+						;
+					}
+					String productname = rs.getString("productname");
+					if (!ProductCacheMap.get(productno).getProductName().equals(productname)) {
+						ProductCacheMap.get(productno).setProductName(productname);
+					}
+					String category = rs.getString("category");
+					if (!ProductCacheMap.get(productno).getCategory().equals(category)) {
+						ProductCacheMap.get(productno).setCategory(category);
+					}
+					int popularity = rs.getInt("popularity");
+					if (ProductCacheMap.get(productno).getPopularity() != popularity) {
+						ProductCacheMap.get(productno).setPopularity(popularity);
+					}
+
+					
+				}
 			}
 
 //			테이블에서 삭제가 됏는데 캐시에 반영이 안됐다는 뜻이다.
