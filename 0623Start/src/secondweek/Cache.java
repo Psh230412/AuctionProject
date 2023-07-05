@@ -45,13 +45,9 @@ public class Cache {
 
 //		Connection conn = null;
 		PreparedStatement stmt = null;
-		PreparedStatement stmt2 = null;
 		PreparedStatement stmtRevise = null;
-		PreparedStatement stmtRevise2 = null;
 		ResultSet rs = null;
-		ResultSet rs2 = null;
 		ResultSet rsForstmtRevise = null;
-		ResultSet rsForstmtRevise2 = null;
 
 		try {
 //			conn = DBUtil.getConnection();
@@ -66,32 +62,15 @@ public class Cache {
 					") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n" + 
 					"INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n" + 
 					"INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? \r\n" + 
-					"AND C.deadline > CURRENT_TIME() ORDER BY C.deadline;");
+					"ORDER BY C.deadline;");
 
-			stmt2 = conn.prepareStatement(
-					"SELECT C.setno, A.userno, E.productno, E.productname, C.finalprice, C.deadline, C.auctionno\r\n" + 
-					"FROM user A INNER JOIN (SELECT p.* FROM participate p\r\n" + 
-					"INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n" + 
-					"FROM participate GROUP BY auctionno\r\n" + 
-					") AS PP ON p.auctionno = PP.auctionno AND p.participatetime = PP.max_time\r\n" + 
-					") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n" + 
-					"INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n" + 
-					"INNER JOIN product E ON D.productno = E.productno WHERE A.userno =  ? \r\n" + 
-					"AND TIMESTAMPDIFF(SECOND, C.deadline, current_timestamp()) > 0\r\n" + 
-					"AND DATEDIFF(C.deadline, current_timestamp()) >= -7 ORDER BY C.deadline DESC;");
 
 			stmt.setInt(1, userno);
-			stmt2.setInt(1, userno);
 
 			rs = stmt.executeQuery();
-			rs2 = stmt2.executeQuery();
 
 			while (rs.next()) {
 				int productno = rs.getInt("productno");
-				participateList.add(productno);
-			}
-			while (rs2.next()) {
-				int productno = rs2.getInt("productno");
 				participateList.add(productno);
 			}
 			
@@ -129,18 +108,7 @@ public class Cache {
 						") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n" + 
 						"INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n" + 
 						"INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? AND E.productno = ?\r\n" + 
-						"AND C.deadline > CURRENT_TIME() ORDER BY C.deadline;");
-				stmtRevise2 = conn.prepareStatement(
-						"SELECT C.setno, A.userno, E.productno, E.image,E.productname,C.finalprice, C.deadline, C.auctionno\r\n" + 
-						"FROM user A INNER JOIN (SELECT p.* FROM participate p\r\n" + 
-						"INNER JOIN ( SELECT auctionno, MAX(participatetime) AS max_time\r\n" + 
-						"FROM participate GROUP BY auctionno\r\n" + 
-						") AS PP ON p.auctionno = PP.auctionno AND p.participatetime = PP.max_time\r\n" + 
-						") AS B ON A.userno = B.userno INNER JOIN copy_auction C ON B.auctionno = C.auctionno\r\n" + 
-						"INNER JOIN enrollmentinfo D ON C.setno = D.setno\r\n" + 
-						"INNER JOIN product E ON D.productno = E.productno WHERE A.userno = ? AND E.productno = ?\r\n" + 
-						"AND TIMESTAMPDIFF(SECOND, C.deadline, current_timestamp()) > 0\r\n" + 
-						"AND DATEDIFF(C.deadline, current_timestamp()) >= -7 ORDER BY C.deadline DESC;");
+						"ORDER BY C.deadline;");
 
 				Iterator<Integer> iterator = participateList.iterator();
 				while (iterator.hasNext()) {
@@ -149,11 +117,8 @@ public class Cache {
 						stmtRevise.setInt(1, userno);
 						stmtRevise.setInt(2, item);
 
-						stmtRevise2.setInt(1, userno);
-						stmtRevise2.setInt(2, item);
 
 						rsForstmtRevise = stmtRevise.executeQuery();
-						rsForstmtRevise2 = stmtRevise2.executeQuery();
 
 						while (rsForstmtRevise.next()) {
 							Integer setnoParse = rsForstmtRevise.getObject("setno", Integer.class);
@@ -179,28 +144,6 @@ public class Cache {
 
 							
 						}
-						while (rsForstmtRevise2.next()) {
-							Integer setnoParse = rsForstmtRevise2.getObject("setno", Integer.class);
-							Integer usernoParse = rsForstmtRevise2.getObject("userno", Integer.class);
-							Integer productnoParse = rsForstmtRevise2.getObject("productno", Integer.class);
-							Integer auctionnoParse = rsForstmtRevise2.getObject("auctionno", Integer.class);
-							String productname = rsForstmtRevise2.getString("productname");
-							Blob imageBlob = rsForstmtRevise2.getBlob("image");
-							int finalprice = rsForstmtRevise2.getInt("finalprice");
-
-							byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
-							ImageIcon imageIcon = setImage(imageBytes);
-
-
-							LocalDateTime endTime = rsForstmtRevise2.getObject("deadline", LocalDateTime.class);
-
-							if (!participateCacheMap.containsKey(productnoParse)) {
-								participateCacheMap.put(productnoParse, new EnrollParticipate(setnoParse, usernoParse,
-										productnoParse, auctionnoParse, productname, imageIcon, endTime, finalprice));
-
-							}
-
-						}
 
 					}
 				}
@@ -210,13 +153,9 @@ public class Cache {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(rsForstmtRevise2);
 			DBUtil.close(rsForstmtRevise);
-			DBUtil.close(rs2);
 			DBUtil.close(rs);
-			DBUtil.close(stmtRevise2);
 			DBUtil.close(stmtRevise);
-			DBUtil.close(stmt2);
 			DBUtil.close(stmt);
 //			DBUtil.close(conn);
 		}
@@ -229,13 +168,9 @@ public class Cache {
 
 //		Connection conn = null;
 		PreparedStatement stmt = null;
-		PreparedStatement stmt2 = null;
 		PreparedStatement stmtRevise = null;
-		PreparedStatement stmtRevise2 = null;
 		ResultSet rs = null;
-		ResultSet rs2 = null;
 		ResultSet rsForstmtRevise = null;
-		ResultSet rsForstmtRevise2 = null;
 
 		try {
 //			conn = DBUtil.getConnection();
@@ -245,29 +180,15 @@ public class Cache {
 							+ "INNER JOIN enrollmentinfo B ON A.userno = B.userno\r\n"
 							+ "INNER JOIN product C ON B.productno = C.productno \r\n"
 							+ "INNER JOIN copy_auction D ON B.setno = D.setno WHERE A.userno = ? \r\n"
-							+ "AND D.deadline > current_timestamp() "
 							+ "ORDER BY D.deadline;");
 
-			stmt2 = conn.prepareStatement(
-					"SELECT B.setno, A.userno, C.productno, C.productname, D.deadline, D.finalprice, D.auctionno FROM user A\r\n"
-							+ "INNER JOIN enrollmentinfo B ON A.userno = B.userno\r\n"
-							+ "INNER JOIN product C ON B.productno = C.productno\r\n"
-							+ "INNER JOIN copy_auction D ON B.setno = D.setno WHERE A.userno = ? \r\n"
-							+ "AND TIMESTAMPDIFF(SECOND, D.deadline, current_timestamp()) > 0\r\n"
-							+ "AND DATEDIFF(D.deadline, current_timestamp()) >= -7 ORDER BY D.deadline DESC;");
 
 			stmt.setInt(1, userno);
-			stmt2.setInt(1, userno);
 
 			rs = stmt.executeQuery();
-			rs2 = stmt2.executeQuery();
 
 			while (rs.next()) {
 				int productno = rs.getInt("productno");
-				enrollList.add(productno);
-			}
-			while (rs2.next()) {
-				int productno = rs2.getInt("productno");
 				enrollList.add(productno);
 			}
 
@@ -299,14 +220,7 @@ public class Cache {
 								+ "INNER JOIN enrollmentinfo B ON A.userno = B.userno\r\n"
 								+ "INNER JOIN product C ON B.productno = C.productno \r\n"
 								+ "INNER JOIN copy_auction D ON B.setno = D.setno WHERE A.userno = ? AND  C.productno=? \r\n"
-								+ "AND D.deadline > current_timestamp() ORDER BY D.deadline;");
-				stmtRevise2 = conn.prepareStatement(
-						"SELECT B.setno, A.userno, C.productno, C.productname,C.image, D.deadline, D.finalprice, D.auctionno FROM user A\r\n"
-								+ "INNER JOIN enrollmentinfo B ON A.userno = B.userno\r\n"
-								+ "INNER JOIN product C ON B.productno = C.productno\r\n"
-								+ "INNER JOIN copy_auction D ON B.setno = D.setno WHERE A.userno = ? AND C.productno = ? \r\n"
-								+ "AND TIMESTAMPDIFF(SECOND, D.deadline, current_timestamp()) > 0\r\n"
-								+ "AND DATEDIFF(D.deadline, current_timestamp()) >= -7 ORDER BY D.deadline DESC;");
+								+ "ORDER BY D.deadline;");
 
 				Iterator<Integer> iterator = enrollList.iterator();
 				while (iterator.hasNext()) {
@@ -315,11 +229,8 @@ public class Cache {
 						stmtRevise.setInt(1, userno);
 						stmtRevise.setInt(2, item);
 
-						stmtRevise2.setInt(1, userno);
-						stmtRevise2.setInt(2, item);
 
 						rsForstmtRevise = stmtRevise.executeQuery();
-						rsForstmtRevise2 = stmtRevise2.executeQuery();
 
 						while (rsForstmtRevise.next()) {
 							Integer setnoParse = rsForstmtRevise.getObject("setno", Integer.class);
@@ -345,29 +256,6 @@ public class Cache {
 
 							
 						}
-						while (rsForstmtRevise2.next()) {
-							Integer setnoParse = rsForstmtRevise2.getObject("setno", Integer.class);
-							Integer usernoParse = rsForstmtRevise2.getObject("userno", Integer.class);
-							Integer productnoParse = rsForstmtRevise2.getObject("productno", Integer.class);
-							Integer auctionnoParse = rsForstmtRevise2.getObject("auctionno", Integer.class);
-							String productname = rsForstmtRevise2.getString("productname");
-							Blob imageBlob = rsForstmtRevise2.getBlob("image");
-
-							byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
-							ImageIcon imageIcon = setImage(imageBytes);
-
-							int finalprice = rsForstmtRevise2.getInt("finalprice");
-
-							LocalDateTime endTime = rsForstmtRevise2.getObject("deadline", LocalDateTime.class);
-
-							if (enrollCacheMap.containsKey(productnoParse)) {
-								enrollCacheMap.put(productnoParse, new EnrollParticipate(setnoParse, usernoParse, productnoParse,
-										auctionnoParse, productname, imageIcon, endTime, finalprice));
-
-							}
-
-						}
-
 					}
 				}
 				return;
@@ -376,13 +264,9 @@ public class Cache {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBUtil.close(rsForstmtRevise2);
 			DBUtil.close(rsForstmtRevise);
-			DBUtil.close(rs2);
 			DBUtil.close(rs);
-			DBUtil.close(stmtRevise2);
 			DBUtil.close(stmtRevise);
-			DBUtil.close(stmt2);
 			DBUtil.close(stmt);
 //			DBUtil.close(conn);
 		}

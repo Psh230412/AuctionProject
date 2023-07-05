@@ -778,7 +778,6 @@ public class MypageFrame extends JFrame {
 			enrollList.addAll(negativeTimeList);
 
 
-
 			EnrollParticipate enroll = null;
 
 			if (enrollList != null) {
