@@ -741,9 +741,9 @@ public class MypageFrame extends JFrame {
 			conn = DBUtil.getConnection();
 	
 			
-			Cache.isProductnoProductCacheMap(conn);
-//			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
-//			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
+//			Cache.isProductnoProductCacheMap(conn);
+			Cache.isProductnoparticipateCacheMap(data.getCurrentUser().getNo(), conn);
+			Cache.isProductnoEnrollCacheMap(data.getCurrentUser().getNo(), conn);
 
 			List<EnrollParticipate> enrollList = new ArrayList<>();
 
@@ -777,8 +777,7 @@ public class MypageFrame extends JFrame {
 			enrollList.clear();
 			enrollList.addAll(positiveTimeList);
 			enrollList.addAll(negativeTimeList);
-
-
+			
 			EnrollParticipate enroll = null;
 
 			if (enrollList != null) {

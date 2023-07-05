@@ -581,7 +581,6 @@ public class Cache {
 						ProductCacheMap.get(productno).setPopularity(popularity);
 					}
 
-					
 				}
 			}
 
