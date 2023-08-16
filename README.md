@@ -32,19 +32,17 @@
 <div align="left">
    <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
 </div> 
-<h4>백엔드</h4>
+<h4>언어</h4>
 <div align="left">
     <img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=Java&logoColor=white"/>
 </div>
-</div> 
-<h4>프론트엔드</h4>
-<div align="left">
-	
+
 </div>
 <h4>API</h4>
 <div align="left">
-   
-	
+
+
+
 </div>
 <h4>협업도구</h4>
 <div align="left">
