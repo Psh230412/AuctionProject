@@ -12,21 +12,21 @@
 # :books: <a name="outline">개요</a>
 <br>
 
-> **프로젝트** : 모의 경매 프로그램
+> **프로젝트** : DB 활용 자유 주제 - 모의 경매 프로그램
 >
 > **프로젝트 이름** : Now Auction
 >
 > **분류** : 팀 프로젝트
 >
 > **제작 기간** : 2023.06.23 ~ 2023.07.05
+>
+> **주제 선정 이유** : 경매와 같이 실시간으로 시간과 가격이 변동되는 프로그램을 구현하고 싶어서
 > 
 > **주 사용자층** : 경매를 하고 싶지만 경매에 대해 익숙하지 않은 사람
 >
 > **프로젝트 목표** :
-> 
-> 로컬 환경에서 사용할 수 있는 경매프로그램 제작
-> 1. 실시간 DB 상호작용
-> 2. 사용자에게 경매에 대한 경험 제공
+> 1. 사용자에게 경매에 대한 경험 제공
+> 2. 실시간 DB 상호작용
 > 3. 실제 경매사이트랑 유사하게 만들어보기
 
 <br>
@@ -42,10 +42,7 @@
     <img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=Java&logoColor=white"/>
 </div>
 
-</div>
 <h4>API</h4>
-<div align="left">
-</div>
 
 [![MyGet pre-release](https://img.shields.io/myget/quartznet/vpre/Quartz)](#)
 
