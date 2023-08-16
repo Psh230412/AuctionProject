@@ -58,11 +58,15 @@
 # :scroll: <a name="erd">ERD</a>
 
 ## 초기 ERD
+<img src="https://github.com/Psh230412/0623Start/assets/110301333/18db84d4-60bd-4e4a-bef4-4cfb32e1143a" width="100%"/>
 
 ## 현재 ERD
+<img src="https://github.com/Psh230412/0623Start/assets/110301333/3490b2b3-f836-43f1-a86f-0598953c6e90" width="100%"/>
 
 ### 변경이유
-
+실시간 메인화면에 올라와 있는 물품을 나타내는 auction 테이블의 내용이 사라져도 
+유찰/낙찰을 위한 물품 정보를 보존할 수 있도록
+auction 테이블과 컬럼 구성이 완전히 같은 copy_auction 테이블을 추가함
 
 
 # :family: <a name="team">팀원 역할 소개</a>
