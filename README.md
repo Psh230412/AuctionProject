@@ -43,8 +43,7 @@
 </div>
 <h4>API</h4>
 <div align="left">
-   <img src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white" />
-   <img src="https://img.shields.io/badge/commons%20fileupload-005FF9?style=for-the-badge&logo=maildotru&logoColor=white" />
+   
 	
 </div>
 <h4>협업도구</h4>
