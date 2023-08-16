@@ -78,3 +78,8 @@
 
 # :scroll: <a name="function">기능</a>
 [상세보기](https://github.com/Psh230412/0623Start/blob/master/Presentation.md)
+
+# :mag_right: <a name="#fullfill">보완할점</a>
+### 1. 금액 충전, 결제시스템 추가
+### 2. 입찰한 물품에 상위입찰이 들어오면 기존 입찰자에게 정보제공
+### 3. 낙찰/유찰된 내역 삭제, 유찰물품 재등록
