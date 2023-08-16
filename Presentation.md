@@ -14,10 +14,10 @@
 <img src="https://github.com/Psh230412/0623Start/assets/134483516/e84a5dae-60db-4175-96b8-0b89c19d8b5e"/>
 
 ### 회원가입
-<img src="https://github.com/Psh230412/0623Start/assets/134483516/6022add2-433e-40e2-b11b-7e73c59c566e"/>
+<img src="https://github.com/Psh230412/0623Start/assets/134483516/aaa8f3a9-3e21-4f5d-852c-4c85ba2bdc1b"/>
 
 ### <a name="fun1">메인화면</a>
-<img src="https://github.com/Psh230412/FirstWeb/assets/134483516/9f481ede-149b-4efd-b42a-5c9fe247c2e0"/>
+<img src="https://github.com/Psh230412/0623Start/assets/134483516/6022add2-433e-40e2-b11b-7e73c59c566e"/>
 
 ###  경매참여화면
 <img src="https://github.com/Psh230412/0623Start/assets/134483516/ceb285f9-5cd3-4624-8211-8f80cf9afe02"/>
